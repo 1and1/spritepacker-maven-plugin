@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Robert Murphy
  */
 @Mojo(name = "compile", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
-public class Spritepacker1 extends AbstractMojo {
+public class SpritePacker extends AbstractMojo {
 
     /**
      * Output spritesheet image name
