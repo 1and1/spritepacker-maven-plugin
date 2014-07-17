@@ -2,33 +2,25 @@ package com.murphybob.spritepacker;
 
 import org.apache.maven.plugin.MojoExecutionException;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 public class ImageNode {
-    private File file;
-    private BufferedImage image;
-    private int width;
-    private int height;
+    private final File file;
+    private final BufferedImage image;
+
     private Node node;
 
     /**
      * Create an ImageNode from the given file
      *
      * @param file  the image file
+     * @param image
      * @throws MojoExecutionException
      */
-    public ImageNode(File file) throws MojoExecutionException {
+    public ImageNode(File file, BufferedImage image) throws MojoExecutionException {
         this.file = file;
-        try {
-            this.image = ImageIO.read(file);
-        } catch (IOException e) {
-            throw new MojoExecutionException("Failed to open file: " + file.getPath(), e);
-        }
-        this.width = image.getWidth();
-        this.height = image.getHeight();
+        this.image = image;
     }
 
     public File getFile() {
@@ -40,11 +32,11 @@ public class ImageNode {
     }
 
     public int getWidth() {
-        return width;
+        return this.image.getWidth();
     }
 
     public int getHeight() {
-        return height;
+        return this.image.getHeight();
     }
 
     public Node getNode() {
