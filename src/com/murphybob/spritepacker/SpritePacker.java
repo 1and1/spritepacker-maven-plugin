@@ -12,6 +12,7 @@ import org.codehaus.plexus.util.Scanner;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 import javax.imageio.ImageIO;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -19,8 +20,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,20 +124,15 @@ public class SpritePacker extends AbstractMojo {
         // Load images defined in input array
         List<ImageNode> images = loadImages(inputs);
 
-        log("Sorting images...");
-
-        // Sort images to be largest (by max(width,height)) first
-        sortImages(images);
-
         log("Packing images...");
 
         // Add packing information
-        Node root = packImages(images, padding);
+        Dimension dim = packImages(images, padding);
 
         log("Saving spritesheet...");
 
         // Put to a spritesheet and write to a file
-        saveSpritesheet(images, root, output);
+        saveSpritesheet(images, dim, output);
 
         if (json != null) {
 
@@ -212,23 +206,6 @@ public class SpritePacker extends AbstractMojo {
     }
 
     /**
-     * Sort images by max width / height descending
-     *
-     * @param images    list of images to sort
-     */
-    private void sortImages(List<ImageNode> images) {
-        // Sort by max width / height descending
-        Collections.sort(images, new Comparator<ImageNode>() {
-            @Override
-            public int compare(ImageNode arg0, ImageNode arg1) {
-                int max0 = Math.max(arg0.getWidth(), arg0.getHeight());
-                int max1 = Math.max(arg1.getWidth(), arg1.getHeight());
-                return max1 - max0;
-            }
-        });
-    }
-
-    /**
      * Pack a list of images into a spritesheet, adding Nodes to each ImageNode with the coordinates of the image
      * in the spritesheet
      *
@@ -236,9 +213,9 @@ public class SpritePacker extends AbstractMojo {
      * @param padding   the padding that should be added between images in the spritesheet
      * @return          the root node of the spritesheet
      */
-    private Node packImages(List<ImageNode> images, Integer padding) {
-        PackGrowing packGrowing = new PackGrowing(padding);
-        return packGrowing.fit(images);
+    private Dimension packImages(List<ImageNode> images, Integer padding) {
+        PackGrowing packGrowing = new PackGrowing();
+        return packGrowing.fit(images, padding);
     }
 
     /**
@@ -249,12 +226,13 @@ public class SpritePacker extends AbstractMojo {
      * @param output    the output PNG file to write to
      * @throws MojoExecutionException
      */
-    private void saveSpritesheet(List<ImageNode> images, Node root, File output) throws MojoExecutionException {
+    private void saveSpritesheet(List<ImageNode> images, Dimension dim, File output) throws MojoExecutionException {
         if (!output.getParentFile().exists() && !output.getParentFile().mkdirs()) {
             throw new MojoExecutionException("Couldn't create target directory: " + output.getParentFile());
         }
 
-        BufferedImage spritesheet = new BufferedImage(root.getWidth(), root.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        BufferedImage spritesheet = new BufferedImage((int)dim.getWidth(), (int)dim.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = spritesheet.createGraphics();
         for (ImageNode imageNode : images) {
             if (imageNode.getNode() == null) {
