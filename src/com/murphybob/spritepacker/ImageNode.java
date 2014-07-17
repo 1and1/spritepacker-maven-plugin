@@ -14,6 +14,12 @@ public class ImageNode {
     private int height;
     private Node node;
 
+    /**
+     * Create an ImageNode from the given file
+     *
+     * @param file  the image file
+     * @throws MojoExecutionException
+     */
     public ImageNode(File file) throws MojoExecutionException {
         this.file = file;
         try {

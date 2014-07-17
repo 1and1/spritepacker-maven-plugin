@@ -32,9 +32,7 @@ import java.util.Map;
  * @author Robert Murphy
  */
 @Mojo(name = "compile", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
-public class SpritePacker extends AbstractMojo {
-
-    private static long startTime = System.currentTimeMillis();
+public class Spritepacker extends AbstractMojo {
 
     /**
      * Output spritesheet image name
@@ -43,7 +41,7 @@ public class SpritePacker extends AbstractMojo {
     private File output;
 
     /**
-     * Output json(p) description file containing coords and dimensions.
+     * Output json(p) description file containing coordinates and dimensions.
      */
     @Parameter
     private File json;
@@ -98,8 +96,10 @@ public class SpritePacker extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException {
 
+        long startTime = System.currentTimeMillis();
+
         // Load input files into an ArrayList
-        List<File> inputs = toFileArray(sourceDirectory, includes, excludes);
+        List<File> inputs = toFileList(sourceDirectory, includes, excludes);
 
         // Check if there are actually any inputs to do anything with
         if (inputs.size() == 0) {
@@ -110,7 +110,7 @@ public class SpritePacker extends AbstractMojo {
         // Load output files into an ArrayList
         List<File> outputs = Arrays.asList(output, json);
 
-        // If force overwrite not specified, the JSON file is not being created for the first time,
+        // If force overwrite not specified, and the JSON file is not being created for the first time,
         // and the output files were modified more recently than the input files, return.
         if (forceOverwrite == false &&
             (json == null || json.exists()) &&
@@ -149,11 +149,17 @@ public class SpritePacker extends AbstractMojo {
 
         }
 
-        float took = secondsSinceStart();
+        float took = (System.currentTimeMillis() - startTime) / 1000;
         log("Done - took " + took + "s!");
 
     }
 
+    /**
+     * Get the most recent modified date from a list of files
+     *
+     * @param files     the list of files
+     * @return          the most recent modified date
+     */
     private long getLastModified(List<File> files) {
         long modified = 0;
         for (File f : files) {
@@ -164,7 +170,16 @@ public class SpritePacker extends AbstractMojo {
         return modified;
     }
 
-    private List<File> toFileArray(File sourceDirectory, String[] includes, String[] excludes) {
+    /**
+     * Create a list of files within a source directory, including subdirectories,
+     * that match the includes and excludes criteria
+     *
+     * @param sourceDirectory   the source directory
+     * @param includes          criterion for files to include
+     * @param excludes          criterion for files to exclude
+     * @return                  list of matching files
+     */
+    private List<File> toFileList(File sourceDirectory, String[] includes, String[] excludes) {
         Scanner scanner = buildContext.newScanner(sourceDirectory, true);
         scanner.setIncludes(includes);
         scanner.setExcludes(excludes);
@@ -177,6 +192,13 @@ public class SpritePacker extends AbstractMojo {
         return fileArray;
     }
 
+    /**
+     * Load list of image files as a list of ImageNodes
+     *
+     * @param imageFiles    the image files to load
+     * @return              the list of loaded ImageNodes
+     * @throws MojoExecutionException
+     */
     private List<ImageNode> loadImages(List<File> imageFiles) throws MojoExecutionException {
         List<ImageNode> images = new ArrayList<ImageNode>();
         for (File f : imageFiles) {
@@ -185,6 +207,11 @@ public class SpritePacker extends AbstractMojo {
         return images;
     }
 
+    /**
+     * Sort images by max width / height descending
+     *
+     * @param images    list of images to sort
+     */
     private void sortImages(List<ImageNode> images) {
         // Sort by max width / height descending
         Collections.sort(images, new Comparator<ImageNode>() {
@@ -197,11 +224,27 @@ public class SpritePacker extends AbstractMojo {
         });
     }
 
+    /**
+     * Pack a list of images into a spritesheet, adding Nodes to each ImageNode with the coordinates of the image
+     * in the spritesheet
+     *
+     * @param images    the list of images to pack
+     * @param padding   the padding that should be added between images in the spritesheet
+     * @return          the root node of the spritesheet
+     */
     private Node packImages(List<ImageNode> images, Integer padding) {
         PackGrowing packGrowing = new PackGrowing(padding);
         return packGrowing.fit(images);
     }
 
+    /**
+     * Save list of packed images
+     *
+     * @param images    list of packed images to save
+     * @param root      the root node, the dimensions of which determine the spritesheet size
+     * @param output    the output PNG file to write to
+     * @throws MojoExecutionException
+     */
     private void saveSpritesheet(List<ImageNode> images, Node root, File output) throws MojoExecutionException {
         if (!output.getParentFile().exists() && !output.getParentFile().mkdirs()) {
             throw new MojoExecutionException("Couldn't create target directory: " + output.getParentFile());
@@ -210,6 +253,10 @@ public class SpritePacker extends AbstractMojo {
         BufferedImage spritesheet = new BufferedImage(root.getWidth(), root.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = spritesheet.createGraphics();
         for (ImageNode imageNode : images) {
+            if (imageNode.getNode() == null) {
+                throw new MojoExecutionException("Cannot save images because they have not yet been packed.");
+            }
+
             int x = imageNode.getNode().getX(),
                 y = imageNode.getNode().getY(),
                 width = imageNode.getWidth(),
@@ -224,7 +271,15 @@ public class SpritePacker extends AbstractMojo {
         }
     }
 
-    private void saveJSON(List<ImageNode> images, File json, String jsonp_variable) throws MojoExecutionException {
+    /**
+     * Save the list of images as coordinate and dimension data in a JSON file
+     *
+     * @param images        the list of images
+     * @param json          the output JSON file to write to
+     * @param jsonpVariable optional JSON variable name
+     * @throws MojoExecutionException
+     */
+    private void saveJSON(List<ImageNode> images, File json, String jsonpVariable) throws MojoExecutionException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(Feature.INDENT_OUTPUT, true);
 
@@ -254,7 +309,7 @@ public class SpritePacker extends AbstractMojo {
 
             props.put("n", numbers);
 
-            map.put(fnWithoutExtension(n.getFile()), props);
+            map.put(fileNameWithoutExtension(n.getFile()), props);
         }
 
         // Generate json representation of map object
@@ -266,8 +321,8 @@ public class SpritePacker extends AbstractMojo {
         }
 
         // If user has passed in a variable to wrap this in, append it to the front
-        if (jsonp_variable != null) {
-            out = jsonp_variable + " = " + out;
+        if (jsonpVariable != null) {
+            out = jsonpVariable + " = " + out;
         }
 
         // Write it to the designated output file
@@ -280,19 +335,20 @@ public class SpritePacker extends AbstractMojo {
         }
     }
 
-    private static String fnWithoutExtension(File file) {
-        String fn = file.getName();
-        String[] parts = fn.split("\\.(?=[^\\.]+$)");
+    /**
+     * Get the file name without the file extension
+     *
+     * @param file  the file to get the name of
+     * @return      the file name without an extension
+     */
+    private String fileNameWithoutExtension(File file) {
+        String fileName = file.getName();
+        String[] parts = fileName.split("\\.(?=[^\\.]+$)");
         if (parts.length > 0) {
             return parts[0];
         } else {
-            return fn;
+            return fileName;
         }
-    }
-
-    private float secondsSinceStart() {
-        float tookM = (System.currentTimeMillis() - startTime);
-        return tookM / 1000;
     }
 
     public void log(Object message) {

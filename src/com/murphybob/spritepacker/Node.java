@@ -1,6 +1,7 @@
 package com.murphybob.spritepacker;
 
 public class Node {
+
     private Integer x;
     private Integer y;
     private Integer width;
@@ -9,6 +10,14 @@ public class Node {
     private Node right;
     private boolean used = false;
 
+    /**
+     * Create a new Node with the given x position, y position, width and height
+     *
+     * @param xPos      x position
+     * @param yPos      y position
+     * @param width     width
+     * @param height    height
+     */
     public Node(int xPos, int yPos, int width, int height) {
         this.x = xPos;
         this.y = yPos;

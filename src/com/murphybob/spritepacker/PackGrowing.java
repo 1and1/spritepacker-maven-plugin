@@ -7,7 +7,7 @@ public class PackGrowing {
     private Node root;
     private int padding = 0;
 
-    /*
+    /**
      * Creates a PackGrowing instance with the given number of padding pixels
      *
      * @param	padding	padding in pixels
@@ -16,8 +16,8 @@ public class PackGrowing {
         this.padding = padding;
     }
 
-    /*
-     * Adds Node node property to each element in an array of ImageNodes according to how it could be packed into a larger rectangle
+    /**
+     * Adds Node node property to each element in a list of ImageNodes according to how it could be packed into a larger rectangle
      *
      * @param	images	An ArrayList of ImageNodes to be packed. This should be sorted largest to smallest max side for best results.
      */
@@ -41,24 +41,35 @@ public class PackGrowing {
         return root;
     }
 
-    // Find a place for this node
-    private Node findNode(Node nodeIn, int w, int h) {
+    /**
+     * Find an available unused node of the given width and height, starting from nodeIn
+     *
+     * @param nodeIn    the node from which to start the find operation
+     * @param width     width of the node
+     * @param height    height of the node
+     * @return          found node, or null if no available node was found
+     */
+    private Node findNode(Node nodeIn, int width, int height) {
         if (nodeIn.isUsed()) {
-            Node temp = findNode(nodeIn.getRight(), w, h);
-            if (temp != null) {
-                nodeIn = temp;
-                return nodeIn;
-            } else {
-                return findNode(nodeIn.getDown(), w, h);
-            }
-        } else if (w <= nodeIn.getWidth() && h <= nodeIn.getHeight()) {
-            return nodeIn;
-        } else {
-            return null;
+            Node rightAvailable = findNode(nodeIn.getRight(), width, height);
+            return (rightAvailable != null) ? rightAvailable : findNode(nodeIn.getDown(), width, height);
         }
+
+        if (width <= nodeIn.getWidth() && height <= nodeIn.getHeight()) {
+            return nodeIn;
+        }
+
+        return null;
     }
 
-    // Split a node into a node of size w x h and return the remaining space to the pool
+    /**
+     * Split a node into a node of size width x height and return the remaining space to the pool
+     *
+     * @param nodeIn    the node to split
+     * @param width     width
+     * @param height    height
+     * @return          the split node
+     */
     private Node splitNode(Node nodeIn, int width, int height) {
         nodeIn.setUsed(true);
         nodeIn.setDown(new Node(nodeIn.getX(), nodeIn.getY() + height + padding, nodeIn.getWidth(), nodeIn.getHeight() - height - padding));
@@ -66,13 +77,21 @@ public class PackGrowing {
         return nodeIn;
     }
 
-    // Grow the size of the available space to add another block
+    /**
+     * Grow the size of the available space to add another block, and return new available node
+     *
+     * @param width     width needed
+     * @param height    height needed
+     * @return          new available node
+     */
     private Node growNode(int width, int height) {
         boolean canGrowDown = (width <= root.getWidth());
         boolean canGrowRight = (height <= root.getHeight());
 
-        boolean shouldGrowRight = canGrowRight && (root.getHeight() >= (root.getWidth() + width)); // attempt to keep square-ish by growing right when height is much greater than width
-        boolean shouldGrowDown = canGrowDown && (root.getWidth() >= (root.getHeight() + height)); // attempt to keep square-ish by growing down  when width  is much greater than height
+        // attempt to keep square-ish by growing right when height is much greater than width
+        boolean shouldGrowRight = canGrowRight && (root.getHeight() >= (root.getWidth() + width));
+        // attempt to keep square-ish by growing down when width is much greater than height
+        boolean shouldGrowDown = canGrowDown && (root.getWidth() >= (root.getHeight() + height));
 
         if (shouldGrowRight) {
             return growRight(width, height);
@@ -82,12 +101,19 @@ public class PackGrowing {
             return growRight(width, height);
         } else if (canGrowDown) {
             return growDown(width, height);
-        } else {
-            return null; // need to ensure sensible root starting size to avoid this happening
         }
+
+        // need to ensure sensible root starting size to avoid this happening
+        return null;
     }
 
-    // Grow right
+    /**
+     * Grow the root node right, and return new available node
+     *
+     * @param width     width needed
+     * @param height    height needed
+     * @return          new available node
+     */
     private Node growRight(int width, int height) {
         Node newRoot = new Node(root.getX(), root.getY(), root.getWidth() + width + padding, root.getHeight());
         newRoot.setUsed(true);
@@ -98,12 +124,18 @@ public class PackGrowing {
         Node availableNode = findNode(root, width, height);
         if (availableNode != null) {
             return splitNode(availableNode, width, height);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
-    // Grow down
+    /**
+     * Grow the root node down and return new available node
+     *
+     * @param width     width needed
+     * @param height    height needed
+     * @return          new available node
+     */
     private Node growDown(int width, int height) {
         Node newRoot = new Node(root.getX(), root.getY(), root.getWidth(), root.getHeight() + height + padding);
         newRoot.setUsed(true);
@@ -114,9 +146,9 @@ public class PackGrowing {
         Node availableNode = findNode(root, width, height);
         if (availableNode != null) {
             return splitNode(availableNode, width, height);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
 }
