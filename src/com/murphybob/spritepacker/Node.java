@@ -2,10 +2,10 @@ package com.murphybob.spritepacker;
 
 public class Node {
 
-    private Integer x;
-    private Integer y;
-    private Integer width;
-    private Integer height;
+    private int x;
+    private int y;
+    private int width;
+    private int height;
     private Node down;
     private Node right;
     private boolean used = false;
@@ -25,27 +25,27 @@ public class Node {
         this.height = height;
     }
 
-    public Integer getY() {
+    public int getY() {
         return y;
     }
 
-    public Integer getX() {
+    public int getX() {
         return x;
     }
 
-    public Integer getWidth() {
+    public int getWidth() {
         return width;
     }
 
-    public void setWidth(Integer width) {
+    public void setWidth(int width) {
         this.width = width;
     }
 
-    public Integer getHeight() {
+    public int getHeight() {
         return height;
     }
 
-    public void setHeight(Integer height) {
+    public void setHeight(int height) {
         this.height = height;
     }
 
