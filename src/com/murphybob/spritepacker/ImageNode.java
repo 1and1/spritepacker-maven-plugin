@@ -14,8 +14,8 @@ public class ImageNode {
     /**
      * Create an ImageNode from the given file
      *
-     * @param file  the image file
-     * @param image
+     * @param file  the image file path
+     * @param image the image
      * @throws MojoExecutionException
      */
     public ImageNode(File file, BufferedImage image) throws MojoExecutionException {
