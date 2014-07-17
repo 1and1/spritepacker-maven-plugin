@@ -1,38 +1,57 @@
 package com.murphybob.spritepacker;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PackGrowing {
 
+    private final List<NamedImage> images;
+    private final int padding;
+
+    private final Map<NamedImage, Point> positionMap;
     private Node root;
 
     /**
-     * Adds Node node property to each element in a list of ImageNodes according to how it could be packed into a larger rectangle
+     * Creates a new Packing for the given images and padding.
      *
-     * @param images	the list of ImageNodes to be packed.
-     * @param padding   the amount of padding to put between sprites, in pixels
-     * @return          the dimensions of the resulting spritesheet
+     * @param images  the list of ImageNodes to be packed.
+     * @param padding the amount of padding to put between sprites, in pixels
      */
-    public Dimension fit(List<ImageNode> images, int padding) {
+    private PackGrowing(List<NamedImage> images, int padding) {
+        this.images = new ArrayList<>(images);
+        this.padding = padding;
+        positionMap = new IdentityHashMap<>();
+    }
 
+    public static ImagePacking fit(List<NamedImage> images, int padding) {
+        PackGrowing packGrowing = new PackGrowing(images, padding);
+        Dimension dimension = packGrowing.fit();
+        return new ImagePacking(dimension, packGrowing.positionMap);
+    }
+
+    /**
+     * Fits the images.
+     */
+    private Dimension fit() {
         // sort the images, without modifying the sort order of the original image list
-        List<ImageNode> sortedImages = new ArrayList<>(images);
-        sortImages(sortedImages);
+        sortImages(images);
 
-        root = new Node(padding, padding, sortedImages.get(0).getWidth(), sortedImages.get(0).getHeight());
+        root = new Node(padding, this.padding, images.get(0).getWidth(), images.get(0).getHeight());
 
-        for (ImageNode imageNode : sortedImages) {
+        for (NamedImage imageNode : images) {
             final int width = imageNode.getWidth();
             final int height = imageNode.getHeight();
 
             final Node availableNode = findNode(root, width, height);
             final Node newNode = (availableNode == null) ? growNode(width, height, padding) : splitNode(availableNode, width, height, padding);
 
-            imageNode.setNode(newNode);
+            positionMap.put(imageNode, new Point(newNode.getX(), newNode.getY()));
         }
 
         return new Dimension(root.getWidth() + padding * 2, root.getHeight() + padding * 2);
@@ -41,13 +60,13 @@ public class PackGrowing {
     /**
      * Sort images by max width / height descending
      *
-     * @param images    list of images to sort
+     * @param images list of images to sort
      */
-    private void sortImages(List<ImageNode> images) {
+    private void sortImages(List<NamedImage> images) {
         // Sort by max width / height descending
-        Collections.sort(images, new Comparator<ImageNode>() {
+        Collections.sort(images, new Comparator<NamedImage>() {
             @Override
-            public int compare(ImageNode arg0, ImageNode arg1) {
+            public int compare(NamedImage arg0, NamedImage arg1) {
                 int max0 = Math.max(arg0.getWidth(), arg0.getHeight());
                 int max1 = Math.max(arg1.getWidth(), arg1.getHeight());
                 return max1 - max0;
@@ -58,10 +77,10 @@ public class PackGrowing {
     /**
      * Find an available unused node of the given width and height, starting from nodeIn
      *
-     * @param nodeIn    the node from which to start the find operation
-     * @param width     width of the node
-     * @param height    height of the node
-     * @return          found node, or null if no available node was found
+     * @param nodeIn the node from which to start the find operation
+     * @param width  width of the node
+     * @param height height of the node
+     * @return found node, or null if no available node was found
      */
     private Node findNode(Node nodeIn, int width, int height) {
         if (nodeIn.isUsed()) {
@@ -79,10 +98,10 @@ public class PackGrowing {
     /**
      * Split a node into a node of size width x height and return the remaining space to the pool
      *
-     * @param nodeIn    the node to split
-     * @param width     width
-     * @param height    height
-     * @return          the split node
+     * @param nodeIn the node to split
+     * @param width  width
+     * @param height height
+     * @return the split node
      */
     private Node splitNode(Node nodeIn, int width, int height, int padding) {
         nodeIn.setUsed(true);
@@ -94,9 +113,9 @@ public class PackGrowing {
     /**
      * Grow the size of the available space to add another block, and return new available node
      *
-     * @param width     width needed
-     * @param height    height needed
-     * @return          new available node
+     * @param width  width needed
+     * @param height height needed
+     * @return new available node
      */
     private Node growNode(int width, int height, int padding) {
         boolean canGrowDown = (width <= root.getWidth());
@@ -124,9 +143,9 @@ public class PackGrowing {
     /**
      * Grow the root node right, and return new available node
      *
-     * @param width     width needed
-     * @param height    height needed
-     * @return          new available node
+     * @param width  width needed
+     * @param height height needed
+     * @return new available node
      */
     private Node growRight(int width, int height, int padding) {
         Node newRoot = new Node(root.getX(), root.getY(), root.getWidth() + width + padding, root.getHeight());
@@ -146,9 +165,9 @@ public class PackGrowing {
     /**
      * Grow the root node down and return new available node
      *
-     * @param width     width needed
-     * @param height    height needed
-     * @return          new available node
+     * @param width  width needed
+     * @param height height needed
+     * @return new available node
      */
     private Node growDown(int width, int height, int padding) {
         Node newRoot = new Node(root.getX(), root.getY(), root.getWidth(), root.getHeight() + height + padding);

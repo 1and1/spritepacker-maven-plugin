@@ -13,8 +13,8 @@ import org.codehaus.plexus.util.Scanner;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 import javax.imageio.ImageIO;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
@@ -119,24 +119,24 @@ public class SpritePacker extends AbstractMojo {
         log("Loading " + inputs.size() + " images...");
 
         // Load images defined in input array
-        List<ImageNode> images = loadImages(inputs);
+        List<NamedImage> images = loadImages(inputs);
 
         log("Packing images...");
 
         // Add packing information
-        Dimension dim = packImages(images, padding);
+        ImagePacking imagePacking = PackGrowing.fit(images, padding);
 
         log("Saving spritesheet...");
 
         // Put to a spritesheet and write to a file
-        saveSpritesheet(images, dim, output);
+        saveSpritesheet(images, imagePacking, output);
 
         if (json != null) {
 
             log("Saving JSON...");
 
             // Write json(p) data with image coords and dimensions to a file
-            saveJSON(images, json, jsonpVar);
+            saveJSON(images, imagePacking, json, jsonpVar);
 
         }
 
@@ -145,7 +145,7 @@ public class SpritePacker extends AbstractMojo {
 
     }
 
-    private boolean isAnyInputNewerThanAnyOutput(List<File> inputs, List<File> outputs) throws MojoExecutionException {
+    private boolean isAnyInputNewerThanAnyOutput(List<File> inputs, List<File> outputs) {
         assert inputs != null && !inputs.isEmpty();
         assert outputs != null && !outputs.isEmpty();
 
@@ -195,12 +195,12 @@ public class SpritePacker extends AbstractMojo {
      * @return the list of loaded ImageNodes
      * @throws MojoExecutionException
      */
-    private List<ImageNode> loadImages(List<File> imageFiles) throws MojoExecutionException {
-        List<ImageNode> images = new ArrayList<>(imageFiles.size());
+    private List<NamedImage> loadImages(List<File> imageFiles) throws MojoExecutionException {
+        List<NamedImage> images = new ArrayList<>(imageFiles.size());
         for (File f : imageFiles) {
             try {
                 String basename = FileUtils.basename(f.getName());
-                images.add(new ImageNode(ImageIO.read(f), basename));
+                images.add(new NamedImage(ImageIO.read(f), basename));
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to open file: " + f.getAbsolutePath(), e);
             }
@@ -209,42 +209,26 @@ public class SpritePacker extends AbstractMojo {
     }
 
     /**
-     * Pack a list of images into a spritesheet, adding Nodes to each ImageNode with the coordinates of the image
-     * in the spritesheet
-     *
-     * @param images  the list of images to pack
-     * @param padding the padding that should be added between images in the spritesheet
-     * @return the root node of the spritesheet
-     */
-    private Dimension packImages(List<ImageNode> images, Integer padding) {
-        PackGrowing packGrowing = new PackGrowing();
-        return packGrowing.fit(images, padding);
-    }
-
-    /**
      * Save list of packed images
      *
-     * @param images list of packed images to save
-     * @param dim    the dimensions which determine the spritesheet size
-     * @param output the output PNG file to write to
+     * @param images       list of packed images to save
+     * @param imagePacking the result of the packing
+     * @param output       the output PNG file to write to
      * @throws MojoExecutionException
      */
-    private void saveSpritesheet(List<ImageNode> images, Dimension dim, File output) throws MojoExecutionException {
+    private void saveSpritesheet(List<NamedImage> images, ImagePacking imagePacking, File output) throws MojoExecutionException {
         if (!output.getParentFile().exists() && !output.getParentFile().mkdirs()) {
             throw new MojoExecutionException("Couldn't create target directory: " + output.getParentFile());
         }
 
-        BufferedImage spritesheet = new BufferedImage((int) dim.getWidth(), (int) dim.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage spritesheet = new BufferedImage(imagePacking.getWidth(), imagePacking.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = spritesheet.createGraphics();
-        for (ImageNode imageNode : images) {
-            if (imageNode.getNode() == null) {
-                throw new MojoExecutionException("Cannot save images because they have not yet been packed.");
-            }
-
-            int x = imageNode.getNode().getX(),
-                    y = imageNode.getNode().getY(),
-                    width = imageNode.getWidth(),
-                    height = imageNode.getHeight();
+        for (NamedImage imageNode : images) {
+            Point imagePosition = imagePacking.getPosition(imageNode);
+            int x = imagePosition.x;
+            int y = imagePosition.y;
+            int width = imageNode.getWidth();
+            int height = imageNode.getHeight();
             gfx.drawImage(imageNode.getImage(), x, y, x + width, y + height, 0, 0, width, height, null);
         }
 
@@ -263,21 +247,22 @@ public class SpritePacker extends AbstractMojo {
      * @param jsonpVariable optional JSON variable name
      * @throws MojoExecutionException
      */
-    private void saveJSON(List<ImageNode> images, File json, String jsonpVariable) throws MojoExecutionException {
+    private void saveJSON(List<NamedImage> images, ImagePacking imagePacking, File json, String jsonpVariable) throws MojoExecutionException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(Feature.INDENT_OUTPUT, true);
 
         Map<String, Object> map = new HashMap<>();
-        for (ImageNode n : images) {
+        for (NamedImage n : images) {
+            Point position = imagePacking.getPosition(n);
 
             Map<String, Object> props = new HashMap<>();
-            int x = n.getNode().getX(),
-                    y = n.getNode().getY(),
-                    width = n.getWidth(),
-                    height = n.getHeight();
+            int x = position.x;
+            int y = position.y;
+            int width = n.getWidth();
+            int height = n.getHeight();
 
-            String xStr = x == 0 ? "0" : "-" + x + "px",
-                    yStr = y == 0 ? "0" : "-" + y + "px";
+            String xStr = x == 0 ? "0" : "-" + x + "px";
+            String yStr = y == 0 ? "0" : "-" + y + "px";
 
             props.put("x", xStr);
             props.put("y", yStr);

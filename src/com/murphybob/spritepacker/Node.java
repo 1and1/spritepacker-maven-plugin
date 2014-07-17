@@ -62,7 +62,7 @@ public class Node {
     }
 
     public void setUsed(boolean used) {
-        this.used = used;
+        this.used = true;
     }
 
     public String toString() {
