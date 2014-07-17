@@ -20,7 +20,7 @@ public class PackGrowing {
     public Dimension fit(List<ImageNode> images, int padding) {
 
         // sort the images, without modifying the sort order of the original image list
-        List<ImageNode> sortedImages = new ArrayList<ImageNode>(images);
+        List<ImageNode> sortedImages = new ArrayList<>(images);
         sortImages(sortedImages);
 
         root = new Node(padding, padding, sortedImages.get(0).getWidth(), sortedImages.get(0).getHeight());

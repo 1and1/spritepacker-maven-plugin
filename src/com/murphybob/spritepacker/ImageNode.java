@@ -1,12 +1,9 @@
 package com.murphybob.spritepacker;
 
-import org.apache.maven.plugin.MojoExecutionException;
-
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 public class ImageNode {
-    private final File file;
+    private final String name;
     private final BufferedImage image;
 
     private Node node;
@@ -14,17 +11,16 @@ public class ImageNode {
     /**
      * Create an ImageNode from the given file
      *
-     * @param file  the image file path
      * @param image the image
-     * @throws MojoExecutionException
+     * @param name the name of the image
      */
-    public ImageNode(File file, BufferedImage image) throws MojoExecutionException {
-        this.file = file;
+    public ImageNode(BufferedImage image, String name) {
+        this.name = name;
         this.image = image;
     }
 
-    public File getFile() {
-        return file;
+    public String getName() {
+        return name;
     }
 
     public BufferedImage getImage() {
@@ -48,7 +44,6 @@ public class ImageNode {
     }
 
     public String toString() {
-        return file.getPath() + "\n" + node;
+        return name + "\n" + node;
     }
-
 }

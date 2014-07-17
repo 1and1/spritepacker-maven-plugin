@@ -8,6 +8,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig.Feature;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.Scanner;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
@@ -97,8 +98,7 @@ public class SpritePacker extends AbstractMojo {
 
         long startTime = System.currentTimeMillis();
 
-        // Load input files into an ArrayList
-        List<File> inputs = toFileList(sourceDirectory, includes, excludes);
+        List<File> inputs = scanPaths(sourceDirectory, includes, excludes);
 
         // Check if there are actually any inputs to do anything with
         if (inputs.size() == 0) {
@@ -111,10 +111,7 @@ public class SpritePacker extends AbstractMojo {
 
         // If force overwrite not specified, and the JSON file is not being created for the first time,
         // and the output files were modified more recently than the input files, return.
-        if (forceOverwrite == false &&
-            (json == null || json.exists()) &&
-            getLastModified(inputs) < getLastModified(outputs)) {
-
+        if (!(forceOverwrite || isAnyInputNewerThanAnyOutput(inputs, outputs))) {
             log("No source images modified.");
             return;
         }
@@ -148,56 +145,62 @@ public class SpritePacker extends AbstractMojo {
 
     }
 
-    /**
-     * Get the most recent modified date from a list of files
-     *
-     * @param files     the list of files
-     * @return          the most recent modified date
-     */
-    private long getLastModified(List<File> files) {
-        long modified = 0;
-        for (File f : files) {
-            if (f != null) {
-                modified = Math.max(modified, f.lastModified());
+    private boolean isAnyInputNewerThanAnyOutput(List<File> inputs, List<File> outputs) throws MojoExecutionException {
+        assert inputs != null && !inputs.isEmpty();
+        assert outputs != null && !outputs.isEmpty();
+
+        long newestInput = 0L;
+        for (File input : inputs) {
+            if (input != null) {
+                newestInput = Math.max(input.lastModified(), newestInput);
             }
         }
-        return modified;
+
+        long oldestOutput = newestInput;
+        for (File output : outputs) {
+            if (output != null) {
+                oldestOutput = Math.min(output.lastModified(), oldestOutput);
+            }
+        }
+
+        return newestInput >= oldestOutput;
     }
 
     /**
      * Create a list of files within a source directory, including subdirectories,
      * that match the includes and excludes criteria
      *
-     * @param sourceDirectory   the source directory
-     * @param includes          criterion for files to include
-     * @param excludes          criterion for files to exclude
-     * @return                  list of matching files
+     * @param sourceDirectory the source directory
+     * @param includes        criterion for files to include
+     * @param excludes        criterion for files to exclude
+     * @return list of matching files
      */
-    private List<File> toFileList(File sourceDirectory, String[] includes, String[] excludes) {
+    private List<File> scanPaths(File sourceDirectory, String[] includes, String[] excludes) {
         Scanner scanner = buildContext.newScanner(sourceDirectory, true);
         scanner.setIncludes(includes);
         scanner.setExcludes(excludes);
         scanner.scan();
-        String[] files = scanner.getIncludedFiles();
-        List<File> fileArray = new ArrayList<File>(files.length);
-        for (String f : files) {
-            fileArray.add(new File(sourceDirectory, f));
+        String[] fileNames = scanner.getIncludedFiles();
+        List<File> paths = new ArrayList<>(fileNames.length);
+        for (String fileName : fileNames) {
+            paths.add(new File(sourceDirectory, fileName));
         }
-        return fileArray;
+        return paths;
     }
 
     /**
      * Load list of image files as a list of ImageNodes
      *
-     * @param imageFiles    the image files to load
-     * @return              the list of loaded ImageNodes
+     * @param imageFiles the image files to load
+     * @return the list of loaded ImageNodes
      * @throws MojoExecutionException
      */
     private List<ImageNode> loadImages(List<File> imageFiles) throws MojoExecutionException {
-        List<ImageNode> images = new ArrayList<ImageNode>(imageFiles.size());
+        List<ImageNode> images = new ArrayList<>(imageFiles.size());
         for (File f : imageFiles) {
             try {
-                images.add(new ImageNode(f, ImageIO.read(f)));
+                String basename = FileUtils.basename(f.getName());
+                images.add(new ImageNode(ImageIO.read(f), basename));
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to open file: " + f.getAbsolutePath(), e);
             }
@@ -209,9 +212,9 @@ public class SpritePacker extends AbstractMojo {
      * Pack a list of images into a spritesheet, adding Nodes to each ImageNode with the coordinates of the image
      * in the spritesheet
      *
-     * @param images    the list of images to pack
-     * @param padding   the padding that should be added between images in the spritesheet
-     * @return          the root node of the spritesheet
+     * @param images  the list of images to pack
+     * @param padding the padding that should be added between images in the spritesheet
+     * @return the root node of the spritesheet
      */
     private Dimension packImages(List<ImageNode> images, Integer padding) {
         PackGrowing packGrowing = new PackGrowing();
@@ -221,9 +224,9 @@ public class SpritePacker extends AbstractMojo {
     /**
      * Save list of packed images
      *
-     * @param images    list of packed images to save
-     * @param root      the root node, the dimensions of which determine the spritesheet size
-     * @param output    the output PNG file to write to
+     * @param images list of packed images to save
+     * @param dim    the dimensions which determine the spritesheet size
+     * @param output the output PNG file to write to
      * @throws MojoExecutionException
      */
     private void saveSpritesheet(List<ImageNode> images, Dimension dim, File output) throws MojoExecutionException {
@@ -231,8 +234,7 @@ public class SpritePacker extends AbstractMojo {
             throw new MojoExecutionException("Couldn't create target directory: " + output.getParentFile());
         }
 
-
-        BufferedImage spritesheet = new BufferedImage((int)dim.getWidth(), (int)dim.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage spritesheet = new BufferedImage((int) dim.getWidth(), (int) dim.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = spritesheet.createGraphics();
         for (ImageNode imageNode : images) {
             if (imageNode.getNode() == null) {
@@ -240,9 +242,9 @@ public class SpritePacker extends AbstractMojo {
             }
 
             int x = imageNode.getNode().getX(),
-                y = imageNode.getNode().getY(),
-                width = imageNode.getWidth(),
-                height = imageNode.getHeight();
+                    y = imageNode.getNode().getY(),
+                    width = imageNode.getWidth(),
+                    height = imageNode.getHeight();
             gfx.drawImage(imageNode.getImage(), x, y, x + width, y + height, 0, 0, width, height, null);
         }
 
@@ -265,17 +267,17 @@ public class SpritePacker extends AbstractMojo {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(Feature.INDENT_OUTPUT, true);
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         for (ImageNode n : images) {
 
-            Map<String, Object> props = new HashMap<String, Object>();
+            Map<String, Object> props = new HashMap<>();
             int x = n.getNode().getX(),
-                y = n.getNode().getY(),
-                width = n.getWidth(),
-                height = n.getHeight();
+                    y = n.getNode().getY(),
+                    width = n.getWidth(),
+                    height = n.getHeight();
 
             String xStr = x == 0 ? "0" : "-" + x + "px",
-                   yStr = y == 0 ? "0" : "-" + y + "px";
+                    yStr = y == 0 ? "0" : "-" + y + "px";
 
             props.put("x", xStr);
             props.put("y", yStr);
@@ -283,7 +285,7 @@ public class SpritePacker extends AbstractMojo {
             props.put("h", "" + height + "px");
             props.put("xy", xStr + " " + yStr);
 
-            Map<String, Integer> numbers = new HashMap<String, Integer>();
+            Map<String, Integer> numbers = new HashMap<>();
             numbers.put("x", x);
             numbers.put("y", y);
             numbers.put("w", width);
@@ -291,11 +293,11 @@ public class SpritePacker extends AbstractMojo {
 
             props.put("n", numbers);
 
-            map.put(fileNameWithoutExtension(n.getFile()), props);
+            map.put(n.getName(), props);
         }
 
         // Generate json representation of map object
-        String out = "";
+        String out;
         try {
             out = mapper.writeValueAsString(map);
         } catch (Exception e) {
@@ -314,22 +316,6 @@ public class SpritePacker extends AbstractMojo {
             fw.close();
         } catch (IOException e) {
             throw new MojoExecutionException("Couldn't write JSON: " + json, e);
-        }
-    }
-
-    /**
-     * Get the file name without the file extension
-     *
-     * @param file  the file to get the name of
-     * @return      the file name without an extension
-     */
-    private String fileNameWithoutExtension(File file) {
-        String fileName = file.getName();
-        String[] parts = fileName.split("\\.(?=[^\\.]+$)");
-        if (parts.length > 0) {
-            return parts[0];
-        } else {
-            return fileName;
         }
     }
 
