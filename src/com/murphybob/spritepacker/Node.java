@@ -2,13 +2,13 @@ package com.murphybob.spritepacker;
 
 public class Node {
 
-    private Integer x;
-    private Integer y;
-    private Integer width;
-    private Integer height;
+    private final int x;
+    private final int y;
+    private int width;
+    private int height;
     private Node down;
     private Node right;
-    private boolean used = false;
+    private boolean used;
 
     /**
      * Create a new Node with the given x position, y position, width and height
@@ -25,15 +25,15 @@ public class Node {
         this.height = height;
     }
 
-    public Integer getY() {
+    public int getY() {
         return y;
     }
 
-    public Integer getX() {
+    public int getX() {
         return x;
     }
 
-    public Integer getWidth() {
+    public int getWidth() {
         return width;
     }
 
