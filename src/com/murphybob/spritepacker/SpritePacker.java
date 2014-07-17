@@ -1,29 +1,26 @@
 package com.murphybob.spritepacker;
 
+import com.murphybob.spritepacker.converters.CssPackingConverter;
+import com.murphybob.spritepacker.converters.JsonPackingConverter;
+import com.murphybob.spritepacker.converters.LessPackingConverter;
+import com.murphybob.spritepacker.converters.PackingConverter;
+import com.murphybob.spritepacker.converters.SpritesheetPackingConverter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig.Feature;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.Scanner;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 import javax.imageio.ImageIO;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -41,7 +38,7 @@ public class SpritePacker extends AbstractMojo {
     private File output;
 
     /**
-     * Output json(p) description file containing coordinates and dimensions.
+     * Optional output json(p) description file containing coordinates and dimensions.
      */
     @Parameter
     private File json;
@@ -55,6 +52,18 @@ public class SpritePacker extends AbstractMojo {
      */
     @Parameter
     private String jsonpVar;
+
+    /**
+     * Optional output CSS file containing coordinates and dimensions.
+     */
+    @Parameter
+    private File css;
+
+    /**
+     * Optional output LESS file containing coordinates and dimensions.
+     */
+    @Parameter
+    private File less;
 
     /**
      * The source directory containing the LESS sources.
@@ -126,22 +135,17 @@ public class SpritePacker extends AbstractMojo {
         // Add packing information
         ImagePacking imagePacking = PackGrowing.fit(images, padding);
 
-        log("Saving spritesheet...");
+        List<PackingConverter> consumers = Arrays.asList(new SpritesheetPackingConverter(output),
+                                                         new JsonPackingConverter(json, jsonpVar),
+                                                         new CssPackingConverter(css),
+                                                         new LessPackingConverter(less));
 
-        // Put to a spritesheet and write to a file
-        saveSpritesheet(images, imagePacking, output);
-
-        if (json != null) {
-
-            log("Saving JSON...");
-
-            // Write json(p) data with image coords and dimensions to a file
-            saveJSON(images, imagePacking, json, jsonpVar);
-
+        for (PackingConverter consumer : consumers) {
+            consumer.convert(imagePacking, getLog());
         }
 
-        float took = (System.currentTimeMillis() - startTime) / 1000;
-        log("Done - took " + took + "s!");
+        long took = System.currentTimeMillis() - startTime;
+        log("Done - took " + took + "ms!");
 
     }
 
@@ -206,102 +210,6 @@ public class SpritePacker extends AbstractMojo {
             }
         }
         return images;
-    }
-
-    /**
-     * Save list of packed images
-     *
-     * @param images       list of packed images to save
-     * @param imagePacking the result of the packing
-     * @param output       the output PNG file to write to
-     * @throws MojoExecutionException
-     */
-    private void saveSpritesheet(List<NamedImage> images, ImagePacking imagePacking, File output) throws MojoExecutionException {
-        if (!output.getParentFile().exists() && !output.getParentFile().mkdirs()) {
-            throw new MojoExecutionException("Couldn't create target directory: " + output.getParentFile());
-        }
-
-        BufferedImage spritesheet = new BufferedImage(imagePacking.getWidth(), imagePacking.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D gfx = spritesheet.createGraphics();
-        for (NamedImage imageNode : images) {
-            Point imagePosition = imagePacking.getPosition(imageNode);
-            int x = imagePosition.x;
-            int y = imagePosition.y;
-            int width = imageNode.getWidth();
-            int height = imageNode.getHeight();
-            gfx.drawImage(imageNode.getImage(), x, y, x + width, y + height, 0, 0, width, height, null);
-        }
-
-        try {
-            ImageIO.write(spritesheet, "png", output);
-        } catch (IOException e) {
-            throw new MojoExecutionException("Couldn't write spritesheet: " + output, e);
-        }
-    }
-
-    /**
-     * Save the list of images as coordinate and dimension data in a JSON file
-     *
-     * @param images        the list of images
-     * @param json          the output JSON file to write to
-     * @param jsonpVariable optional JSON variable name
-     * @throws MojoExecutionException
-     */
-    private void saveJSON(List<NamedImage> images, ImagePacking imagePacking, File json, String jsonpVariable) throws MojoExecutionException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(Feature.INDENT_OUTPUT, true);
-
-        Map<String, Object> map = new HashMap<>();
-        for (NamedImage n : images) {
-            Point position = imagePacking.getPosition(n);
-
-            Map<String, Object> props = new HashMap<>();
-            int x = position.x;
-            int y = position.y;
-            int width = n.getWidth();
-            int height = n.getHeight();
-
-            String xStr = x == 0 ? "0" : "-" + x + "px";
-            String yStr = y == 0 ? "0" : "-" + y + "px";
-
-            props.put("x", xStr);
-            props.put("y", yStr);
-            props.put("w", "" + width + "px");
-            props.put("h", "" + height + "px");
-            props.put("xy", xStr + " " + yStr);
-
-            Map<String, Integer> numbers = new HashMap<>();
-            numbers.put("x", x);
-            numbers.put("y", y);
-            numbers.put("w", width);
-            numbers.put("h", height);
-
-            props.put("n", numbers);
-
-            map.put(n.getName(), props);
-        }
-
-        // Generate json representation of map object
-        String out;
-        try {
-            out = mapper.writeValueAsString(map);
-        } catch (Exception e) {
-            throw new MojoExecutionException("Couldn't generate JSON data", e);
-        }
-
-        // If user has passed in a variable to wrap this in, append it to the front
-        if (jsonpVariable != null) {
-            out = jsonpVariable + " = " + out;
-        }
-
-        // Write it to the designated output file
-        try {
-            FileWriter fw = new FileWriter(json);
-            fw.write(out);
-            fw.close();
-        } catch (IOException e) {
-            throw new MojoExecutionException("Couldn't write JSON: " + json, e);
-        }
     }
 
     public void log(Object message) {

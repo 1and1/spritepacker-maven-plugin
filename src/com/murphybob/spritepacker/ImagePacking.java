@@ -2,6 +2,7 @@ package com.murphybob.spritepacker;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -41,5 +42,9 @@ public class ImagePacking {
                ", width=" + width +
                ", height=" + height +
                '}';
+    }
+
+    public Collection<NamedImage> getImages() {
+        return positionMap.keySet();
     }
 }
