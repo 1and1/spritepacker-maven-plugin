@@ -185,7 +185,7 @@ public class SpritePacker extends AbstractMojo {
         scanner.setExcludes(excludes);
         scanner.scan();
         String[] files = scanner.getIncludedFiles();
-        List<File> fileArray = new ArrayList<File>();
+        List<File> fileArray = new ArrayList<File>(files.length);
         for (String f : files) {
             fileArray.add(new File(sourceDirectory, f));
         }
