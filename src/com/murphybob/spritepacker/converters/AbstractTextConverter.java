@@ -11,34 +11,46 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 /**
- * TODO mklein: document class purpose
- * <p/>
+ * An abstract PackingConverter that saves the output of the subclass's implemented createOutput method to a text file.
  *
  * @author mklein
  */
 public abstract class AbstractTextConverter implements PackingConverter {
     private final File file;
-    private final String name;
+    private final String type;
 
-    protected AbstractTextConverter(File file, String name) {
+    /**
+     * Create an AbstractTextConverter that saves to the specified file, and specify the type of output file for logging purposes.
+     *
+     * @param file  the output file to write to
+     * @param type  the type of file to convert to, for logging purposes
+     */
+    protected AbstractTextConverter(File file, String type) {
         this.file = file;
-        this.name = name;
+        this.type = type;
     }
 
+    /**
+     * Convert the specified ImagePacking to a text file.
+     *
+     * @param imagePacking  the ImagePacking to convert
+     * @param log           the log object to use
+     * @throws MojoExecutionException
+     */
     @Override
     public void convert(ImagePacking imagePacking, Log log) throws MojoExecutionException {
         if (file == null) {
-            log.info("No " + name + " output file specified.");
+            log.info("No " + type + " output file specified.");
             return;
         }
 
-        log.info("Generating " + name + " output...");
+        log.info("Generating " + type + " output...");
 
         String output = createOutput(imagePacking, log);
 
         try {
             try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath(), Charset.forName("UTF-8"))) {
-                log.info("Saving " + name + "...");
+                log.info("Saving " + type + "...");
                 bufferedWriter.write(output);
             }
         } catch (IOException e) {
@@ -48,13 +60,20 @@ public abstract class AbstractTextConverter implements PackingConverter {
     }
 
     /**
+     * Create output text as String based on an ImagePacking.
      *
-     * @param imagePacking
-     * @param log
-     * @return  output of the converter; null if the
+     * @param imagePacking  the ImagePacking to convert
+     * @param log           the log object to use
+     * @return              String containing the text file contents
      */
     protected abstract String createOutput(ImagePacking imagePacking, Log log) throws MojoExecutionException;
 
+    /**
+     * Convert an integer into a String pixel value, leaving off the "px" for values of 0.
+     *
+     * @param i     the int value to convert
+     * @return      the pixel value
+     */
     protected String intToPixel(int i) {
         return i == 0 ? "0" : i + "px";
     }

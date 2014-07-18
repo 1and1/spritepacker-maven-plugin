@@ -9,6 +9,11 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * An algorithm for packing images into a spritesheet
+ *
+ * @author Robert Murphy
+ */
 public class PackGrowing {
 
     private final List<NamedImage> images;
@@ -18,9 +23,9 @@ public class PackGrowing {
     private Node root;
 
     /**
-     * Creates a new Packing for the given images and padding.
+     * Creates a new PackGrowing for the given images and padding.
      *
-     * @param images  the list of ImageNodes to be packed.
+     * @param images  the list of images to be packed
      * @param padding the amount of padding to put between sprites, in pixels
      */
     private PackGrowing(List<NamedImage> images, int padding) {
@@ -29,6 +34,14 @@ public class PackGrowing {
         positionMap = new IdentityHashMap<>();
     }
 
+    /**
+     * Fit the images and return an ImagePacking containing the outer dimensions
+     * of the spritesheet and a Map of images to positions.
+     *
+     * @param images    the list of images to be packed
+     * @param padding   the amount of padding to put between sprites, in pixels
+     * @return          the resulting ImagePacking, containing dimension and image position data
+     */
     public static ImagePacking fit(List<NamedImage> images, int padding) {
         PackGrowing packGrowing = new PackGrowing(images, padding);
         Dimension dimension = packGrowing.fit();
@@ -36,7 +49,9 @@ public class PackGrowing {
     }
 
     /**
-     * Fits the images.
+     * Fits the images and return the outer dimensions of the resulting spritesheet.
+     *
+     * @return  the outer dimensions of the spritesheet after fitting the images
      */
     private Dimension fit() {
         // sort the images, without modifying the sort order of the original image list
@@ -44,14 +59,14 @@ public class PackGrowing {
 
         root = new Node(padding, this.padding, images.get(0).getWidth(), images.get(0).getHeight());
 
-        for (NamedImage imageNode : images) {
-            final int width = imageNode.getWidth();
-            final int height = imageNode.getHeight();
+        for (NamedImage image : images) {
+            final int width = image.getWidth();
+            final int height = image.getHeight();
 
             final Node availableNode = findNode(root, width, height);
             final Node newNode = (availableNode == null) ? growNode(width, height, padding) : splitNode(availableNode, width, height, padding);
 
-            positionMap.put(imageNode, new Point(newNode.getX(), newNode.getY()));
+            positionMap.put(image, new Point(newNode.getX(), newNode.getY()));
         }
 
         return new Dimension(root.getWidth() + padding * 2, root.getHeight() + padding * 2);
@@ -80,7 +95,7 @@ public class PackGrowing {
      * @param nodeIn the node from which to start the find operation
      * @param width  width of the node
      * @param height height of the node
-     * @return found node, or null if no available node was found
+     * @return       found node, or null if no available node was found
      */
     private Node findNode(Node nodeIn, int width, int height) {
         if (nodeIn.isUsed()) {
@@ -101,7 +116,7 @@ public class PackGrowing {
      * @param nodeIn the node to split
      * @param width  width
      * @param height height
-     * @return the split node
+     * @return       the split node
      */
     private Node splitNode(Node nodeIn, int width, int height, int padding) {
         nodeIn.setUsed(true);
@@ -115,7 +130,7 @@ public class PackGrowing {
      *
      * @param width  width needed
      * @param height height needed
-     * @return new available node
+     * @return       new available node
      */
     private Node growNode(int width, int height, int padding) {
         boolean canGrowDown = (width <= root.getWidth());
@@ -145,7 +160,7 @@ public class PackGrowing {
      *
      * @param width  width needed
      * @param height height needed
-     * @return new available node
+     * @return       new available node
      */
     private Node growRight(int width, int height, int padding) {
         Node newRoot = new Node(root.getX(), root.getY(), root.getWidth() + width + padding, root.getHeight());
@@ -167,7 +182,7 @@ public class PackGrowing {
      *
      * @param width  width needed
      * @param height height needed
-     * @return new available node
+     * @return       new available node
      */
     private Node growDown(int width, int height, int padding) {
         Node newRoot = new Node(root.getX(), root.getY(), root.getWidth(), root.getHeight() + height + padding);

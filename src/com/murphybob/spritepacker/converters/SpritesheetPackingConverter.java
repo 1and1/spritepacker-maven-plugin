@@ -13,24 +13,29 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * TODO mklein: document class purpose
- * <p/>
+ * Converts ImagePacking to a spritesheet PNG file.
  *
- * @author mklein
+ * @author Robert Murphy, mklein
  */
 public class SpritesheetPackingConverter implements PackingConverter {
 
     private final File output;
 
+    /**
+     * Create a spritesheet converter with output file output.
+     *
+     * @param output
+     */
     public SpritesheetPackingConverter(File output) {
         this.output = output;
     }
 
     /**
-     * Save list of packed images
+     * Convert ImagePacking to a spritesheet image and save as a PNG file.
      *
-     * @param imagePacking the result of the packing
-     * @throws org.apache.maven.plugin.MojoExecutionException
+     * @param imagePacking  the ImagePacking to convert
+     * @param log           the log object to use
+     * @throws MojoExecutionException
      */
     @Override
     public void convert(ImagePacking imagePacking, Log log) throws MojoExecutionException {
@@ -46,13 +51,13 @@ public class SpritesheetPackingConverter implements PackingConverter {
 
         BufferedImage spritesheet = new BufferedImage(imagePacking.getWidth(), imagePacking.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = spritesheet.createGraphics();
-        for (NamedImage imageNode : imagePacking.getImages()) {
-            Point imagePosition = imagePacking.getPosition(imageNode);
+        for (NamedImage image : imagePacking.getImages()) {
+            Point imagePosition = imagePacking.getPosition(image);
             int x = imagePosition.x;
             int y = imagePosition.y;
-            int width = imageNode.getWidth();
-            int height = imageNode.getHeight();
-            gfx.drawImage(imageNode.getImage(), x, y, x + width, y + height, 0, 0, width, height, null);
+            int width = image.getWidth();
+            int height = image.getHeight();
+            gfx.drawImage(image.getImage(), x, y, x + width, y + height, 0, 0, width, height, null);
         }
 
         try {

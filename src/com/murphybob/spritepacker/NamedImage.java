@@ -2,12 +2,17 @@ package com.murphybob.spritepacker;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * A class to hold a BufferedImage along with its name.
+ *
+ * @author Robert Murphy, mklein
+ */
 public class NamedImage {
     private final String name;
     private final BufferedImage image;
 
     /**
-     * Create an ImageNode from the given file
+     * Create a NamedImage that contains an image and a name.
      *
      * @param image the image
      * @param name the name of the image
@@ -35,7 +40,7 @@ public class NamedImage {
 
     @Override
     public String toString() {
-        return "ImageNode{" +
+        return "NamedImage{" +
                "name='" + name + '\'' +
                ", image=" + image +
                '}';

@@ -1,5 +1,10 @@
 package com.murphybob.spritepacker;
 
+/**
+ * A node in the PackGrowing tree
+ *
+ * @author Robert Murphy, mklein
+ */
 public class Node {
 
     private final int x;

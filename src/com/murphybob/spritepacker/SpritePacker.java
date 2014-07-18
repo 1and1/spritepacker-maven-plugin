@@ -32,19 +32,19 @@ import java.util.List;
 public class SpritePacker extends AbstractMojo {
 
     /**
-     * Output spritesheet image name
+     * Output spritesheet image file
      */
     @Parameter(required = true)
     private File output;
 
     /**
-     * Optional output json(p) description file containing coordinates and dimensions.
+     * Optional output JSON(P) description file containing coordinates and dimensions
      */
     @Parameter
     private File json;
 
     /**
-     * Optional padding variable for jsonp files
+     * Optional variable for JSONP files
      * e.g.
      * { image: {...} }
      * becomes
@@ -54,19 +54,31 @@ public class SpritePacker extends AbstractMojo {
     private String jsonpVar;
 
     /**
-     * Optional output CSS file containing coordinates and dimensions.
+     * Optional output CSS file containing coordinates and dimensions, where each icon is saved as its own class.
      */
     @Parameter
     private File css;
 
     /**
-     * Optional output LESS file containing coordinates and dimensions.
+     * Optional CSS class prefix. Default value is "icon".
+     */
+    @Parameter(defaultValue = "icon")
+    private String cssPrefix;
+
+    /**
+     * Optional output LESS file containing coordinates and dimensions, where each icon is saved as position and size mixins.
      */
     @Parameter
     private File less;
 
     /**
-     * The source directory containing the LESS sources.
+     * Optional LESS namespace name. Default value is "icon".
+     */
+    @Parameter(defaultValue = "icon")
+    private String lessNamespace;
+
+    /**
+     * The source directory containing the icons
      */
     @Parameter(required = true)
     private File sourceDirectory;
@@ -116,7 +128,7 @@ public class SpritePacker extends AbstractMojo {
         }
 
         // Load output files into an ArrayList
-        List<File> outputs = Arrays.asList(output, json);
+        List<File> outputs = Arrays.asList(output, json, css, less);
 
         // If force overwrite not specified, and the JSON file is not being created for the first time,
         // and the output files were modified more recently than the input files, return.
@@ -137,8 +149,8 @@ public class SpritePacker extends AbstractMojo {
 
         List<PackingConverter> consumers = Arrays.asList(new SpritesheetPackingConverter(output),
                                                          new JsonPackingConverter(json, jsonpVar),
-                                                         new CssPackingConverter(css),
-                                                         new LessPackingConverter(less));
+                                                         new CssPackingConverter(css, cssPrefix),
+                                                         new LessPackingConverter(less, lessNamespace));
 
         for (PackingConverter consumer : consumers) {
             consumer.convert(imagePacking, getLog());
@@ -149,6 +161,14 @@ public class SpritePacker extends AbstractMojo {
 
     }
 
+    /**
+     * Check if any input is newer than any output. This also takes output files into account that do not yet exist,
+     * as they have a lastModified time of 0L and are thus automatically "older" than any input files.
+     *
+     * @param inputs    the list of input files
+     * @param outputs   the list of output files
+     * @return          whether any input file was newer than any output file
+     */
     private boolean isAnyInputNewerThanAnyOutput(List<File> inputs, List<File> outputs) {
         assert inputs != null && !inputs.isEmpty();
         assert outputs != null && !outputs.isEmpty();
@@ -177,7 +197,7 @@ public class SpritePacker extends AbstractMojo {
      * @param sourceDirectory the source directory
      * @param includes        criterion for files to include
      * @param excludes        criterion for files to exclude
-     * @return list of matching files
+     * @return                list of matching files
      */
     private List<File> scanPaths(File sourceDirectory, String[] includes, String[] excludes) {
         Scanner scanner = buildContext.newScanner(sourceDirectory, true);
@@ -193,17 +213,17 @@ public class SpritePacker extends AbstractMojo {
     }
 
     /**
-     * Load list of image files as a list of ImageNodes
+     * Load list of image files as a list of NamedImages
      *
      * @param imageFiles the image files to load
-     * @return the list of loaded ImageNodes
+     * @return           the list of loaded NamedImages
      * @throws MojoExecutionException
      */
     private List<NamedImage> loadImages(List<File> imageFiles) throws MojoExecutionException {
         List<NamedImage> images = new ArrayList<>(imageFiles.size());
         for (File f : imageFiles) {
             try {
-                String basename = FileUtils.basename(f.getName());
+                String basename = FileUtils.removeExtension(f.getName());
                 images.add(new NamedImage(ImageIO.read(f), basename));
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to open file: " + f.getAbsolutePath(), e);
