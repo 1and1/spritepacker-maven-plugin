@@ -34,6 +34,7 @@ public class JsonPackingConverter extends AbstractTextConverter {
     }
 
     /**
+     *Create output JSON string based on an ImagePacking.
      *
      * @param imagePacking  the ImagePacking to convert
      * @param log           the log object to use

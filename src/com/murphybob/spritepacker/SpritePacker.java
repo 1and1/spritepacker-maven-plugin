@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Packs spritesheets from supplied images.
  *
- * @author Robert Murphy
+ * @author Robert Murphy, mklein, ssiegler
  */
 @Mojo(name = "compile", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class SpritePacker extends AbstractMojo {
