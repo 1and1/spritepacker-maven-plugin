@@ -1,10 +1,10 @@
-package com.murphybob.spritepacker;
+package net.oneandone.maven.plugins.spritepacker;
 
-import com.murphybob.spritepacker.converters.CssPackingConverter;
-import com.murphybob.spritepacker.converters.JsonPackingConverter;
-import com.murphybob.spritepacker.converters.LessPackingConverter;
-import com.murphybob.spritepacker.converters.PackingConverter;
-import com.murphybob.spritepacker.converters.SpritesheetPackingConverter;
+import net.oneandone.maven.plugins.spritepacker.converters.CssPackingConverter;
+import net.oneandone.maven.plugins.spritepacker.converters.JsonPackingConverter;
+import net.oneandone.maven.plugins.spritepacker.converters.LessPackingConverter;
+import net.oneandone.maven.plugins.spritepacker.converters.PackingConverter;
+import net.oneandone.maven.plugins.spritepacker.converters.SpritesheetPackingConverter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;

@@ -1,4 +1,4 @@
-package com.murphybob.spritepacker;
+package net.oneandone.maven.plugins.spritepacker;
 
 import java.awt.Dimension;
 import java.awt.Point;
