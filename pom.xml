@@ -12,6 +12,19 @@
     <packaging>maven-plugin</packaging>
 
     <name>spritepacker-maven-plugin Maven Mojo</name>
+    <description>A maven plugin to generate a single combined image (spritesheet) from multiple source images.</description>
+    <url>http://1and1.github.io/spritepacker-maven-plugin/</url>
+
+    <scm>
+        <connection>scm:git:git://github.com/1and1/spritepacker-maven-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/1and1/spritepacker-maven-plugin.git</developerConnection>
+        <url>https://github.com/1and1/spritepacker-maven-plugin/</url>
+        <tag>HEAD</tag>
+    </scm>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/1and1/spritepacker-maven-plugin/issues</url>
+    </issueManagement>
 
     <properties>
         <oneandone.java.source>1.7</oneandone.java.source>
