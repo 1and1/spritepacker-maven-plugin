@@ -16,6 +16,15 @@ import java.util.Map;
  */
 public class PackGrowing {
 
+    private static final Comparator<NamedImage> IMAGE_ORDER = new Comparator<NamedImage>() {
+        @Override
+        public int compare(NamedImage arg0, NamedImage arg1) {
+            int max0 = Math.max(arg0.getWidth(), arg0.getHeight());
+            int max1 = Math.max(arg1.getWidth(), arg1.getHeight());
+            return max1 - max0;
+        }
+    };
+
     private final List<NamedImage> images;
     private final int padding;
 
@@ -79,14 +88,7 @@ public class PackGrowing {
      */
     private void sortImages(List<NamedImage> images) {
         // Sort by max width / height descending
-        Collections.sort(images, new Comparator<NamedImage>() {
-            @Override
-            public int compare(NamedImage arg0, NamedImage arg1) {
-                int max0 = Math.max(arg0.getWidth(), arg0.getHeight());
-                int max1 = Math.max(arg1.getWidth(), arg1.getHeight());
-                return max1 - max0;
-            }
-        });
+        Collections.sort(images, IMAGE_ORDER);
     }
 
     /**
@@ -133,13 +135,13 @@ public class PackGrowing {
      * @return       new available node
      */
     private Node growNode(int width, int height, int padding) {
-        boolean canGrowDown = (width <= root.getWidth());
-        boolean canGrowRight = (height <= root.getHeight());
+        boolean canGrowDown = width <= root.getWidth();
+        boolean canGrowRight = height <= root.getHeight();
 
         // attempt to keep square-ish by growing right when height is much greater than width
-        boolean shouldGrowRight = canGrowRight && (root.getHeight() >= (root.getWidth() + width));
+        boolean shouldGrowRight = canGrowRight && root.getHeight() >= root.getWidth() + width;
         // attempt to keep square-ish by growing down when width is much greater than height
-        boolean shouldGrowDown = canGrowDown && (root.getWidth() >= (root.getHeight() + height));
+        boolean shouldGrowDown = canGrowDown && root.getWidth() >= root.getHeight() + height;
 
         if (shouldGrowRight) {
             return growRight(width, height, padding);
