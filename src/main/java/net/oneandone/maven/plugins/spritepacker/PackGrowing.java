@@ -63,6 +63,9 @@ public class PackGrowing {
      * @return  the outer dimensions of the spritesheet after fitting the images
      */
     private Dimension fit() {
+        if (images.isEmpty()) {
+            return new Dimension(0, 0);
+        }
         // sort the images, without modifying the sort order of the original image list
         sortImages(images);
 
