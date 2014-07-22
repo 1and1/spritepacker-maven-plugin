@@ -35,13 +35,13 @@ public class SpritePacker extends AbstractMojo {
      * Output spritesheet image file
      */
     @Parameter(required = true)
-    private File output;
+    File output;
 
     /**
      * Optional output JSON(P) description file containing coordinates and dimensions
      */
     @Parameter
-    private File json;
+    File json;
 
     /**
      * Optional variable for JSONP files
@@ -51,64 +51,64 @@ public class SpritePacker extends AbstractMojo {
      * jsonpVar = { image: {...} }
      */
     @Parameter
-    private String jsonpVar;
+    String jsonpVar;
 
     /**
      * Optional output CSS file containing coordinates and dimensions, where each icon is saved as its own class.
      */
     @Parameter
-    private File css;
+    File css;
 
     /**
      * Optional CSS class prefix. Default value is "icon".
      */
     @Parameter(defaultValue = "icon")
-    private String cssPrefix;
+    String cssPrefix;
 
     /**
      * Optional output LESS file containing coordinates and dimensions, where each icon is saved as position and size mixins.
      */
     @Parameter
-    private File less;
+    File less;
 
     /**
      * Optional LESS namespace name. Default value is "icon".
      */
     @Parameter(defaultValue = "icon")
-    private String lessNamespace;
+    String lessNamespace;
 
     /**
      * The source directory containing the icons
      */
     @Parameter(required = true)
-    private File sourceDirectory;
+    File sourceDirectory;
 
     /**
      * List of files to include. Specified as fileset patterns which are relative to the source directory. Default is all files.
      */
     @Parameter
-    private String[] includes = new String[] { "**/*" };
+    String[] includes = new String[] { "**/*" };
 
     /**
      * List of files to exclude. Specified as fileset patterns which are relative to the source directory.
      */
     @Parameter
-    private String[] excludes = new String[] { };
+    String[] excludes = new String[] { };
 
     /**
      * Optional transparent padding added between images in spritesheet.
      */
     @Parameter(defaultValue = "0")
-    private Integer padding;
+    Integer padding;
 
     /**
      * Optionally force the sprite packer to always re-generate files regardless of whether new graphics were found.
      */
     @Parameter(defaultValue = "false")
-    private Boolean forceOverwrite;
+    Boolean forceOverwrite;
 
     @Component
-    private BuildContext buildContext;
+    BuildContext buildContext;
 
     /**
      * Execute the MOJO.
