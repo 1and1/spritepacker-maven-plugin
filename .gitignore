@@ -43,3 +43,5 @@ bin/*
 .git/*
 .classpath
 .project
+/*.iml
+/.idea
