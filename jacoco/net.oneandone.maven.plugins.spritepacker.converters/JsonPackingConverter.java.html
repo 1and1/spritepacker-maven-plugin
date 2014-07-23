@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JsonPackingConverter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spritepacker-maven-plugin Maven Mojo</a> &gt; <a href="index.source.html" class="el_package">net.oneandone.maven.plugins.spritepacker.converters</a> &gt; <span class="el_source">JsonPackingConverter.java</span></div><h1>JsonPackingConverter.java</h1><pre class="source lang-java linenums">package net.oneandone.maven.plugins.spritepacker.converters;
+
+import net.oneandone.maven.plugins.spritepacker.ImagePacking;
+import net.oneandone.maven.plugins.spritepacker.NamedImage;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
+
+import java.awt.Point;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Converts ImagePacking to a JSON(P) file, with the result that each icon's details are available
+ * via a named property which encapsulates w, h, x, y and xy as pixel values as well as storing
+ * integer values for x, y, w and h in the property n.
+ *
+ * @author Robert Murphy, mklein
+ */
+public class JsonPackingConverter extends AbstractTextConverter {
+    private final String jsonpVar;
+
+    /**
+     * Create a JSON converter with output file json and optional JSONP variable jsonpVar.
+     *
+     * @param json     the output JSON file to write to
+     * @param jsonpVar optional JSONP variable name
+     */
+    public JsonPackingConverter(File json, String jsonpVar) {
+<span class="nc" id="L32">        super(json, &quot;JSON&quot;);</span>
+<span class="nc" id="L33">        this.jsonpVar = jsonpVar;</span>
+<span class="nc" id="L34">    }</span>
+
+    /**
+     *Create output JSON string based on an ImagePacking.
+     *
+     * @param imagePacking  the ImagePacking to convert
+     * @param log           the log object to use
+     * @return              String containing the JSON file contents
+     * @throws MojoExecutionException
+     */
+    @Override
+    protected String createOutput(ImagePacking imagePacking, Log log) throws MojoExecutionException {
+<span class="nc" id="L46">        ObjectMapper mapper = new ObjectMapper();</span>
+<span class="nc" id="L47">        mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);</span>
+
+<span class="nc" id="L49">        Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        for (NamedImage n : imagePacking.getImages()) {</span>
+<span class="nc" id="L51">            Point position = imagePacking.getPosition(n);</span>
+
+<span class="nc" id="L53">            Map&lt;String, Object&gt; props = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L54">            int x = position.x;</span>
+<span class="nc" id="L55">            int y = position.y;</span>
+<span class="nc" id="L56">            int width = n.getWidth();</span>
+<span class="nc" id="L57">            int height = n.getHeight();</span>
+
+<span class="nc" id="L59">            String xStr = intToPixel(-x);</span>
+<span class="nc" id="L60">            String yStr = intToPixel(-y);</span>
+
+<span class="nc" id="L62">            props.put(&quot;x&quot;, xStr);</span>
+<span class="nc" id="L63">            props.put(&quot;y&quot;, yStr);</span>
+<span class="nc" id="L64">            props.put(&quot;w&quot;, intToPixel(width));</span>
+<span class="nc" id="L65">            props.put(&quot;h&quot;, intToPixel(height));</span>
+<span class="nc" id="L66">            props.put(&quot;xy&quot;, xStr + &quot; &quot; + yStr);</span>
+
+<span class="nc" id="L68">            Map&lt;String, Integer&gt; numbers = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L69">            numbers.put(&quot;x&quot;, x);</span>
+<span class="nc" id="L70">            numbers.put(&quot;y&quot;, y);</span>
+<span class="nc" id="L71">            numbers.put(&quot;w&quot;, width);</span>
+<span class="nc" id="L72">            numbers.put(&quot;h&quot;, height);</span>
+
+<span class="nc" id="L74">            props.put(&quot;n&quot;, numbers);</span>
+
+<span class="nc" id="L76">            map.put(n.getName(), props);</span>
+<span class="nc" id="L77">        }</span>
+
+        // Generate json representation of map object
+        String out;
+        try {
+<span class="nc" id="L82">            out = mapper.writeValueAsString(map);</span>
+<span class="nc" id="L83">        } catch (Exception e) {</span>
+<span class="nc" id="L84">            throw new MojoExecutionException(&quot;Couldn't generate JSON data&quot;, e);</span>
+<span class="nc" id="L85">        }</span>
+
+        // If user has passed in a variable to wrap this in, append it to the front
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (jsonpVar != null) {</span>
+<span class="nc" id="L89">            out = jsonpVar + &quot; = &quot; + out;</span>
+        }
+
+<span class="nc" id="L92">        return out;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>

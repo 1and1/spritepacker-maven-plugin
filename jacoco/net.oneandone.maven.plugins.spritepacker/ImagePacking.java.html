@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ImagePacking.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spritepacker-maven-plugin Maven Mojo</a> &gt; <a href="index.source.html" class="el_package">net.oneandone.maven.plugins.spritepacker</a> &gt; <span class="el_source">ImagePacking.java</span></div><h1>ImagePacking.java</h1><pre class="source lang-java linenums">package net.oneandone.maven.plugins.spritepacker;
+
+import java.awt.Dimension;
+import java.awt.Point;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+
+/**
+ * Holds the result of the PackGrowing. Contains a Map of images to positions
+ * as well as the outer dimensions of the spritesheet.
+ *
+ * @author ssiegler
+ */
+public class ImagePacking {
+    private final Map&lt;NamedImage, Point&gt; positionMap;
+    private final int width;
+    private final int height;
+
+    /**
+     * Create an ImagePacking with the given dimension and position map data.
+     *
+     * @param dimension     the outer dimensions of the spritesheet
+     * @param positionMap   a map of images to positions
+     */
+<span class="fc" id="L26">    public ImagePacking(Dimension dimension, Map&lt;NamedImage, Point&gt; positionMap) {</span>
+<span class="fc" id="L27">        width = dimension.width;</span>
+<span class="fc" id="L28">        height = dimension.height;</span>
+<span class="fc" id="L29">        this.positionMap = Collections.unmodifiableMap(positionMap);</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * Get the position of the specified image within the spritesheet.
+     *
+     * @param image the image to get the position of
+     * @return      the position of the given image
+     */
+    public Point getPosition(NamedImage image) {
+<span class="fc" id="L39">        return positionMap.get(image);</span>
+    }
+
+    public int getWidth() {
+<span class="fc" id="L43">        return width;</span>
+    }
+
+    public int getHeight() {
+<span class="fc" id="L47">        return height;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L52">        return &quot;ImagePacking{&quot; +</span>
+               &quot;positionMap=&quot; + positionMap +
+               &quot;, width=&quot; + width +
+               &quot;, height=&quot; + height +
+               '}';
+    }
+
+    /**
+     * Get a collection of all images that were packed
+     *
+     * @return  a collection of all images that were packed
+     */
+    public Collection&lt;NamedImage&gt; getImages() {
+<span class="fc" id="L65">        return positionMap.keySet();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SpritesheetPackingConverter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spritepacker-maven-plugin Maven Mojo</a> &gt; <a href="index.source.html" class="el_package">net.oneandone.maven.plugins.spritepacker.converters</a> &gt; <span class="el_source">SpritesheetPackingConverter.java</span></div><h1>SpritesheetPackingConverter.java</h1><pre class="source lang-java linenums">package net.oneandone.maven.plugins.spritepacker.converters;
+
+import net.oneandone.maven.plugins.spritepacker.ImagePacking;
+import net.oneandone.maven.plugins.spritepacker.NamedImage;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
+
+import javax.imageio.ImageIO;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+/**
+ * Converts ImagePacking to a spritesheet PNG file.
+ *
+ * @author Robert Murphy, mklein
+ */
+public class SpritesheetPackingConverter implements PackingConverter {
+
+    private final File output;
+
+    /**
+     * Create a spritesheet converter with output file output.
+     *
+     * @param output
+     */
+<span class="nc" id="L29">    public SpritesheetPackingConverter(File output) {</span>
+<span class="nc" id="L30">        this.output = output;</span>
+<span class="nc" id="L31">    }</span>
+
+    /**
+     * Convert ImagePacking to a spritesheet image and save as a PNG file.
+     *
+     * @param imagePacking  the ImagePacking to convert
+     * @param log           the log object to use
+     * @throws MojoExecutionException
+     */
+    @Override
+    public void convert(ImagePacking imagePacking, Log log) throws MojoExecutionException {
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (output == null) {</span>
+<span class="nc" id="L43">            throw new MojoExecutionException(&quot;No spritesheet specified.&quot;);</span>
+        }
+
+<span class="nc" id="L46">        log.info(&quot;Saving spritesheet...&quot;);</span>
+
+<span class="nc bnc" id="L48" title="All 4 branches missed.">        if (!output.getParentFile().exists() &amp;&amp; !output.getParentFile().mkdirs()) {</span>
+<span class="nc" id="L49">            throw new MojoExecutionException(&quot;Couldn't create target directory: &quot; + output.getParentFile());</span>
+        }
+
+<span class="nc" id="L52">        BufferedImage spritesheet = new BufferedImage(imagePacking.getWidth(), imagePacking.getHeight(), BufferedImage.TYPE_INT_ARGB);</span>
+<span class="nc" id="L53">        Graphics2D gfx = spritesheet.createGraphics();</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        for (NamedImage image : imagePacking.getImages()) {</span>
+<span class="nc" id="L55">            Point imagePosition = imagePacking.getPosition(image);</span>
+<span class="nc" id="L56">            int x = imagePosition.x;</span>
+<span class="nc" id="L57">            int y = imagePosition.y;</span>
+<span class="nc" id="L58">            int width = image.getWidth();</span>
+<span class="nc" id="L59">            int height = image.getHeight();</span>
+<span class="nc" id="L60">            gfx.drawImage(image.getImage(), x, y, x + width, y + height, 0, 0, width, height, null);</span>
+<span class="nc" id="L61">        }</span>
+
+        try {
+<span class="nc" id="L64">            ImageIO.write(spritesheet, &quot;png&quot;, output);</span>
+<span class="nc" id="L65">        } catch (IOException e) {</span>
+<span class="nc" id="L66">            throw new MojoExecutionException(&quot;Couldn't write spritesheet: &quot; + output, e);</span>
+<span class="nc" id="L67">        }</span>
+<span class="nc" id="L68">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>

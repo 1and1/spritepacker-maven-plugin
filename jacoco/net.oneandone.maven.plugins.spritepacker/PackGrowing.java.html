@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PackGrowing.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spritepacker-maven-plugin Maven Mojo</a> &gt; <a href="index.source.html" class="el_package">net.oneandone.maven.plugins.spritepacker</a> &gt; <span class="el_source">PackGrowing.java</span></div><h1>PackGrowing.java</h1><pre class="source lang-java linenums">package net.oneandone.maven.plugins.spritepacker;
+
+import java.awt.Dimension;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * An algorithm for packing images into a spritesheet
+ *
+ * @author Robert Murphy
+ */
+public class PackGrowing {
+
+<span class="fc" id="L19">    private static final Comparator&lt;NamedImage&gt; IMAGE_ORDER = new Comparator&lt;NamedImage&gt;() {</span>
+        @Override
+        public int compare(NamedImage arg0, NamedImage arg1) {
+<span class="fc" id="L22">            int max0 = Math.max(arg0.getWidth(), arg0.getHeight());</span>
+<span class="fc" id="L23">            int max1 = Math.max(arg1.getWidth(), arg1.getHeight());</span>
+<span class="fc" id="L24">            return max1 - max0;</span>
+        }
+    };
+
+    private final List&lt;NamedImage&gt; images;
+    private final int padding;
+
+    private final Map&lt;NamedImage, Point&gt; positionMap;
+    private Node root;
+
+    /**
+     * Creates a new PackGrowing for the given images and padding.
+     *
+     * @param images  the list of images to be packed
+     * @param padding the amount of padding to put between sprites, in pixels
+     */
+<span class="fc" id="L40">    private PackGrowing(List&lt;NamedImage&gt; images, int padding) {</span>
+<span class="fc" id="L41">        this.images = new ArrayList&lt;&gt;(images);</span>
+<span class="fc" id="L42">        this.padding = padding;</span>
+<span class="fc" id="L43">        positionMap = new IdentityHashMap&lt;&gt;();</span>
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * Fit the images and return an ImagePacking containing the outer dimensions
+     * of the spritesheet and a Map of images to positions.
+     *
+     * @param images    the list of images to be packed
+     * @param padding   the amount of padding to put between sprites, in pixels
+     * @return          the resulting ImagePacking, containing dimension and image position data
+     */
+    public static ImagePacking fit(List&lt;NamedImage&gt; images, int padding) {
+<span class="fc" id="L55">        PackGrowing packGrowing = new PackGrowing(images, padding);</span>
+<span class="fc" id="L56">        Dimension dimension = packGrowing.fit();</span>
+<span class="fc" id="L57">        return new ImagePacking(dimension, packGrowing.positionMap);</span>
+    }
+
+    /**
+     * Fits the images and return the outer dimensions of the resulting spritesheet.
+     *
+     * @return  the outer dimensions of the spritesheet after fitting the images
+     */
+    private Dimension fit() {
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (images.isEmpty()) {</span>
+<span class="fc" id="L67">            return new Dimension(0, 0);</span>
+        }
+        // sort the images, without modifying the sort order of the original image list
+<span class="fc" id="L70">        sortImages(images);</span>
+
+<span class="fc" id="L72">        root = new Node(padding, this.padding, images.get(0).getWidth(), images.get(0).getHeight());</span>
+
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        for (NamedImage image : images) {</span>
+<span class="fc" id="L75">            final int width = image.getWidth();</span>
+<span class="fc" id="L76">            final int height = image.getHeight();</span>
+
+<span class="fc" id="L78">            final Node availableNode = findNode(root, width, height);</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            final Node newNode = (availableNode == null) ? growNode(width, height, padding) : splitNode(availableNode, width, height, padding);</span>
+
+<span class="fc" id="L81">            positionMap.put(image, new Point(newNode.getX(), newNode.getY()));</span>
+<span class="fc" id="L82">        }</span>
+
+<span class="fc" id="L84">        return new Dimension(root.getWidth() + padding * 2, root.getHeight() + padding * 2);</span>
+    }
+
+    /**
+     * Sort images by max width / height descending
+     *
+     * @param images list of images to sort
+     */
+    private void sortImages(List&lt;NamedImage&gt; images) {
+        // Sort by max width / height descending
+<span class="fc" id="L94">        Collections.sort(images, IMAGE_ORDER);</span>
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * Find an available unused node of the given width and height, starting from nodeIn
+     *
+     * @param nodeIn the node from which to start the find operation
+     * @param width  width of the node
+     * @param height height of the node
+     * @return       found node, or null if no available node was found
+     */
+    private Node findNode(Node nodeIn, int width, int height) {
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (nodeIn.isUsed()) {</span>
+<span class="fc" id="L107">            Node rightAvailable = findNode(nodeIn.getRight(), width, height);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">            return (rightAvailable != null) ? rightAvailable : findNode(nodeIn.getDown(), width, height);</span>
+        }
+
+<span class="fc bfc" id="L111" title="All 4 branches covered.">        if (width &lt;= nodeIn.getWidth() &amp;&amp; height &lt;= nodeIn.getHeight()) {</span>
+<span class="fc" id="L112">            return nodeIn;</span>
+        }
+
+<span class="fc" id="L115">        return null;</span>
+    }
+
+    /**
+     * Split a node into a node of size width x height and return the remaining space to the pool
+     *
+     * @param nodeIn the node to split
+     * @param width  width
+     * @param height height
+     * @return       the split node
+     */
+    private Node splitNode(Node nodeIn, int width, int height, int padding) {
+<span class="fc" id="L127">        nodeIn.setUsed(true);</span>
+<span class="fc" id="L128">        nodeIn.setDown(new Node(nodeIn.getX(), nodeIn.getY() + height + padding, nodeIn.getWidth(), nodeIn.getHeight() - height - padding));</span>
+<span class="fc" id="L129">        nodeIn.setRight(new Node(nodeIn.getX() + width + padding, nodeIn.getY(), nodeIn.getWidth() - width - padding, height));</span>
+<span class="fc" id="L130">        return nodeIn;</span>
+    }
+
+    /**
+     * Grow the size of the available space to add another block, and return new available node
+     *
+     * @param width  width needed
+     * @param height height needed
+     * @return       new available node
+     */
+    private Node growNode(int width, int height, int padding) {
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        boolean canGrowDown = width &lt;= root.getWidth();</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        boolean canGrowRight = height &lt;= root.getHeight();</span>
+
+        // attempt to keep square-ish by growing right when height is much greater than width
+<span class="pc bpc" id="L145" title="1 of 4 branches missed.">        boolean shouldGrowRight = canGrowRight &amp;&amp; root.getHeight() &gt;= root.getWidth() + width;</span>
+        // attempt to keep square-ish by growing down when width is much greater than height
+<span class="fc bfc" id="L147" title="All 4 branches covered.">        boolean shouldGrowDown = canGrowDown &amp;&amp; root.getWidth() &gt;= root.getHeight() + height;</span>
+
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">        if (shouldGrowRight) {</span>
+<span class="nc" id="L150">            return growRight(width, height, padding);</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        } else if (shouldGrowDown) {</span>
+<span class="fc" id="L152">            return growDown(width, height, padding);</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        } else if (canGrowRight) {</span>
+<span class="fc" id="L154">            return growRight(width, height, padding);</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        } else if (canGrowDown) {</span>
+<span class="fc" id="L156">            return growDown(width, height, padding);</span>
+        }
+
+        // need to ensure sensible root starting size to avoid this happening
+<span class="nc" id="L160">        return null;</span>
+    }
+
+    /**
+     * Grow the root node right, and return new available node
+     *
+     * @param width  width needed
+     * @param height height needed
+     * @return       new available node
+     */
+    private Node growRight(int width, int height, int padding) {
+<span class="fc" id="L171">        Node newRoot = new Node(root.getX(), root.getY(), root.getWidth() + width + padding, root.getHeight());</span>
+<span class="fc" id="L172">        newRoot.setUsed(true);</span>
+<span class="fc" id="L173">        newRoot.setDown(root);</span>
+<span class="fc" id="L174">        newRoot.setRight(new Node(root.getWidth() + root.getX() + padding, root.getY(), width, root.getHeight()));</span>
+<span class="fc" id="L175">        root = newRoot;</span>
+
+<span class="fc" id="L177">        Node availableNode = findNode(root, width, height);</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        if (availableNode != null) {</span>
+<span class="fc" id="L179">            return splitNode(availableNode, width, height, padding);</span>
+        }
+
+<span class="nc" id="L182">        return null;</span>
+    }
+
+    /**
+     * Grow the root node down and return new available node
+     *
+     * @param width  width needed
+     * @param height height needed
+     * @return       new available node
+     */
+    private Node growDown(int width, int height, int padding) {
+<span class="fc" id="L193">        Node newRoot = new Node(root.getX(), root.getY(), root.getWidth(), root.getHeight() + height + padding);</span>
+<span class="fc" id="L194">        newRoot.setUsed(true);</span>
+<span class="fc" id="L195">        newRoot.setDown(new Node(root.getX(), root.getY() + root.getHeight() + padding, root.getWidth(), height));</span>
+<span class="fc" id="L196">        newRoot.setRight(root);</span>
+<span class="fc" id="L197">        root = newRoot;</span>
+
+<span class="fc" id="L199">        Node availableNode = findNode(root, width, height);</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        if (availableNode != null) {</span>
+<span class="fc" id="L201">            return splitNode(availableNode, width, height, padding);</span>
+        }
+
+<span class="nc" id="L204">        return null;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>

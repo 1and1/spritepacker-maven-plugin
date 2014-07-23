@@ -1,0 +1,12 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,PackGrowing,14,436,5,33,4,60,5,24,0,10
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,Node,30,48,0,0,1,19,1,11,1,11
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,PackGrowing.new Comparator() {...},0,19,0,0,0,4,0,2,0,2
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,SpritePacker,272,80,33,3,38,19,20,5,2,5
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,NamedImage,25,17,0,0,3,6,3,3,3,3
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,ImagePacking,22,31,0,0,1,9,1,5,1,5
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker.converters,AbstractTextConverter,141,0,12,0,18,0,9,0,3,0
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker.converters,SpritesheetPackingConverter,122,0,8,0,23,0,6,0,2,0
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker.converters,CssPackingConverter,102,0,4,0,15,0,4,0,2,0
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker.converters,JsonPackingConverter,169,0,4,0,35,0,4,0,2,0
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker.converters,LessPackingConverter,107,0,2,0,15,0,3,0,2,0

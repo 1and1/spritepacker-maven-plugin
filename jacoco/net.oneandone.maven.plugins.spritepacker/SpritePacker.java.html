@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SpritePacker.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spritepacker-maven-plugin Maven Mojo</a> &gt; <a href="index.source.html" class="el_package">net.oneandone.maven.plugins.spritepacker</a> &gt; <span class="el_source">SpritePacker.java</span></div><h1>SpritePacker.java</h1><pre class="source lang-java linenums">package net.oneandone.maven.plugins.spritepacker;
+
+import net.oneandone.maven.plugins.spritepacker.converters.CssPackingConverter;
+import net.oneandone.maven.plugins.spritepacker.converters.JsonPackingConverter;
+import net.oneandone.maven.plugins.spritepacker.converters.LessPackingConverter;
+import net.oneandone.maven.plugins.spritepacker.converters.PackingConverter;
+import net.oneandone.maven.plugins.spritepacker.converters.SpritesheetPackingConverter;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.Scanner;
+import org.sonatype.plexus.build.incremental.BuildContext;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+
+/**
+ * Packs spritesheets from supplied images.
+ *
+ * @author Robert Murphy, mklein, ssiegler
+ */
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">@Mojo(name = &quot;compile&quot;, defaultPhase = LifecyclePhase.PROCESS_SOURCES)</span>
+<span class="fc" id="L32">public class SpritePacker extends AbstractMojo {</span>
+
+    /**
+     * Output spritesheet image file
+     */
+    @Parameter(required = true)
+    File output;
+
+    /**
+     * Optional output JSON(P) description file containing coordinates and dimensions
+     */
+    @Parameter
+    File json;
+
+    /**
+     * Optional variable for JSONP files
+     * e.g.
+     * { image: {...} }
+     * becomes
+     * jsonpVar = { image: {...} }
+     */
+    @Parameter
+    String jsonpVar;
+
+    /**
+     * Optional output CSS file containing coordinates and dimensions, where each icon is saved as its own class.
+     */
+    @Parameter
+    File css;
+
+    /**
+     * Optional CSS class prefix. Default value is &quot;icon&quot;.
+     */
+    @Parameter(defaultValue = &quot;icon&quot;)
+    String cssPrefix;
+
+    /**
+     * Optional output LESS file containing coordinates and dimensions, where each icon is saved as position and size mixins.
+     */
+    @Parameter
+    File less;
+
+    /**
+     * Optional LESS namespace name. Default value is &quot;icon&quot;.
+     */
+    @Parameter(defaultValue = &quot;icon&quot;)
+    String lessNamespace;
+
+    /**
+     * The source directory containing the icons
+     */
+    @Parameter(required = true)
+    File sourceDirectory;
+
+    /**
+     * List of files to include. Specified as fileset patterns which are relative to the source directory. Default is all files.
+     */
+<span class="fc" id="L89">    @Parameter</span>
+    String[] includes = new String[] { &quot;**/*&quot; };
+
+    /**
+     * List of files to exclude. Specified as fileset patterns which are relative to the source directory.
+     */
+<span class="fc" id="L95">    @Parameter</span>
+    String[] excludes = new String[] { };
+
+    /**
+     * Optional transparent padding added between images in spritesheet.
+     */
+    @Parameter(defaultValue = &quot;0&quot;)
+    Integer padding;
+
+    /**
+     * Optionally force the sprite packer to always re-generate files regardless of whether new graphics were found.
+     */
+    @Parameter(defaultValue = &quot;false&quot;)
+    Boolean forceOverwrite;
+
+    @Component
+    BuildContext buildContext;
+
+    /**
+     * Execute the MOJO.
+     *
+     * @throws MojoExecutionException if something unexpected occurs.
+     */
+    public void execute() throws MojoExecutionException {
+
+<span class="fc" id="L120">        long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L122">        List&lt;File&gt; inputs = scanPaths(sourceDirectory, includes, excludes);</span>
+
+        // Check if there are actually any inputs to do anything with
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">        if (inputs.size() == 0) {</span>
+<span class="fc" id="L126">            log(&quot;No source images found.&quot;);</span>
+<span class="fc" id="L127">            return;</span>
+        }
+
+        // Load output files into an ArrayList
+<span class="nc" id="L131">        List&lt;File&gt; outputs = Arrays.asList(output, json, css, less);</span>
+
+        // If force overwrite not specified, and the JSON file is not being created for the first time,
+        // and the output files were modified more recently than the input files, return.
+<span class="nc bnc" id="L135" title="All 4 branches missed.">        if (!(forceOverwrite || isAnyInputNewerThanAnyOutput(inputs, outputs))) {</span>
+<span class="nc" id="L136">            log(&quot;No source images modified.&quot;);</span>
+<span class="nc" id="L137">            return;</span>
+        }
+
+<span class="nc" id="L140">        log(&quot;Loading &quot; + inputs.size() + &quot; images...&quot;);</span>
+
+        // Load images defined in input array
+<span class="nc" id="L143">        List&lt;NamedImage&gt; images = loadImages(inputs);</span>
+
+<span class="nc" id="L145">        log(&quot;Packing images...&quot;);</span>
+
+        // Add packing information
+<span class="nc" id="L148">        ImagePacking imagePacking = PackGrowing.fit(images, padding);</span>
+
+<span class="nc" id="L150">        List&lt;PackingConverter&gt; consumers = Arrays.asList(new SpritesheetPackingConverter(output),</span>
+                                                         new JsonPackingConverter(json, jsonpVar),
+                                                         new CssPackingConverter(css, cssPrefix),
+                                                         new LessPackingConverter(less, lessNamespace));
+
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        for (PackingConverter consumer : consumers) {</span>
+<span class="nc" id="L156">            consumer.convert(imagePacking, getLog());</span>
+<span class="nc" id="L157">        }</span>
+
+<span class="nc" id="L159">        long took = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L160">        log(&quot;Done - took &quot; + took + &quot;ms!&quot;);</span>
+
+<span class="nc" id="L162">    }</span>
+
+    /**
+     * Check if any input is newer than any output. This also takes output files into account that do not yet exist,
+     * as they have a lastModified time of 0L and are thus automatically &quot;older&quot; than any input files.
+     *
+     * @param inputs    the list of input files
+     * @param outputs   the list of output files
+     * @return          whether any input file was newer than any output file
+     */
+    private boolean isAnyInputNewerThanAnyOutput(List&lt;File&gt; inputs, List&lt;File&gt; outputs) {
+<span class="nc bnc" id="L173" title="All 6 branches missed.">        assert inputs != null &amp;&amp; !inputs.isEmpty();</span>
+<span class="nc bnc" id="L174" title="All 6 branches missed.">        assert outputs != null &amp;&amp; !outputs.isEmpty();</span>
+
+<span class="nc" id="L176">        long newestInput = 0L;</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        for (File input : inputs) {</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">            if (input != null) {</span>
+<span class="nc" id="L179">                newestInput = Math.max(input.lastModified(), newestInput);</span>
+            }
+<span class="nc" id="L181">        }</span>
+
+<span class="nc" id="L183">        long oldestOutput = newestInput;</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        for (File output : outputs) {</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">            if (output != null) {</span>
+<span class="nc" id="L186">                oldestOutput = Math.min(output.lastModified(), oldestOutput);</span>
+            }
+<span class="nc" id="L188">        }</span>
+
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        return newestInput &gt;= oldestOutput;</span>
+    }
+
+    /**
+     * Create a list of files within a source directory, including subdirectories,
+     * that match the includes and excludes criteria
+     *
+     * @param sourceDirectory the source directory
+     * @param includes        criterion for files to include
+     * @param excludes        criterion for files to exclude
+     * @return                list of matching files
+     */
+    private List&lt;File&gt; scanPaths(File sourceDirectory, String[] includes, String[] excludes) {
+<span class="fc" id="L203">        Scanner scanner = buildContext.newScanner(sourceDirectory, true);</span>
+<span class="fc" id="L204">        scanner.setIncludes(includes);</span>
+<span class="fc" id="L205">        scanner.setExcludes(excludes);</span>
+<span class="fc" id="L206">        scanner.scan();</span>
+<span class="fc" id="L207">        String[] fileNames = scanner.getIncludedFiles();</span>
+<span class="fc" id="L208">        List&lt;File&gt; paths = new ArrayList&lt;&gt;(fileNames.length);</span>
+<span class="pc bpc" id="L209" title="1 of 2 branches missed.">        for (String fileName : fileNames) {</span>
+<span class="nc" id="L210">            paths.add(new File(sourceDirectory, fileName));</span>
+        }
+<span class="fc" id="L212">        return paths;</span>
+    }
+
+    /**
+     * Load list of image files as a list of NamedImages
+     *
+     * @param imageFiles the image files to load
+     * @return           the list of loaded NamedImages
+     * @throws MojoExecutionException
+     */
+    private List&lt;NamedImage&gt; loadImages(List&lt;File&gt; imageFiles) throws MojoExecutionException {
+<span class="nc" id="L223">        List&lt;NamedImage&gt; images = new ArrayList&lt;&gt;(imageFiles.size());</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        for (File f : imageFiles) {</span>
+            try {
+<span class="nc" id="L226">                String basename = FileUtils.removeExtension(f.getName());</span>
+<span class="nc" id="L227">                images.add(new NamedImage(ImageIO.read(f), basename));</span>
+<span class="nc" id="L228">            } catch (IOException e) {</span>
+<span class="nc" id="L229">                throw new MojoExecutionException(&quot;Failed to open file: &quot; + f.getAbsolutePath(), e);</span>
+<span class="nc" id="L230">            }</span>
+<span class="nc" id="L231">        }</span>
+<span class="nc" id="L232">        return images;</span>
+    }
+
+    public void log(Object message) {
+<span class="fc" id="L236">        getLog().info(message.toString());</span>
+<span class="fc" id="L237">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>
