@@ -50,11 +50,11 @@ public abstract class AbstractTextConverter implements PackingConverter {
 
         try {
             try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath(), Charset.forName("UTF-8"))) {
-                log.info("Saving " + type + "...");
+                log.info("Saving " + type + " to file " + file.getAbsolutePath());
                 bufferedWriter.write(output);
             }
         } catch (IOException e) {
-            throw new MojoExecutionException("Could not write to file '"+file.getAbsolutePath()+"'.", e);
+            throw new MojoExecutionException("Couldn't write to file " + file.getAbsolutePath(), e);
         }
 
     }

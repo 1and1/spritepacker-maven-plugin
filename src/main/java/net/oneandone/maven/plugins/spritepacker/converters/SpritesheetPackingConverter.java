@@ -43,11 +43,11 @@ public class SpritesheetPackingConverter implements PackingConverter {
             throw new MojoExecutionException("No spritesheet specified.");
         }
 
-        log.info("Saving spritesheet...");
-
         if (!output.getParentFile().exists() && !output.getParentFile().mkdirs()) {
             throw new MojoExecutionException("Couldn't create target directory: " + output.getParentFile());
         }
+
+        log.info("Generating spritesheet...");
 
         BufferedImage spritesheet = new BufferedImage(imagePacking.getWidth(), imagePacking.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = spritesheet.createGraphics();
@@ -60,10 +60,12 @@ public class SpritesheetPackingConverter implements PackingConverter {
             gfx.drawImage(image.getImage(), x, y, x + width, y + height, 0, 0, width, height, null);
         }
 
+        log.info("Saving spritesheet to file " + output.getAbsolutePath());
+
         try {
             ImageIO.write(spritesheet, "png", output);
         } catch (IOException e) {
-            throw new MojoExecutionException("Couldn't write spritesheet: " + output, e);
+            throw new MojoExecutionException("Couldn't write spritesheet " + output.getAbsolutePath(), e);
         }
     }
 

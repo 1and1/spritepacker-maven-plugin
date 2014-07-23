@@ -137,7 +137,7 @@ public class SpritePacker extends AbstractMojo {
             return;
         }
 
-        log("Loading " + inputs.size() + " images...");
+        log("Loading " + inputs.size() + " images from " + sourceDirectory.getAbsolutePath());
 
         // Load images defined in input array
         List<NamedImage> images = loadImages(inputs);

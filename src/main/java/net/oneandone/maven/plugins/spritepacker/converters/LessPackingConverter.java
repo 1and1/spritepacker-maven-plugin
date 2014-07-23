@@ -43,7 +43,7 @@ public class LessPackingConverter extends AbstractTextConverter {
                                 .append("/* icons can be referenced with the syntax \"#")
                                 .append(lessNamespace).append(" > .create(icon-name);\" */\n")
                                 .append("#").append(lessNamespace).append("{\n")
-                                .append(".create(@name){.pos(@name);.size(@name);}\n");
+                                .append("    .create(@name){.pos(@name);.size(@name);}\n");
         for (NamedImage image : imagePacking.getImages()) {
             String name = image.getName();
             Point position = imagePacking.getPosition(image);
