@@ -10,6 +10,7 @@ import org.codehaus.jackson.map.SerializationConfig;
 import java.awt.Point;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,18 +37,19 @@ public class JsonPackingConverter extends AbstractTextConverter {
     /**
      *Create output JSON string based on an ImagePacking.
      *
+     * @param imageList     the list of images
      * @param imagePacking  the ImagePacking to convert
      * @param log           the log object to use
      * @return              String containing the JSON file contents
      * @throws MojoExecutionException
      */
     @Override
-    protected String createOutput(ImagePacking imagePacking, Log log) throws MojoExecutionException {
+    protected String createOutput(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
 
         Map<String, Object> map = new HashMap<>();
-        for (NamedImage n : imagePacking.getImages()) {
+        for (NamedImage n : imageList) {
             Point position = imagePacking.getPosition(n);
 
             Map<String, Object> props = new HashMap<>();

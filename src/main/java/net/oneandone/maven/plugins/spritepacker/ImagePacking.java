@@ -2,7 +2,6 @@ package net.oneandone.maven.plugins.spritepacker;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -54,14 +53,5 @@ public class ImagePacking {
                ", width=" + width +
                ", height=" + height +
                '}';
-    }
-
-    /**
-     * Get a collection of all images that were packed
-     *
-     * @return  a collection of all images that were packed
-     */
-    public Collection<NamedImage> getImages() {
-        return positionMap.keySet();
     }
 }

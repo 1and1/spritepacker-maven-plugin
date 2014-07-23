@@ -1,6 +1,7 @@
 package net.oneandone.maven.plugins.spritepacker.converters;
 
 import net.oneandone.maven.plugins.spritepacker.ImagePacking;
+import net.oneandone.maven.plugins.spritepacker.NamedImage;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.List;
 
 /**
  * An abstract PackingConverter that saves the output of the subclass's implemented createOutput method to a text file.
@@ -33,12 +35,13 @@ public abstract class AbstractTextConverter implements PackingConverter {
     /**
      * Convert the specified ImagePacking to a text file.
      *
+     * @param imageList     the list of images
      * @param imagePacking  the ImagePacking to convert
      * @param log           the log object to use
      * @throws MojoExecutionException
      */
     @Override
-    public void convert(ImagePacking imagePacking, Log log) throws MojoExecutionException {
+    public void convert(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
         if (file == null) {
             log.info("No " + type + " output file specified.");
             return;
@@ -46,7 +49,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
 
         log.info("Generating " + type + " output...");
 
-        String output = createOutput(imagePacking, log);
+        String output = createOutput(imageList, imagePacking, log);
 
         try {
             try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath(), Charset.forName("UTF-8"))) {
@@ -62,11 +65,13 @@ public abstract class AbstractTextConverter implements PackingConverter {
     /**
      * Create output text as String based on an ImagePacking.
      *
+     * @param imageList     the list of images
      * @param imagePacking  the ImagePacking to convert
      * @param log           the log object to use
      * @return              String containing the text file contents
+     * @throws MojoExecutionException
      */
-    protected abstract String createOutput(ImagePacking imagePacking, Log log) throws MojoExecutionException;
+    protected abstract String createOutput(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException;
 
     /**
      * Convert an integer into a String pixel value, leaving off the "px" for values of 0.

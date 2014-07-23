@@ -11,6 +11,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Converts ImagePacking to a spritesheet PNG file.
@@ -33,12 +34,14 @@ public class SpritesheetPackingConverter implements PackingConverter {
     /**
      * Convert ImagePacking to a spritesheet image and save as a PNG file.
      *
+     *
+     * @param imageList     the list of images
      * @param imagePacking  the ImagePacking to convert
      * @param log           the log object to use
      * @throws MojoExecutionException
      */
     @Override
-    public void convert(ImagePacking imagePacking, Log log) throws MojoExecutionException {
+    public void convert(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
         if (output == null) {
             throw new MojoExecutionException("No spritesheet specified.");
         }
@@ -51,7 +54,7 @@ public class SpritesheetPackingConverter implements PackingConverter {
 
         BufferedImage spritesheet = new BufferedImage(imagePacking.getWidth(), imagePacking.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = spritesheet.createGraphics();
-        for (NamedImage image : imagePacking.getImages()) {
+        for (NamedImage image : imageList) {
             Point imagePosition = imagePacking.getPosition(image);
             int x = imagePosition.x;
             int y = imagePosition.y;

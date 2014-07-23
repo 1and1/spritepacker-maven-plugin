@@ -153,7 +153,7 @@ public class SpritePacker extends AbstractMojo {
                                                          new LessPackingConverter(less, lessNamespace));
 
         for (PackingConverter consumer : consumers) {
-            consumer.convert(imagePacking, getLog());
+            consumer.convert(images, imagePacking, getLog());
         }
 
         long took = System.currentTimeMillis() - startTime;
