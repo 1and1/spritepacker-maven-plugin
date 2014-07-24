@@ -19,7 +19,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for the AbstractTextConverter
@@ -30,11 +35,9 @@ public class AbstractTextConverterTest {
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
 
-    private String output;
-    private MojoExecutionException exception;
     private Path file;
-    private String type;
     private Log log;
+    private String output;
 
     @Before
     public void before() throws Exception {
@@ -58,13 +61,15 @@ public class AbstractTextConverterTest {
     @Test
     public void doNothingOnNullFile() throws Exception {
         file = null;
-        exception = new MojoExecutionException("This should not be thrown");
 
-        convert();
+        AbstractTextConverter converter = convert();
+
+        verify(converter, never()).createOutput(anyListOf(NamedImage.class), any(ImagePacking.class), any(Log.class));
     }
 
     @Test(expected = MojoExecutionException.class)
     public void throwsExceptionWhenFileIsNotWritable() throws Exception {
+        // Prevent file from being written to by creating a directory in its place.
         Files.createDirectory(file);
 
         convert();
@@ -78,19 +83,17 @@ public class AbstractTextConverterTest {
     }
 
     private AbstractTextConverter createConverter() {
-        return new AbstractTextConverter(file, type) {
+        return spy(new AbstractTextConverter(file, null) {
             @Override
             protected String createOutput(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
-                if (exception == null) {
-                    return output;
-                } else {
-                    throw exception;
-                }
+                return output;
             }
-        };
+        });
     }
 
-    private void convert() throws MojoExecutionException {
-        createConverter().convert(null, null, log);
+    private AbstractTextConverter convert() throws MojoExecutionException {
+        AbstractTextConverter converter = createConverter();
+        converter.convert(null, null, log);
+        return converter;
     }
 }
