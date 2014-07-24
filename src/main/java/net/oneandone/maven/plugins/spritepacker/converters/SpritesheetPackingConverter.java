@@ -36,7 +36,6 @@ public class SpritesheetPackingConverter implements PackingConverter {
     /**
      * Convert ImagePacking to a spritesheet image and save as a PNG file.
      *
-     *
      * @param imageList     the list of images
      * @param imagePacking  the ImagePacking to convert
      * @param log           the log object to use
@@ -70,7 +69,6 @@ public class SpritesheetPackingConverter implements PackingConverter {
     protected BufferedImage createSpritesheet(List<NamedImage> imageList, ImagePacking imagePacking) {
         BufferedImage spritesheet = new BufferedImage(imagePacking.getWidth(), imagePacking.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = spritesheet.createGraphics();
-        gfx.getComposite();
         gfx.setComposite(AlphaComposite.Src);
         for (NamedImage image : imageList) {
             Point imagePosition = imagePacking.getPosition(image);
