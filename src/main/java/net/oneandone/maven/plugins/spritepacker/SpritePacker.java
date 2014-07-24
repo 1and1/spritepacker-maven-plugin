@@ -153,7 +153,7 @@ public class SpritePacker extends AbstractMojo {
         Path cssPath = fileToPath(css);
         Path lessPath = fileToPath(less);
 
-        List<PackingConverter> consumers = Arrays.asList(new SpritesheetPackingConverter(output),
+        List<PackingConverter> consumers = Arrays.asList(new SpritesheetPackingConverter(outputPath),
                                                          new JsonPackingConverter(jsonPath, jsonpVar),
                                                          new CssPackingConverter(cssPath, cssPrefix),
                                                          new LessPackingConverter(lessPath, lessNamespace));

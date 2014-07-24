@@ -6,11 +6,13 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
 import javax.imageio.ImageIO;
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -20,14 +22,14 @@ import java.util.List;
  */
 public class SpritesheetPackingConverter implements PackingConverter {
 
-    private final File output;
+    private final Path output;
 
     /**
      * Create a spritesheet converter with output file output.
      *
-     * @param output
+     * @param output the path to the output file
      */
-    public SpritesheetPackingConverter(File output) {
+    public SpritesheetPackingConverter(Path output) {
         this.output = output;
     }
 
@@ -46,14 +48,30 @@ public class SpritesheetPackingConverter implements PackingConverter {
             throw new MojoExecutionException("No spritesheet specified.");
         }
 
-        if (!output.getParentFile().exists() && !output.getParentFile().mkdirs()) {
-            throw new MojoExecutionException("Couldn't create target directory: " + output.getParentFile());
+        try {
+            Files.createDirectories(output.getParent());
+        } catch (IOException e) {
+            throw new MojoExecutionException("Couldn't create target directory: " + output.getParent(), e);
         }
 
         log.info("Generating spritesheet...");
 
+        BufferedImage spritesheet = createSpritesheet(imageList, imagePacking);
+
+        log.info("Saving spritesheet to file " + output.toAbsolutePath());
+
+        try {
+            ImageIO.write(spritesheet, "png", Files.newOutputStream(output));
+        } catch (IOException e) {
+            throw new MojoExecutionException("Couldn't write spritesheet " + output.toAbsolutePath(), e);
+        }
+    }
+
+    protected BufferedImage createSpritesheet(List<NamedImage> imageList, ImagePacking imagePacking) {
         BufferedImage spritesheet = new BufferedImage(imagePacking.getWidth(), imagePacking.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = spritesheet.createGraphics();
+        gfx.getComposite();
+        gfx.setComposite(AlphaComposite.Src);
         for (NamedImage image : imageList) {
             Point imagePosition = imagePacking.getPosition(image);
             int x = imagePosition.x;
@@ -62,14 +80,7 @@ public class SpritesheetPackingConverter implements PackingConverter {
             int height = image.getHeight();
             gfx.drawImage(image.getImage(), x, y, x + width, y + height, 0, 0, width, height, null);
         }
-
-        log.info("Saving spritesheet to file " + output.getAbsolutePath());
-
-        try {
-            ImageIO.write(spritesheet, "png", output);
-        } catch (IOException e) {
-            throw new MojoExecutionException("Couldn't write spritesheet " + output.getAbsolutePath(), e);
-        }
+        return spritesheet;
     }
 
 }
