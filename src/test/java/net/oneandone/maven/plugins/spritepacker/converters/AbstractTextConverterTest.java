@@ -23,6 +23,8 @@ import static org.mockito.Mockito.mock;
 
 /**
  * Unit tests for the AbstractTextConverter
+ *
+ * @autor ssiegler
  */
 public class AbstractTextConverterTest {
     @Rule
@@ -41,7 +43,7 @@ public class AbstractTextConverterTest {
         FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
         file = fileSystem.getPath("/output");
 
-        output = "This are not the things you are looking for.\nLook, over there, a three headed monkey!";
+        output = "These are not the things you are looking for.\nLook, over there, a three headed monkey!";
     }
 
     @Test
