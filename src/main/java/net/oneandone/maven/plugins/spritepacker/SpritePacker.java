@@ -18,6 +18,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -147,10 +148,15 @@ public class SpritePacker extends AbstractMojo {
         // Add packing information
         ImagePacking imagePacking = PackGrowing.fit(images, padding);
 
+        Path outputPath = fileToPath(output);
+        Path jsonPath = fileToPath(json);
+        Path cssPath = fileToPath(css);
+        Path lessPath = fileToPath(less);
+
         List<PackingConverter> consumers = Arrays.asList(new SpritesheetPackingConverter(output),
-                                                         new JsonPackingConverter(json.toPath(), jsonpVar),
-                                                         new CssPackingConverter(css.toPath(), cssPrefix),
-                                                         new LessPackingConverter(less.toPath(), lessNamespace));
+                                                         new JsonPackingConverter(jsonPath, jsonpVar),
+                                                         new CssPackingConverter(cssPath, cssPrefix),
+                                                         new LessPackingConverter(lessPath, lessNamespace));
 
         for (PackingConverter consumer : consumers) {
             consumer.convert(images, imagePacking, getLog());
@@ -159,6 +165,16 @@ public class SpritePacker extends AbstractMojo {
         long took = System.currentTimeMillis() - startTime;
         log("Done - took " + took + "ms!");
 
+    }
+
+    /**
+     * Convert a file to a path, or return null if the file is null
+     *
+     * @param file  the file to convert to a path
+     * @return      the path that was converted from a file
+     */
+    private Path fileToPath(File file) {
+        return (file == null) ? null : file.toPath();
     }
 
     /**
