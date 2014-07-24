@@ -8,7 +8,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 
 import java.awt.Point;
-import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +25,10 @@ public class JsonPackingConverter extends AbstractTextConverter {
 
     /**
      * Create a JSON converter with output file json and optional JSONP variable jsonpVar.
-     *
-     * @param json     the output JSON file to write to
+     *  @param json     the output JSON file to write to
      * @param jsonpVar optional JSONP variable name
      */
-    public JsonPackingConverter(File json, String jsonpVar) {
+    public JsonPackingConverter(Path json, String jsonpVar) {
         super(json, "JSON");
         this.jsonpVar = jsonpVar;
     }

@@ -6,7 +6,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
 import java.awt.Point;
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -20,11 +20,10 @@ public class CssPackingConverter extends AbstractTextConverter {
 
     /**
      * Create a CSS converter with output file css and class prefix cssPrefix.
-     *
-     * @param css       the output CSS file to write to
+     *  @param css       the output CSS file to write to
      * @param cssPrefix the CSS class prefix for each icon class
      */
-    public CssPackingConverter(File css, String cssPrefix) {
+    public CssPackingConverter(Path css, String cssPrefix) {
         super(css, "CSS");
         this.cssPrefix = cssPrefix;
     }

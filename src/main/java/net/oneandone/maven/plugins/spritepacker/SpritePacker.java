@@ -148,9 +148,9 @@ public class SpritePacker extends AbstractMojo {
         ImagePacking imagePacking = PackGrowing.fit(images, padding);
 
         List<PackingConverter> consumers = Arrays.asList(new SpritesheetPackingConverter(output),
-                                                         new JsonPackingConverter(json, jsonpVar),
-                                                         new CssPackingConverter(css, cssPrefix),
-                                                         new LessPackingConverter(less, lessNamespace));
+                                                         new JsonPackingConverter(json.toPath(), jsonpVar),
+                                                         new CssPackingConverter(css.toPath(), cssPrefix),
+                                                         new LessPackingConverter(less.toPath(), lessNamespace));
 
         for (PackingConverter consumer : consumers) {
             consumer.convert(images, imagePacking, getLog());

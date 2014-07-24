@@ -6,7 +6,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
 import java.awt.Point;
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -21,11 +21,10 @@ public class LessPackingConverter extends AbstractTextConverter {
 
     /**
      * Create a LESS converter with output file less and namespace lessNamespace.
-     *
-     * @param less          the output LESS file to write to
+     *  @param less          the output LESS file to write to
      * @param lessNamespace the LESS namespace under which the mixins should be added
      */
-    public LessPackingConverter(File less, String lessNamespace) {
+    public LessPackingConverter(Path less, String lessNamespace) {
         super(less, "LESS");
         this.lessNamespace = lessNamespace;
     }
