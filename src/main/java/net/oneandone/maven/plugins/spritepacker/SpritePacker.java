@@ -63,7 +63,7 @@ public class SpritePacker extends AbstractMojo {
     /**
      * Optional CSS class prefix. Default value is "icon".
      */
-    @Parameter(defaultValue = "icon")
+    @Parameter
     String cssPrefix;
 
     /**
@@ -73,9 +73,9 @@ public class SpritePacker extends AbstractMojo {
     File less;
 
     /**
-     * Optional LESS namespace name. Default value is "icon".
+     * Optional LESS namespace name.
      */
-    @Parameter(defaultValue = "icon")
+    @Parameter
     String lessNamespace;
 
     /**

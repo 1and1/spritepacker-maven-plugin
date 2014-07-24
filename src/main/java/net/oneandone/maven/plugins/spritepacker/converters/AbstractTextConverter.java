@@ -1,5 +1,6 @@
 package net.oneandone.maven.plugins.spritepacker.converters;
 
+import com.google.common.base.Strings;
 import net.oneandone.maven.plugins.spritepacker.ImagePacking;
 import net.oneandone.maven.plugins.spritepacker.NamedImage;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -23,7 +24,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
 
     /**
      * Create an AbstractTextConverter that saves to the specified file, and specify the type of output file for logging purposes.
-     *  @param file  the output file to write to
+     * @param file  the output file to write to
      * @param type  the type of file to convert to, for logging purposes
      */
     protected AbstractTextConverter(Path file, String type) {
@@ -80,5 +81,28 @@ public abstract class AbstractTextConverter implements PackingConverter {
      */
     protected String intToPixel(int i) {
         return i == 0 ? "0" : i + "px";
+    }
+
+    /**
+     * Sanitize name for use in CSS or LESS by removing all characters that are not letters, numbers
+     * hyphens or underscores.
+     *
+     * @param name  the name to be sanitized
+     * @return      sanitized name without special characters
+     */
+    protected String sanitize(String name) {
+        return (name == null) ? null : name.replaceAll("[^\\p{L}\\p{N}-_]", "");
+    }
+
+    /**
+     * Fix names by checking if the first character is a number or hyphen.
+     * If so, insert an underscore at the beginning of the name in order to make it valid for
+     * use in CSS or LESS.
+     *
+     * @param name  the name to fix
+     * @return      valid name without number or hyphen as first character
+     */
+    protected String fixFirstChar(String name) {
+        return (Strings.isNullOrEmpty(name) || name.substring(0,1).matches("[^0-9-]")) ? name : "_" + name;
     }
 }
