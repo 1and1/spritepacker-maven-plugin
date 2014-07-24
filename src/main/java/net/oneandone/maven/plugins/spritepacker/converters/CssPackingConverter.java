@@ -20,7 +20,7 @@ public class CssPackingConverter extends AbstractTextConverter {
 
     /**
      * Create a CSS converter with output file css and class prefix cssPrefix.
-     *  @param css       the output CSS file to write to
+     * @param css       the output CSS file to write to
      * @param cssPrefix the CSS class prefix for each icon class
      */
     public CssPackingConverter(Path css, String cssPrefix) {
@@ -31,8 +31,8 @@ public class CssPackingConverter extends AbstractTextConverter {
     /**
      * Create output CSS string based on an ImagePacking.
      *
-     * @param imageList     the list of images
-     * @param imagePacking  the ImagePacking to convert
+     * @param imageList     the list of images - must not be null
+     * @param imagePacking  the ImagePacking to convert - must not be null
      * @param log           the log object to use
      * @return              String containing the CSS file contents
      * @throws MojoExecutionException

@@ -36,8 +36,8 @@ public class JsonPackingConverter extends AbstractTextConverter {
     /**
      *Create output JSON string based on an ImagePacking.
      *
-     * @param imageList     the list of images
-     * @param imagePacking  the ImagePacking to convert
+     * @param imageList     the list of images - must not be null
+     * @param imagePacking  the ImagePacking to convert - must not be null
      * @param log           the log object to use
      * @return              String containing the JSON file contents
      * @throws MojoExecutionException
