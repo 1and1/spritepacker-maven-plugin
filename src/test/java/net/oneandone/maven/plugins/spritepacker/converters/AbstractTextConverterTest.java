@@ -59,6 +59,16 @@ public class AbstractTextConverterTest {
     }
 
     @Test
+    public void testSanitize() throws Exception {
+        // TODO
+    }
+
+    @Test
+    public void testFixFirstChar() throws Exception {
+        // TODO
+    }
+
+    @Test
     public void doNothingOnNullFile() throws Exception {
         file = null;
 
