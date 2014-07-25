@@ -60,7 +60,13 @@ Configuration
 	See [http://plexus.codehaus.org/plexus-utils/apidocs/org/codehaus/plexus/util/DirectoryScanner.html] for more details.</dt>
 	
 	<dt>output</dt>
-	<dd> <b><i>(required)</i></b> File to write PNG spritesheet to.</dd>
+	<dd><b><i>(required)</i></b> File to write PNG spritesheet to.</dd>
+	
+	<dt>forceOverwrite</dt>
+	<dd><i>(optional, default=false)</i> Normally the output files are not re-generated if they already exist and none of the source files
+	are newer than any of the output files. Setting this option to true ensures that all output files are re-created and overwritten
+	regardless of the source files' last modified dates. This could be especially useful if you want icons that are deleted from the source
+	directory to always be removed from the spritesheet.
 	
     <dt>padding</dt>
     <dd><i>(optional)</i> Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
@@ -96,6 +102,58 @@ Configuration
 
 Output formats
 --------------
+
+### CSS
+
+If a CSS output file is specified, the name of each icon file in the source directory becomes a CSS class, optionally prefixed with
+the cssPrefix specified in the configuration, that contains position and size information about the icon within the spritesheet. For instance,
+an icon with source name "smiley.png", with cssPrefix "icon" specified, would result in the CSS class ".icon-smiley". Note that the file names
+names may be modified to make them valid as CSS class names: special characters are removed and in the case that the first character of a class
+name would be a number or hyphen, it is prefixed with an underscore.
+
+For instance, a source directory containing the following files:
+
+    0smiley.png
+    -1frown.png
+    +2wink!.png
+    excited.png
+    
+would result in the following CSS:
+
+    ._0smiley{background-position:0 0;width:20px;height:20px;}
+    ._-1frown{background-position:-20px 0;width:20px;height:20px;}
+    ._2wink{background-position:0 -20px;width:20px;height:20px;}
+    .excited{background-position:-20px -20px;width:20px;height:20px;}
+
+### Less
+
+If a Less output files is specified, Less mixins are created for each icon file in the source directory. The resulting mixin file
+holds three functions for each icon:
+
+    .create(icon-name) // to create an icon with .pos() and .size()
+    .pos(icon-name) // to get the background-position
+    .size(icon-name) // to get the size
+
+If you configure lessNamespace these mixins will be surrounded by the chosen Less namespace (#namespace{ }), in which case you can
+call the mixins using the following syntax:
+
+    #namespace > .create(icon-name)
+    #namespace > .pos(icon-name)
+    #namespace > .size(icon-name)
+
+When defining position and size of icons at once, the .create() function can be used, while the .pos() function is useful when
+the position of an already-defined icon changes, such as for hover states. For example, to define a hover-state for an icon
+within a button, you could do something like this:
+
+    // standard non-hovered icon
+    a.button .icon-help {
+        #icon > .create(icon-help1);  // inserts background-position, width and height
+    }
+
+    // if only the sprite position changes on hover
+    a.button:hover .icon-help {
+        #icon > .pos(icon-help2);  // inserts only background-position
+    }
 
 ### JSON
 
@@ -137,12 +195,6 @@ At that level is also *n* which contains the same keys (apart from *xy*) with th
 		}
 	}
 
-### CSS
-
-
-Notes
-=====
-
 This was originally built for use with the official lesscss-maven-plugin with the idea being this plugin creates a spritesheet
 and writes the data, and that plugin loads the data and makes it available within the less files.  That's not possible in the
 standard lesscss-maven-plugin because it can't read custom JS files however lesscss-java does have the ability to do so, meaning
@@ -166,10 +218,13 @@ If you are using that then add *jsonpVar* in the Spritepacker configuration in y
 	
 where *Sprites* is the value of jsonpVar.
 
-It's also worth noting that this uses Java libraries for creating the spritesheet, it can almost certainly be made smaller by
+Notes
+-----
+
+This uses Java libraries for creating the spritesheet; it can almost certainly be made smaller by
 adding your favourite PNG optimiser (optipng, deflopt, advancepng, etc) downstream in the build process. 
 
-License
-=======
+License and Copyright
+-------
 
 See [LICENSE](https://github.com/murphybob/spritepacker/blob/master/LICENSE) file.
