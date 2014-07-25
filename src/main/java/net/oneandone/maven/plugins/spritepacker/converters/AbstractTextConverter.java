@@ -85,7 +85,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
     }
 
     /**
-     * Sanitize name for use in CSS or LESS by removing all characters that are not letters, numbers
+     * Sanitize name for use in CSS or Less by removing all characters that are not letters, numbers
      * hyphens or underscores.
      *
      * @param name  the name to be sanitized
@@ -98,7 +98,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
     /**
      * Fix names by checking if the first character is a letter or an underscore.
      * If not, insert an underscore at the beginning of the name in order to make it valid for
-     * use in CSS or LESS.
+     * use in CSS or Less.
      *
      * @param name  the name to fix
      * @return      valid name without number or hyphen as first character

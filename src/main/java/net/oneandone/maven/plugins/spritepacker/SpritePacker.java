@@ -67,13 +67,13 @@ public class SpritePacker extends AbstractMojo {
     String cssPrefix;
 
     /**
-     * Optional output LESS file containing coordinates and dimensions, where each icon is saved as position and size mixins.
+     * Optional output Less file containing coordinates and dimensions, where each icon is saved as position and size mixins.
      */
     @Parameter
     File less;
 
     /**
-     * Optional LESS namespace name.
+     * Optional Less namespace name.
      */
     @Parameter
     String lessNamespace;

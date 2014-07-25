@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Converts ImagePacking to a LESS file, with the result that each icon's properties are available
+ * Converts ImagePacking to a Less file, with the result that each icon's properties are available
  * via mixins. the ".create" mixin returns all properties, the ".pos" mixin returns only the position
  * and the ".size" mixin returns only the dimensions of the icon.
  *
@@ -21,22 +21,22 @@ public class LessPackingConverter extends AbstractTextConverter {
     private final String lessNamespace;
 
     /**
-     * Create a LESS converter with output file less and namespace lessNamespace.
-     * @param less          the output LESS file to write to
-     * @param lessNamespace the LESS namespace under which the mixins should be added
+     * Create a Less converter with output file less and namespace lessNamespace.
+     * @param less          the output Less file to write to
+     * @param lessNamespace the Less namespace under which the mixins should be added
      */
     public LessPackingConverter(Path less, String lessNamespace) {
-        super(less, "LESS");
+        super(less, "Less");
         this.lessNamespace = fixFirstChar(sanitize(lessNamespace));
     }
 
     /**
-     * Create output LESS string based on an ImagePacking.
+     * Create output Less string based on an ImagePacking.
      *
      * @param imageList     the list of images - must not be null
      * @param imagePacking  the ImagePacking to convert - must not be null
      * @param log           the log object to use
-     * @return              String containing the LESS file contents
+     * @return              String containing the Less file contents
      * @throws MojoExecutionException
      */
     @Override
