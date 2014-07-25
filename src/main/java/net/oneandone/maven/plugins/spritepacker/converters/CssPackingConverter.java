@@ -1,10 +1,10 @@
 package net.oneandone.maven.plugins.spritepacker.converters;
 
-import com.google.common.base.Strings;
 import net.oneandone.maven.plugins.spritepacker.ImagePacking;
 import net.oneandone.maven.plugins.spritepacker.NamedImage;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.awt.Point;
 import java.nio.file.Path;
@@ -61,6 +61,6 @@ public class CssPackingConverter extends AbstractTextConverter {
      * @return      CSS class name that has been sanitized and prefixed, with first character fixed as needed.
      */
     private String getCssClassName(String name) {
-        return Strings.isNullOrEmpty(cssPrefix) ? fixFirstChar(sanitize(name)) : cssPrefix + "-" + sanitize(name);
+        return StringUtils.isNotEmpty(cssPrefix) ? cssPrefix + "-" + sanitize(name) : fixFirstChar(sanitize(name));
     }
 }
