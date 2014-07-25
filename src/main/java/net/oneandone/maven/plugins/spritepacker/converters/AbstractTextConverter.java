@@ -20,8 +20,8 @@ import java.util.List;
  * @author mklein
  */
 public abstract class AbstractTextConverter implements PackingConverter {
-    private static final CharMatcher CHARS_ALLOWED_IN_CSS_CLASS = CharMatcher.ASCII.and(CharMatcher.JAVA_LETTER_OR_DIGIT.or(CharMatcher.anyOf("-_")));
-    private static final CharMatcher CHARS_ALLOWED_AT_START_OF_CSS_CLASS = CharMatcher.ASCII.and(CharMatcher.JAVA_LETTER.or(CharMatcher.is('_')));
+    private static final CharMatcher CHARS_ALLOWED_IN_CSS_CLASS = CharMatcher.JAVA_LETTER_OR_DIGIT.or(CharMatcher.anyOf("-_"));
+    private static final CharMatcher CHARS_ALLOWED_AT_START_OF_CSS_CLASS = CharMatcher.JAVA_LETTER.or(CharMatcher.is('_'));
     private final Path file;
     private final String type;
 
