@@ -1,5 +1,6 @@
 package net.oneandone.maven.plugins.spritepacker.converters;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 import net.oneandone.maven.plugins.spritepacker.ImagePacking;
 import net.oneandone.maven.plugins.spritepacker.NamedImage;
@@ -19,6 +20,8 @@ import java.util.List;
  * @author mklein
  */
 public abstract class AbstractTextConverter implements PackingConverter {
+    private static final CharMatcher CHARS_ALLOWED_IN_CSS_CLASS = CharMatcher.ASCII.and(CharMatcher.JAVA_LETTER_OR_DIGIT.or(CharMatcher.anyOf("-_")));
+    private static final CharMatcher CHARS_ALLOWED_AT_START_OF_CSS_CLASS = CharMatcher.ASCII.and(CharMatcher.JAVA_LETTER.or(CharMatcher.is('_')));
     private final Path file;
     private final String type;
 
@@ -91,11 +94,11 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @return      sanitized name without special characters
      */
     protected String sanitize(String name) {
-        return (name == null) ? null : name.replaceAll("[^\\p{L}\\p{N}-_]", "");
+        return (name == null) ? null : CHARS_ALLOWED_IN_CSS_CLASS.retainFrom(name);
     }
 
     /**
-     * Fix names by checking if the first character is a number or hyphen.
+     * Fix names by checking if the first character is allowed at the start of a css class name.
      * If so, insert an underscore at the beginning of the name in order to make it valid for
      * use in CSS or LESS.
      *
@@ -103,6 +106,6 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @return      valid name without number or hyphen as first character
      */
     protected String fixFirstChar(String name) {
-        return (Strings.isNullOrEmpty(name) || name.substring(0,1).matches("[^0-9-]")) ? name : "_" + name;
+        return (Strings.isNullOrEmpty(name) || CHARS_ALLOWED_AT_START_OF_CSS_CLASS.matches(name.charAt(0))) ? name : "_" + name;
     }
 }

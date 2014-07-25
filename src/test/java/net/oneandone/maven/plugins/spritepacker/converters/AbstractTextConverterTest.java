@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Unit tests for the AbstractTextConverter
  *
- * @autor ssiegler
+ * @author ssiegler
  */
 public class AbstractTextConverterTest {
     @Rule
@@ -60,12 +60,26 @@ public class AbstractTextConverterTest {
 
     @Test
     public void testSanitize() throws Exception {
-        // TODO
+        AbstractTextConverter converter = createConverter();
+
+        errorCollector.checkThat(converter.sanitize("totallyValidExample001"), is("totallyValidExample001"));
+        errorCollector.checkThat(converter.sanitize("something is wrong"), is("somethingiswrong"));
+        errorCollector.checkThat(converter.sanitize("¿is\tthis\nstrange\benough?"), is("isthisstrangeenough"));
+        errorCollector.checkThat(converter.sanitize("_-_._-_"), is("_-__-_"));
+        errorCollector.checkThat(converter.sanitize(null), is((String) null));
+        errorCollector.checkThat(converter.sanitize(""), is(""));
     }
 
     @Test
     public void testFixFirstChar() throws Exception {
-        // TODO
+        AbstractTextConverter converter = createConverter();
+
+        errorCollector.checkThat(converter.fixFirstChar("-test"), is("_-test"));
+        errorCollector.checkThat(converter.fixFirstChar("007"), is("_007"));
+        errorCollector.checkThat(converter.fixFirstChar("everything is fine"), is("everything is fine"));
+        errorCollector.checkThat(converter.fixFirstChar("\n"), is("_\n"));
+        errorCollector.checkThat(converter.fixFirstChar(null), is((String) null));
+        errorCollector.checkThat(converter.fixFirstChar(""), is(""));
     }
 
     @Test
