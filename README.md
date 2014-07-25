@@ -109,7 +109,7 @@ If a CSS output file is specified, the name of each icon file in the source dire
 the cssPrefix specified in the configuration, that contains position and size information about the icon within the spritesheet. For instance,
 an icon with source name "smiley.png", with cssPrefix "icon" specified, would result in the CSS class ".icon-smiley". Note that special
 characters are removed and number or hyphens at the beginning of class names are prefixed with an underscore, in keeping with the CSS specification
-(see [http://www.w3.org/TR/CSS2/syndata.html#characters]).
+(see [http://www.w3.org/TR/CSS2/syndata.html#characters] ).
 
 For instance, a source directory containing the following files:
 
