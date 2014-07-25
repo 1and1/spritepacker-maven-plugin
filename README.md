@@ -1,85 +1,110 @@
 Spritepacker Maven Plugin
 =========================
 
-This project is a maven plugin to take a set of input images and combine them into a PNG spritesheet. It can also produce a
-JSON(P) file alongside that with descriptive information about the spritesheet layout. This can be plugged into other tools
-for a more automated approach to using a spritesheet in your project.
-
-Install
-=======
-
-* Clone this repository and run mvn install
+This project is a maven plugin to take a set of input images and combine them into a PNG spritesheet. It is capable of generating
+plain CSS output with icons names as class names, Less mixins that take the icon name as a parameter, or a  
+JSON(P) file containing descriptive information about the spritesheet layout that can be plugged into other tools.
 
 Usage
-=====
+-----
 
-Include the plugin in your maven project, and use the pom.xml configuration directives to tell it what images you want to combine and where you would like it to combine them to.
+Include the plugin in your maven project, and use the pom.xml configuration directives to tell it what images you want to
+combine and where you would like it to combine them to.
 
 	<plugin>
 		<groupId>com.murphybob</groupId>
 		<artifactId>spritepacker-maven-plugin</artifactId>
-		<version>0.10.0</version>
-		<configuration>
-			<sourceDirectory>${project.basedir}/src/images/sprites/</sourceDirectory>
-			<includes>
-				<include>*.png</include>
-			</includes>
-			<output>${project.build.directory}/images/assets-sprite.png</output>
-			<json>${project.build.directory}/images/assets-sprite.json</json>
-			<padding>10</padding>
-		</configuration>
+		<version>1.0.0</version>
         <executions>
             <execution>
                 <goals>
                     <goal>compile</goal>
                 </goals>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/images/sprites/</sourceDirectory>
+                    <output>${project.build.directory}/images/sprite.png</output>
+                    <includes>
+                        <include>*.png</include>
+                    </includes>
+                    <excludes>
+                        <exclude>*.gif</exclude>
+                    </excludes>
+                    <json>${project.build.directory}/images/sprite.json</json>
+                    <jsonpVar>sprite</jsonpVar>
+                    <css>${project.build.directory}/images/sprite.css</css>
+                    <cssPrefix>icon</cssPrefix>
+                    <less>${project.build.directory}/images/sprite.less</less>
+                    <lessNamespace>icon</lessNamespace>
+                    <padding>10</padding>
+                </configuration>
+
             </execution>
         </executions>
 	</plugin>
 
 Configuration
-=============
+-------------
 
 <dl>
 
 	<dt>sourceDirectory</dt>
-	<dd>The directory where your source images reside.  This will be scanned recursively and files included based on
+	<dd><b>(required)</b> The directory where your source images reside.  This will be scanned recursively and files included based on
 	include/exclude rules.</dd>
 	
 	<dt>includes</dt>
-	<dd>Expression of which files to include.
+	<dd><b>(optional)</b> Expression of which files to include.
 	See [http://plexus.codehaus.org/plexus-utils/apidocs/org/codehaus/plexus/util/DirectoryScanner.html] for more details.</dt>
 	
 	<dt>excludes</dt>
-	<dd>Expression of which files to exclude.
+	<dd><b>(optional)</b> Expression of which files to exclude.
 	See [http://plexus.codehaus.org/plexus-utils/apidocs/org/codehaus/plexus/util/DirectoryScanner.html] for more details.</dt>
 	
 	<dt>output</dt>
-	<dd>File to write PNG spritesheet to.</dd>
+	<dd> <b>(required)</b> File to write PNG spritesheet to.</dd>
+	
+    <dt>padding</dt>
+    <dd><b>(optional)</b> Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
+    with images bleeding into each other due to users zooming, sub-pixel rendering, etc...</dd>
 	
 	<dt>json</dt>
-	<dd>File to write JSON(P) spritesheet metadata to. See below for structure.</dd>
+	<dd><b>(optional)</b> File to write JSON(P) spritesheet metadata to. See [below](#json) for structure.</dd>
 	
 	<dt>jsonpVar</dt>
-	<dd>If set this is used as a padding variable to make the JSON file into a JSONP file which may be more useful depending
+	<dd><b>(optional)</b> If set this is used as a padding variable to make the JSON file into a JSONP file which may be more useful depending
 	on your application. e.g.<br>
-		*{ image: {...} }*<br>
+		{ image: {...} }<br>
 		becomes<br>
-		*jsonpVar = { image: {...} }*
+		jsonpVar = { image: {...} }
 	</dd>
 	
-	<dt>padding</dt>
-	<dd>Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
-	with images bleeding into each other due to users zooming, sub-pixel rendering, etc...</dd>
+	<dt>css</dt>
+	<dd><b>(optional)</b> File to write CSS classes to. See [below](#css) for more information on the format.</dd>
+	
+    <dt>cssPrefix</dt>
+    <dd><b>(optional)</b> Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
+    with images bleeding into each other due to users zooming, sub-pixel rendering, etc...</dd>
+    
+    <dt>padding</dt>
+    <dd><b>(optional)</b> Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
+    with images bleeding into each other due to users zooming, sub-pixel rendering, etc...</dd>
+    
+    <dt>padding</dt>
+    <dd><b>(optional)</b> Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
+    with images bleeding into each other due to users zooming, sub-pixel rendering, etc...</dd>
    
 </dl>
 
-JSON
-====
+Output formats
+--------------
 
-The JSON is formatted as in the example below.  At the top level are keys which are derived from the file name of the image, with the extension stripped.  For that reason, if you wish to use this data you must ensure these filenames are unique throughout the entire list of images.
+### <a name="json"></a>JSON
 
-At the next level are the width (*w*), height (*h*), negative x location (*x*), negative y location (*y*), and both x and y in one for convenience (*xy*) as strings with "px" appended for use in a stylesheet.
+The JSON is formatted as in the example below.  At the top level are keys which are derived from the file name of the image,
+with the extension stripped.  For that reason, if you wish to use this data you must ensure these filenames are unique
+throughout the entire list of images.
+
+At the next level are the width (*w*), height (*h*), negative x location (*x*), negative y location (*y*), and both x and y
+in one for convenience (*xy*) as strings with "px" appended for use in a stylesheet.
 
 At that level is also *n* which contains the same keys (apart from *xy*) with the same values as pure integers. 
 
@@ -112,6 +137,9 @@ At that level is also *n* which contains the same keys (apart from *xy*) with th
 		}
 	}
 
+### <a name="css"></a>CSS
+
+
 Notes
 =====
 
@@ -138,7 +166,8 @@ If you are using that then add *jsonpVar* in the Spritepacker configuration in y
 	
 where *Sprites* is the value of jsonpVar.
 
-It's also worth noting that this uses Java libraries for creating the spritesheet, it can almost certainly be made smaller by adding your favourite PNG optimiser (optipng, deflopt, advancepng, etc) downstream in the build process. 
+It's also worth noting that this uses Java libraries for creating the spritesheet, it can almost certainly be made smaller by
+adding your favourite PNG optimiser (optipng, deflopt, advancepng, etc) downstream in the build process. 
 
 License
 =======
