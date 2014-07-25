@@ -50,7 +50,7 @@ public class LessPackingConverter extends AbstractTextConverter {
         }
         sb.append(tab).append(".create(@name){.pos(@name);.size(@name);}\n");
         for (NamedImage image : imageList) {
-            String name = image.getName();
+            String name = sanitize(image.getName());
             Point position = imagePacking.getPosition(image);
             String x = intToPixel(-position.x);
             String y = intToPixel(-position.y);

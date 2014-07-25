@@ -74,7 +74,7 @@ public class JsonPackingConverter extends AbstractTextConverter {
 
             props.put("n", numbers);
 
-            map.put(n.getName(), props);
+            map.put(sanitize(n.getName()), props);
         }
 
         // Generate json representation of map object
