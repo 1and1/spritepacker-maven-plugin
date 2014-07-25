@@ -18,6 +18,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -120,16 +121,21 @@ public class SpritePacker extends AbstractMojo {
 
         long startTime = System.currentTimeMillis();
 
-        List<File> inputs = scanPaths(sourceDirectory, includes, excludes);
+        List<Path> inputs = scanPaths(sourceDirectory, includes, excludes);
 
         // Check if there are actually any inputs to do anything with
-        if (inputs.size() == 0) {
+        if (inputs.isEmpty()) {
             log("No source images found.");
             return;
         }
 
+        Path outputPath = fileToPath(output);
+        Path jsonPath = fileToPath(json);
+        Path cssPath = fileToPath(css);
+        Path lessPath = fileToPath(less);
+
         // Load output files into an ArrayList
-        List<File> outputs = Arrays.asList(output, json, css, less);
+        List<Path> outputs = Arrays.asList(outputPath, jsonPath, cssPath, lessPath);
 
         // If force overwrite not specified, and the JSON file is not being created for the first time,
         // and the output files were modified more recently than the input files, return.
@@ -147,11 +153,6 @@ public class SpritePacker extends AbstractMojo {
 
         // Add packing information
         ImagePacking imagePacking = PackGrowing.fit(images, padding);
-
-        Path outputPath = fileToPath(output);
-        Path jsonPath = fileToPath(json);
-        Path cssPath = fileToPath(css);
-        Path lessPath = fileToPath(less);
 
         List<PackingConverter> consumers = Arrays.asList(new SpritesheetPackingConverter(outputPath),
                                                          new JsonPackingConverter(jsonPath, jsonpVar),
@@ -185,21 +186,29 @@ public class SpritePacker extends AbstractMojo {
      * @param outputs   the list of output files
      * @return          whether any input file was newer than any output file
      */
-    private boolean isAnyInputNewerThanAnyOutput(List<File> inputs, List<File> outputs) {
+    protected boolean isAnyInputNewerThanAnyOutput(List<Path> inputs, List<Path> outputs) {
         assert inputs != null && !inputs.isEmpty();
         assert outputs != null && !outputs.isEmpty();
 
         long newestInput = 0L;
-        for (File input : inputs) {
+        for (Path input : inputs) {
             if (input != null) {
-                newestInput = Math.max(input.lastModified(), newestInput);
+                try {
+                    newestInput = Math.max(Files.getLastModifiedTime(input).toMillis(), newestInput);
+                } catch (IOException e) {
+                    log("Cannot determine last modification time of input file: " + input.toAbsolutePath());
+                }
             }
         }
 
         long oldestOutput = newestInput;
-        for (File output : outputs) {
+        for (Path output : outputs) {
             if (output != null) {
-                oldestOutput = Math.min(output.lastModified(), oldestOutput);
+                try {
+                    oldestOutput = Math.min(Files.getLastModifiedTime(output).toMillis(), oldestOutput);
+                } catch (IOException e) {
+                    log("Cannot determine last modification time of output file: " + output.toAbsolutePath());
+                }
             }
         }
 
@@ -215,15 +224,15 @@ public class SpritePacker extends AbstractMojo {
      * @param excludes        criterion for files to exclude
      * @return                list of matching files
      */
-    private List<File> scanPaths(File sourceDirectory, String[] includes, String[] excludes) {
+    protected List<Path> scanPaths(File sourceDirectory, String[] includes, String[] excludes) {
         Scanner scanner = buildContext.newScanner(sourceDirectory, true);
         scanner.setIncludes(includes);
         scanner.setExcludes(excludes);
         scanner.scan();
         String[] fileNames = scanner.getIncludedFiles();
-        List<File> paths = new ArrayList<>(fileNames.length);
+        List<Path> paths = new ArrayList<>(fileNames.length);
         for (String fileName : fileNames) {
-            paths.add(new File(sourceDirectory, fileName));
+            paths.add(sourceDirectory.toPath().resolve(fileName));
         }
         return paths;
     }
@@ -235,14 +244,14 @@ public class SpritePacker extends AbstractMojo {
      * @return           the list of loaded NamedImages
      * @throws MojoExecutionException
      */
-    private List<NamedImage> loadImages(List<File> imageFiles) throws MojoExecutionException {
+    protected List<NamedImage> loadImages(List<Path> imageFiles) throws MojoExecutionException {
         List<NamedImage> images = new ArrayList<>(imageFiles.size());
-        for (File f : imageFiles) {
+        for (Path f : imageFiles) {
             try {
-                String basename = FileUtils.removeExtension(f.getName());
-                images.add(new NamedImage(ImageIO.read(f), basename));
+                String basename = FileUtils.removeExtension(f.getFileName().toString());
+                images.add(new NamedImage(ImageIO.read(Files.newInputStream(f)), basename));
             } catch (IOException e) {
-                throw new MojoExecutionException("Failed to open file: " + f.getAbsolutePath(), e);
+                throw new MojoExecutionException("Failed to open file: " + f.toAbsolutePath(), e);
             }
         }
         return images;
