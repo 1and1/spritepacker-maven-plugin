@@ -107,9 +107,9 @@ Output formats
 
 If a CSS output file is specified, the name of each icon file in the source directory becomes a CSS class, optionally prefixed with
 the cssPrefix specified in the configuration, that contains position and size information about the icon within the spritesheet. For instance,
-an icon with source name "smiley.png", with cssPrefix "icon" specified, would result in the CSS class ".icon-smiley". Note that the file names
-names may be modified to make them valid as CSS class names: special characters are removed and in the case that the first character of a class
-name would be a number or hyphen, it is prefixed with an underscore.
+an icon with source name "smiley.png", with cssPrefix "icon" specified, would result in the CSS class ".icon-smiley". Note that special
+characters are removed and number or hyphens at the beginning of class names are prefixed with an underscore, in keeping with the CSS specification
+(see [http://www.w3.org/TR/CSS2/syndata.html#characters]).
 
 For instance, a source directory containing the following files:
 
@@ -147,19 +147,19 @@ within a button, you could do something like this:
 
     // standard non-hovered icon
     a.button .icon-help {
-        #icon > .create(icon-help1);  // inserts background-position, width and height
+        #icon > .create(icon-help1);  // define background-position, width and height
     }
 
     // if only the sprite position changes on hover
     a.button:hover .icon-help {
-        #icon > .pos(icon-help2);  // inserts only background-position
+        #icon > .pos(icon-help2);  // define only background-position
     }
 
 ### JSON
 
-The JSON is formatted as in the example below.  At the top level are keys which are derived from the file name of the image,
-with the extension stripped.  For that reason, if you wish to use this data you must ensure these filenames are unique
-throughout the entire list of images.
+If a JSON output file is specified it is formatted as in the example below.  At the top level are keys which are derived
+from the file names of the images, with the extension stripped.  For that reason, if you wish to use this data you must
+ensure these filenames are unique throughout the entire list of images.
 
 At the next level are the width (*w*), height (*h*), negative x location (*x*), negative y location (*y*), and both x and y
 in one for convenience (*xy*) as strings with "px" appended for use in a stylesheet.
@@ -224,7 +224,7 @@ Notes
 This uses Java libraries for creating the spritesheet; it can almost certainly be made smaller by
 adding your favourite PNG optimiser (optipng, deflopt, advancepng, etc) downstream in the build process. 
 
-License and Copyright
+License
 -------
 
 See [LICENSE](https://github.com/murphybob/spritepacker/blob/master/LICENSE) file.
