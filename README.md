@@ -48,29 +48,29 @@ Configuration
 <dl>
 
 	<dt>sourceDirectory</dt>
-	<dd><b>(required)</b> The directory where your source images reside.  This will be scanned recursively and files included based on
+	<dd><b><i>(required)</i></b> The directory where your source images reside.  This will be scanned recursively and files included based on
 	include/exclude rules.</dd>
 	
 	<dt>includes</dt>
-	<dd><b>(optional)</b> Expression of which files to include.
+	<dd><i>(optional)</i> Expression of which files to include.
 	See [http://plexus.codehaus.org/plexus-utils/apidocs/org/codehaus/plexus/util/DirectoryScanner.html] for more details.</dt>
 	
 	<dt>excludes</dt>
-	<dd><b>(optional)</b> Expression of which files to exclude.
+	<dd><i>(optional)</i> Expression of which files to exclude.
 	See [http://plexus.codehaus.org/plexus-utils/apidocs/org/codehaus/plexus/util/DirectoryScanner.html] for more details.</dt>
 	
 	<dt>output</dt>
-	<dd> <b>(required)</b> File to write PNG spritesheet to.</dd>
+	<dd> <b><i>(required)</i></b> File to write PNG spritesheet to.</dd>
 	
     <dt>padding</dt>
-    <dd><b>(optional)</b> Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
+    <dd><i>(optional)</i> Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
     with images bleeding into each other due to users zooming, sub-pixel rendering, etc...</dd>
 	
 	<dt>json</dt>
-	<dd><b>(optional)</b> File to write JSON(P) spritesheet metadata to. See [below](#json) for structure.</dd>
+	<dd><i>(optional)</i> File to write JSON(P) spritesheet metadata to. See <a href="#json">below</a> for structure.</dd>
 	
 	<dt>jsonpVar</dt>
-	<dd><b>(optional)</b> If set this is used as a padding variable to make the JSON file into a JSONP file which may be more useful depending
+	<dd><i>(optional)</i> If set this is used as a padding variable to make the JSON file into a JSONP file which may be more useful depending
 	on your application. e.g.<br>
 		{ image: {...} }<br>
 		becomes<br>
@@ -78,26 +78,26 @@ Configuration
 	</dd>
 	
 	<dt>css</dt>
-	<dd><b>(optional)</b> File to write CSS classes to. See [below](#css) for more information on the format.</dd>
+	<dd><i>(optional)</i> File to write CSS classes to. See <a href="#css">below</a> for more information on the format.</dd>
 	
     <dt>cssPrefix</dt>
-    <dd><b>(optional)</b> Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
-    with images bleeding into each other due to users zooming, sub-pixel rendering, etc...</dd>
+    <dd><i>(optional)</i> Prefix to add to CSS classes. For instance, if there is a "smiley.png" icon it would normally get the CSS class name
+    ".smiley", whereas if the prefix "icon" is specified the resulting class is ".icon-smiley". This helps ensure that icon class names
+    don't conflict with other CSS classes.</dd>
     
-    <dt>padding</dt>
-    <dd><b>(optional)</b> Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
-    with images bleeding into each other due to users zooming, sub-pixel rendering, etc...</dd>
+    <dt>less</dt>
+    <dd><i>(optional)</i> File to write Less mixins to. See <a href="#less">below</a> for information on usage.</dd>
     
-    <dt>padding</dt>
-    <dd><b>(optional)</b> Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
-    with images bleeding into each other due to users zooming, sub-pixel rendering, etc...</dd>
+    <dt>lessNamespace</dt>
+    <dd><i>(optional)</i> The namespace that contains the Less mixins. If this is specified then all icon mixins are put into a 
+    #namespace{ } block, which helps prevent conflicts with other Less mixins.</dd>
    
 </dl>
 
 Output formats
 --------------
 
-### <a name="json"></a>JSON
+### JSON
 
 The JSON is formatted as in the example below.  At the top level are keys which are derived from the file name of the image,
 with the extension stripped.  For that reason, if you wish to use this data you must ensure these filenames are unique
@@ -137,7 +137,7 @@ At that level is also *n* which contains the same keys (apart from *xy*) with th
 		}
 	}
 
-### <a name="css"></a>CSS
+### CSS
 
 
 Notes
