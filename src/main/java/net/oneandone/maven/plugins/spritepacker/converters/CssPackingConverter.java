@@ -60,7 +60,7 @@ public class CssPackingConverter extends AbstractTextConverter {
      * @param name  the base CSS class name
      * @return      CSS class name that has been sanitized and prefixed, with first character fixed as needed.
      */
-    private String getCssClassName(String name) {
+    protected String getCssClassName(String name) {
         return StringUtils.isNotEmpty(cssPrefix) ? cssPrefix + "-" + sanitize(name) : fixFirstChar(sanitize(name));
     }
 }
