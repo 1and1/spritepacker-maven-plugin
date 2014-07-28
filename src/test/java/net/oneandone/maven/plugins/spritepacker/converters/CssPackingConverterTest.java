@@ -13,6 +13,7 @@ import org.junit.rules.ErrorCollector;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class CssPackingConverterTest {
     private List<NamedImage> getImageList() {
         List<NamedImage> imageList = new ArrayList<>(500);
         for (int i=0; i<500; i++) {
-            NamedImage image = new NamedImage(null, "img"+i);
+            NamedImage image = new NamedImage(new BufferedImage(10+i, 600-i, BufferedImage.TYPE_INT_ARGB), "img"+i);
             imageList.add(image);
         }
         return imageList;

@@ -1,6 +1,7 @@
 package net.oneandone.maven.plugins.spritepacker;
 
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 /**
  * A class to hold a BufferedImage along with its name.
@@ -18,8 +19,8 @@ public class NamedImage {
      * @param name the name of the image
      */
     public NamedImage(BufferedImage image, String name) {
-        this.name = name;
-        this.image = image;
+        this.name = Objects.requireNonNull(name);
+        this.image = Objects.requireNonNull(image);
     }
 
     public String getName() {
