@@ -39,6 +39,7 @@ public class CssPackingConverterTest {
     public static final String[] names = { null, "", ".", "abc", "0815-test", "&9.test" };
 
     private static final String PREFIX = "test";
+    private static final int NUM_IMAGES = 500;
 
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
@@ -55,8 +56,8 @@ public class CssPackingConverterTest {
     }
 
     private List<NamedImage> getImageList() {
-        List<NamedImage> imageList = new ArrayList<>(500);
-        for (int i = 0; i < 500; i++) {
+        List<NamedImage> imageList = new ArrayList<>(NUM_IMAGES);
+        for (int i = 0; i < NUM_IMAGES; i++) {
             NamedImage image = new NamedImage(new BufferedImage(10 + i, 600 - i, BufferedImage.TYPE_INT_ARGB), "img" + i);
             imageList.add(image);
         }
@@ -107,7 +108,7 @@ public class CssPackingConverterTest {
             }
         }
 
-        errorCollector.checkThat("500 icon classes were created", imageNumber, is(500));
+        errorCollector.checkThat(NUM_IMAGES + " icon classes were created", imageNumber, is(NUM_IMAGES));
     }
 
     private void checkLineStartsWithoutPrefix(String imageName, String trimmed) {
