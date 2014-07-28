@@ -9,7 +9,7 @@ import org.codehaus.jackson.map.SerializationConfig;
 
 import java.awt.Point;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +21,9 @@ import java.util.Map;
  * @author Robert Murphy, mklein
  */
 public class JsonPackingConverter extends AbstractTextConverter {
+    protected static final int IMAGE_PROPERTY_COUNT = 6;
+    protected static final int RAW_NUMBER_COUNT = 4;
+
     private final String jsonpVar;
 
     /**
@@ -44,14 +47,31 @@ public class JsonPackingConverter extends AbstractTextConverter {
      */
     @Override
     protected String createOutput(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
+        Map<String, Object> map = buildOutputMap(imageList, imagePacking);
 
-        Map<String, Object> map = new HashMap<>();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
+
+            String out = mapper.writeValueAsString(map);
+            return jsonpVar == null ? out : jsonpVar + " = " + out;
+        } catch (Exception e) {
+            throw new MojoExecutionException("Couldn't generate JSON data", e);
+        }
+    }
+
+    /**
+     * Builds the output structure
+     * @param imageList a list of images, defines the order of the entries in the map
+     * @param imagePacking a packing of the images in the list
+     * @return a map with an entry for each image
+     */
+    protected Map<String, Object> buildOutputMap(List<NamedImage> imageList, ImagePacking imagePacking) {
+        Map<String, Object> map = new LinkedHashMap<>(imageList.size());
         for (NamedImage n : imageList) {
             Point position = imagePacking.getPosition(n);
 
-            Map<String, Object> props = new HashMap<>();
+            Map<String, Object> props = new LinkedHashMap<>(IMAGE_PROPERTY_COUNT);
             int x = position.x;
             int y = position.y;
             int width = n.getWidth();
@@ -66,7 +86,7 @@ public class JsonPackingConverter extends AbstractTextConverter {
             props.put("h", intToPixel(height));
             props.put("xy", xStr + " " + yStr);
 
-            Map<String, Integer> numbers = new HashMap<>();
+            Map<String, Integer> numbers = new LinkedHashMap<>(RAW_NUMBER_COUNT);
             numbers.put("x", x);
             numbers.put("y", y);
             numbers.put("w", width);
@@ -76,20 +96,6 @@ public class JsonPackingConverter extends AbstractTextConverter {
 
             map.put(sanitize(n.getName()), props);
         }
-
-        // Generate json representation of map object
-        String out;
-        try {
-            out = mapper.writeValueAsString(map);
-        } catch (Exception e) {
-            throw new MojoExecutionException("Couldn't generate JSON data", e);
-        }
-
-        // If user has passed in a variable to wrap this in, append it to the front
-        if (jsonpVar != null) {
-            out = jsonpVar + " = " + out;
-        }
-
-        return out;
+        return map;
     }
 }
