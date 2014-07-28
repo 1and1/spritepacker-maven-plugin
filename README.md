@@ -227,4 +227,4 @@ adding your favourite PNG optimiser (optipng, deflopt, advancepng, etc) downstre
 License
 -------
 
-See [LICENSE](master/LICENSE) file.
+See [LICENSE](LICENSE) file.
