@@ -227,4 +227,4 @@ adding your favourite PNG optimiser (optipng, deflopt, advancepng, etc) downstre
 License
 -------
 
-See [LICENSE](https://github.com/murphybob/spritepacker/blob/master/LICENSE) file.
+See [LICENSE](master/LICENSE) file.
