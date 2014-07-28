@@ -80,7 +80,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @param i     the int value to convert
      * @return      the pixel value
      */
-    protected String intToPixel(int i) {
+    protected static String intToPixel(int i) {
         return i == 0 ? "0" : i + "px";
     }
 
@@ -91,7 +91,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @param name  the name to be sanitized
      * @return      sanitized name without special characters
      */
-    protected String sanitize(String name) {
+    protected static String sanitize(String name) {
         return (name == null) ? null : CHARS_NOT_ALLOWED_IN_IDENTIFIERS.matcher(name).replaceAll("");
     }
 
@@ -103,7 +103,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @param name  the name to fix
      * @return      valid name without number or hyphen as first character
      */
-    protected String fixFirstChar(String name) {
+    protected static String fixFirstChar(String name) {
         return (name == null || name.isEmpty() || name.charAt(0) == '_' || Character.isLetter(name.charAt(0))) ? name : "_" + name;
     }
 }

@@ -51,35 +51,29 @@ public class AbstractTextConverterTest {
 
     @Test
     public void testIntToPixel() throws Exception {
-        AbstractTextConverter abstractTextConverter = createConverter();
-
-        errorCollector.checkThat(abstractTextConverter.intToPixel(0), is("0"));
-        errorCollector.checkThat(abstractTextConverter.intToPixel(2), is("2px"));
-        errorCollector.checkThat(abstractTextConverter.intToPixel(-32), is("-32px"));
+        errorCollector.checkThat(AbstractTextConverter.intToPixel(0), is("0"));
+        errorCollector.checkThat(AbstractTextConverter.intToPixel(2), is("2px"));
+        errorCollector.checkThat(AbstractTextConverter.intToPixel(-32), is("-32px"));
     }
 
     @Test
     public void testSanitize() throws Exception {
-        AbstractTextConverter converter = createConverter();
-
-        errorCollector.checkThat(converter.sanitize("totallyValidExample001"), is("totallyValidExample001"));
-        errorCollector.checkThat(converter.sanitize("something is wrong"), is("somethingiswrong"));
-        errorCollector.checkThat(converter.sanitize("¿is\tthis\nstrange\benough?"), is("isthisstrangeenough"));
-        errorCollector.checkThat(converter.sanitize("_-_._-_"), is("_-__-_"));
-        errorCollector.checkThat(converter.sanitize(null), is((String) null));
-        errorCollector.checkThat(converter.sanitize(""), is(""));
+        errorCollector.checkThat(AbstractTextConverter.sanitize("totallyValidExample001"), is("totallyValidExample001"));
+        errorCollector.checkThat(AbstractTextConverter.sanitize("something is wrong"), is("somethingiswrong"));
+        errorCollector.checkThat(AbstractTextConverter.sanitize("¿is\tthis\nstrange\benough?"), is("isthisstrangeenough"));
+        errorCollector.checkThat(AbstractTextConverter.sanitize("_-_._-_"), is("_-__-_"));
+        errorCollector.checkThat(AbstractTextConverter.sanitize(null), is((String) null));
+        errorCollector.checkThat(AbstractTextConverter.sanitize(""), is(""));
     }
 
     @Test
     public void testFixFirstChar() throws Exception {
-        AbstractTextConverter converter = createConverter();
-
-        errorCollector.checkThat(converter.fixFirstChar("-test"), is("_-test"));
-        errorCollector.checkThat(converter.fixFirstChar("007"), is("_007"));
-        errorCollector.checkThat(converter.fixFirstChar("everything is fine"), is("everything is fine"));
-        errorCollector.checkThat(converter.fixFirstChar("\n"), is("_\n"));
-        errorCollector.checkThat(converter.fixFirstChar(null), is((String) null));
-        errorCollector.checkThat(converter.fixFirstChar(""), is(""));
+        errorCollector.checkThat(AbstractTextConverter.fixFirstChar("-test"), is("_-test"));
+        errorCollector.checkThat(AbstractTextConverter.fixFirstChar("007"), is("_007"));
+        errorCollector.checkThat(AbstractTextConverter.fixFirstChar("everything is fine"), is("everything is fine"));
+        errorCollector.checkThat(AbstractTextConverter.fixFirstChar("\n"), is("_\n"));
+        errorCollector.checkThat(AbstractTextConverter.fixFirstChar(null), is((String) null));
+        errorCollector.checkThat(AbstractTextConverter.fixFirstChar(""), is(""));
     }
 
     @Test
