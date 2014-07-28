@@ -39,8 +39,10 @@ public class CssPackingConverterTest {
     public static final String[] names = { null, "", ".", "abc", "0815-test", "&9.test" };
 
     private static final String PREFIX = "test";
+
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
+
     private Log log;
     private ImagePacking packing;
     private List<NamedImage> imageList;

@@ -4,6 +4,7 @@ import net.oneandone.maven.plugins.spritepacker.ImagePacking;
 import net.oneandone.maven.plugins.spritepacker.NamedImage;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -18,12 +19,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.isIn;
+import static org.hamcrest.Matchers.lessThan;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.doReturn;
@@ -36,9 +42,6 @@ import static org.mockito.Mockito.spy;
 public class JsonPackingConverterTest {
     private static final int HEIGHT = 100;
     private static final int WIDTH = 333;
-
-    private static final String INDENT = "  ";
-    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     @Rule
     public
@@ -100,14 +103,7 @@ public class JsonPackingConverterTest {
 
         String output = converter.createOutput(images, packing, mock(Log.class));
 
-        assertThat(output, is("{" + LINE_SEPARATOR
-                              + INDENT + "\"some key\" : {" + LINE_SEPARATOR
-                              + INDENT + INDENT + "\"number\" : 7," + LINE_SEPARATOR
-                              + INDENT + INDENT + "\"key\" : \"value\"" + LINE_SEPARATOR
-                              + INDENT + "}," + LINE_SEPARATOR
-                              + INDENT + "\"another key\" : \"a string value\"," + LINE_SEPARATOR
-                              + INDENT + "\"third time is a charm\" : 123456789" + LINE_SEPARATOR
-                              + "}"));
+        checkIsJsonRepresentationOf(output, outputMap);
     }
 
     @Test
@@ -116,25 +112,31 @@ public class JsonPackingConverterTest {
         JsonPackingConverter converter = stubOutputMap(jsonpVar);
 
         String output = converter.createOutput(images, packing, mock(Log.class));
+        int split = output.indexOf('=');
+        errorCollector.checkThat(split, allOf(greaterThan(0),
+                                              lessThan(output.length())));
+        errorCollector.checkThat(output.substring(0, split), equalToIgnoringWhiteSpace(AbstractTextConverter.sanitize(jsonpVar)));
+        checkIsJsonRepresentationOf(output.substring(split + 1), outputMap);
+    }
 
-        assertThat(output, is(jsonpVar + " = {" + LINE_SEPARATOR
-                              + INDENT + "\"some key\" : {" + LINE_SEPARATOR
-                              + INDENT + INDENT + "\"number\" : 7," + LINE_SEPARATOR
-                              + INDENT + INDENT + "\"key\" : \"value\"" + LINE_SEPARATOR
-                              + INDENT + "}," + LINE_SEPARATOR
-                              + INDENT + "\"another key\" : \"a string value\"," + LINE_SEPARATOR
-                              + INDENT + "\"third time is a charm\" : 123456789" + LINE_SEPARATOR
-                              + "}"));
+    protected void checkIsJsonRepresentationOf(String jsonString, Map<String, Object> expectedMap) throws java.io.IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Set actual = objectMapper.readValue(jsonString, Map.class).entrySet();
+        Set expected = expectedMap.entrySet();
+
+        errorCollector.checkThat(actual, everyItem(isIn(expected)));
+        errorCollector.checkThat(expected, everyItem(isIn(actual)));
     }
 
     private JsonPackingConverter stubOutputMap(String jsonpVar) {
         JsonPackingConverter converter = spy(new JsonPackingConverter(null, jsonpVar));
-        HashMap<String, Object> subMap = new HashMap<>();
+        Map<String, Object> subMap = new HashMap<>();
         outputMap.put("some key", subMap);
         subMap.put("key", "value");
         subMap.put("number", 7);
         outputMap.put("another key", "a string value");
-        outputMap.put("third time is a charm", 123456789L);
+        outputMap.put("third time is a charm", 123456789);
         doReturn(outputMap).when(converter).buildOutputMap(anyListOf(NamedImage.class), any(ImagePacking.class));
         return converter;
     }

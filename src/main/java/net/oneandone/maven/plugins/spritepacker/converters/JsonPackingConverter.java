@@ -33,7 +33,7 @@ public class JsonPackingConverter extends AbstractTextConverter {
      */
     public JsonPackingConverter(Path json, String jsonpVar) {
         super(json, "JSON");
-        this.jsonpVar = jsonpVar;
+        this.jsonpVar = sanitize(jsonpVar);
     }
 
     /**
