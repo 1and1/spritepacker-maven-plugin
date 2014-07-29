@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(Theories.class)
 public class LessPackingConverterTest {
     @DataPoints
-    public static final String[] names = { null, "", ".", "abc", "0815-test", "&9.test" };
+    public static final String[] names = { "", ".", "abc", "0815-test", "&9.test" };
 
     public static final String NAMESPACE = "test";
     private static final int NUM_IMAGES = 500;
@@ -99,18 +100,20 @@ public class LessPackingConverterTest {
         List<NamedImage> sizes = new ArrayList<>(NUM_IMAGES);
         boolean namespaceDefined = false;
         boolean createDefined = false;
+        boolean namespaceEnded = false;
 
         try (Scanner scanner = new Scanner(output)) {
             while (scanner.hasNextLine()) {
                 String trimmed = scanner.nextLine().trim();
+                char firstChar = trimmed.charAt(0);
 
                 // skip over comments
-                if (trimmed.charAt(0) != '.' && trimmed.charAt(0) != '#') {
+                if (!(firstChar == '.' || firstChar == '#' || firstChar == '}')) {
                     continue;
                 }
 
                 // # signifies namespace
-                if (trimmed.charAt(0) == '#') {
+                if (firstChar == '#') {
                     errorCollector.checkThat("Namespace definition is expected", namespace, not(isEmptyOrNullString()));
                     errorCollector.checkThat("Namespace syntax is correct", trimmed, is("#" + namespace + "{"));
                     errorCollector.checkThat("Namespace only defined once", namespaceDefined, is(false));
@@ -121,26 +124,37 @@ public class LessPackingConverterTest {
                 // if no comment and no namespace -> start of mixin definitions
 
                 if (!createDefined) {
-                    errorCollector.checkThat("Namespace was defined if specified", StringUtils.isNotEmpty(namespace), is(namespaceDefined));
+                    errorCollector.checkThat("Namespace was already defined if specified", StringUtils.isNotEmpty(namespace), is(namespaceDefined));
                     errorCollector.checkThat("Create mixin is first", trimmed, is(".create(@name){.pos(@name);.size(@name);}"));
                     createDefined = true;
                     continue;
                 }
 
+                // } signifies end of namespace
+                if (firstChar == '}') {
+                    errorCollector.checkThat("Namespace was specified", namespace, not(isEmptyOrNullString()));
+                    errorCollector.checkThat("Namespace was defined", namespaceDefined, is(true));
+                    errorCollector.checkThat("Namespace only ended once", namespaceEnded, is(false));
+                    namespaceEnded = true;
+                    continue;
+                }
+
+                errorCollector.checkThat("The namespace hasn't ended yet", namespaceEnded, is(false));
+
                 errorCollector.checkThat("A valid position or size mixin was found", addNameToPositionMap(trimmed, positions) || addNameToSizeList(trimmed, sizes), is(true));
             }
-
-            errorCollector.checkThat("The correct number of position mixins was defined", positions.size(), is(NUM_IMAGES));
-            errorCollector.checkThat("The correct number of size mixins was defined", sizes.size(), is(NUM_IMAGES));
-
-            errorCollector.checkThat("All image positions were defined once", imageList, everyItem(isIn(positions.keySet())));
-            errorCollector.checkThat("All image sizes were defined once", imageList, everyItem(isIn(sizes)));
         }
+
+        errorCollector.checkThat("The correct number of position mixins was defined", positions.size(), is(NUM_IMAGES));
+        errorCollector.checkThat("The correct number of size mixins was defined", sizes.size(), is(NUM_IMAGES));
+
+        errorCollector.checkThat("All image positions were defined once", imageList, everyItem(isIn(positions.keySet())));
+        errorCollector.checkThat("All image sizes were defined once", imageList, everyItem(isIn(sizes)));
     }
 
     private boolean addNameToPositionMap(String trimmed, Map<NamedImage, Point> positions) {
         if (trimmed.startsWith(".pos")) {
-            String name = trimmed.substring(trimmed.indexOf('(')+1, trimmed.indexOf(')'));
+            String name = getNameFromMixin(trimmed);
             NamedImage image = imageMap.get(name);
             errorCollector.checkThat("Valid image name was defined", image, is(notNullValue()));
             Point position = packing.getPosition(image);
@@ -156,7 +170,7 @@ public class LessPackingConverterTest {
 
     private boolean addNameToSizeList(String trimmed, List<NamedImage> sizes) {
         if (trimmed.startsWith(".size")) {
-            String name = trimmed.substring(trimmed.indexOf('(')+1, trimmed.indexOf(')'));
+            String name = getNameFromMixin(trimmed);
             NamedImage image = imageMap.get(name);
             errorCollector.checkThat("Valid image name was defined", image, is(notNullValue()));
             errorCollector.checkThat("Size mixin defined correctly", trimmed,
@@ -169,14 +183,23 @@ public class LessPackingConverterTest {
         return false;
     }
 
-    @Theory
-    public void testLessNamespaceSanitization(String namespace) {
-        // TODO
+    private String getNameFromMixin(String mixin) {
+        return mixin.substring(mixin.indexOf('(')+1, mixin.indexOf(')'));
     }
 
     @Theory
-    public void testLessImageNameSanitization(String name) {
-        // TODO
+    public void constructorEnsuresNamespaceValidity(String namespace) {
+        errorCollector.checkThat(new LessPackingConverter(null, namespace).lessNamespace,
+                                 is(AbstractTextConverter.fixFirstChar(AbstractTextConverter.sanitize(namespace))));
+    }
+
+    @Theory
+    public void testLessImageNameSanitization(String name) throws Exception{
+        List<NamedImage> imageList = Arrays.asList(new NamedImage(new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB), name));
+        ImagePacking packing = getImagePacking(imageList);
+        String output = new LessPackingConverter(null, null).createOutput(imageList, packing, log);
+        errorCollector.checkThat(getNameFromMixin(output.substring(output.lastIndexOf('('))),
+                                 is(AbstractTextConverter.sanitize(name)));
     }
 
 }

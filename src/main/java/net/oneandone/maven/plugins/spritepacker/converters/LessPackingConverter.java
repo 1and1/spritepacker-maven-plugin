@@ -18,7 +18,7 @@ import java.util.List;
  * @author mklein
  */
 public class LessPackingConverter extends AbstractTextConverter {
-    private final String lessNamespace;
+    final String lessNamespace;
 
     /**
      * Create a Less converter with output file less and namespace lessNamespace.

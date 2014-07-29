@@ -136,13 +136,15 @@ public class CssPackingConverterTest {
 
     @Theory
     public void constructorEnsuresPrefixValidity(String name) throws Exception {
-        errorCollector.checkThat(new CssPackingConverter(null, name).cssPrefix, is(AbstractTextConverter.fixFirstChar(AbstractTextConverter.sanitize(name))));
+        errorCollector.checkThat("Prefix is sanitized and first character fixed", new CssPackingConverter(null, name).cssPrefix,
+                                 is(AbstractTextConverter.fixFirstChar(AbstractTextConverter.sanitize(name))));
     }
 
     @Theory
     public void testGetCssClassNameWithoutPrefix(String name) {
         String returnedClassName = CssPackingConverter.getCssClassName(null, name);
-        errorCollector.checkThat("Expected class name is returned", returnedClassName, is(AbstractTextConverter.fixFirstChar(AbstractTextConverter.sanitize(name))));
+        errorCollector.checkThat("Expected class name is returned", returnedClassName,
+                                 is(AbstractTextConverter.fixFirstChar(AbstractTextConverter.sanitize(name))));
     }
 
     @Theory
