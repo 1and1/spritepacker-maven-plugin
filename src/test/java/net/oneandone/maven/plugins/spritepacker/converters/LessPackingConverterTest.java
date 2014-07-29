@@ -149,7 +149,6 @@ public class LessPackingConverterTest {
 
                 // skip over comments
                 if (firstChar == '.') {
-                    // if no comment and no namespace -> start of mixin definitions
                     if (isFirstMixin) {
                         errorCollector.checkThat("Create mixin is first", trimmed, is(".create(@name){.pos(@name);.size(@name);}"));
                         isFirstMixin = false;
