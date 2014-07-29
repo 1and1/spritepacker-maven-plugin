@@ -139,9 +139,13 @@ public class SpritePacker extends AbstractMojo {
 
         // If force overwrite not specified, and the JSON file is not being created for the first time,
         // and the output files were modified more recently than the input files, return.
-        if (!(forceOverwrite || isAnyInputNewerThanAnyOutput(inputs, outputs))) {
-            log("No source images modified.");
-            return;
+        try {
+            if (!(forceOverwrite || Utils.shouldWriteOutput(inputs, outputs))) {
+                log("No source images modified.");
+                return;
+            }
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not check if output should be written.", e);
         }
 
         log("Loading " + inputs.size() + " images from " + sourceDirectory.getAbsolutePath());
@@ -176,52 +180,6 @@ public class SpritePacker extends AbstractMojo {
      */
     private Path fileToPath(File file) {
         return (file == null) ? null : file.toPath();
-    }
-
-    /**
-     * Check if any input is newer than any output. This also takes output files into account that do not yet exist,
-     * as they have a lastModified time of 0L and are thus automatically "older" than any input files.
-     *
-     * @param inputs    the list of input files
-     * @param outputs   the list of output files
-     * @return          whether any input file was newer than any output file
-     */
-    protected boolean isAnyInputNewerThanAnyOutput(List<Path> inputs, List<Path> outputs) {
-        assert inputs != null && !inputs.isEmpty();
-        assert outputs != null && !outputs.isEmpty();
-
-        boolean hasNoInput = true;
-        long newestInput = 0L;
-        for (Path input : inputs) {
-            if (input != null) {
-                try {
-                    newestInput = Math.max(Files.getLastModifiedTime(input).toMillis(), newestInput);
-                    hasNoInput = false;
-                } catch (IOException e) {
-                    log("Cannot determine last modification time of input file: " + input.toAbsolutePath());
-                }
-            }
-        }
-
-        if (hasNoInput) {
-            return false;
-        }
-
-        boolean hasNoOutput = true;
-        for (Path output : outputs) {
-            if (output != null) {
-                try {
-                    if (Files.getLastModifiedTime(output).toMillis() <= newestInput) {
-                        return true;
-                    }
-                    hasNoOutput = false;
-                } catch (IOException e) {
-                    log("Cannot determine last modification time of output file: " + output.toAbsolutePath());
-                }
-            }
-        }
-
-        return hasNoOutput;
     }
 
     /**

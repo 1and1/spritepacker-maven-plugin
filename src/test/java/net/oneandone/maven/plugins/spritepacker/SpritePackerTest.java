@@ -14,7 +14,6 @@ import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -77,37 +76,4 @@ public class SpritePackerTest {
         errorCollector.checkThat(namedImage.getImage(), is(eqImage(ImageIO.read(getClass().getResourceAsStream(resourceName)))));
     }
 
-    @Test
-    public void testAnyInputIsNewerThanAnyOutput() throws Exception {
-        SpritePacker spritePacker = new SpritePacker();
-        FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
-        Path inputDir = fileSystem.getPath("/inputs");
-        Path outputDir = fileSystem.getPath("/outputs");
-        Files.createDirectories(inputDir);
-        Files.createDirectories(outputDir);
-
-        List<Path> inputs = Arrays.asList(inputDir.resolve("first"), inputDir.resolve("second"), inputDir.resolve("last"));
-        List<Path> outputs = Arrays.asList(outputDir.resolve("first"), outputDir.resolve("last"));
-
-        errorCollector.checkThat("If neither inputs nor outputs exist, outputs are considered newer.", spritePacker.isAnyInputNewerThanAnyOutput(inputs, outputs), is(false));
-
-        Files.createFile(outputs.get(0));
-        errorCollector.checkThat("If no inputs exist, outputs are considered newer.", spritePacker.isAnyInputNewerThanAnyOutput(inputs, outputs), is(false));
-
-        Files.createFile(inputs.get(0));
-        errorCollector.checkThat("Newer inputs are considered newer.", spritePacker.isAnyInputNewerThanAnyOutput(inputs, outputs), is(true));
-
-        FileTime lastModifiedTime = Files.getLastModifiedTime(outputs.get(0));
-        Files.setLastModifiedTime(inputs.get(0), lastModifiedTime);
-        errorCollector.checkThat("Inputs with same modification time as outputs are considered newer.", spritePacker.isAnyInputNewerThanAnyOutput(inputs, outputs), is(true));
-
-        Files.setLastModifiedTime(inputs.get(0), FileTime.fromMillis(0L));
-        errorCollector.checkThat("Older inputs are not considered newer.", spritePacker.isAnyInputNewerThanAnyOutput(inputs, outputs), is(false));
-
-        Files.createFile(inputs.get(1));
-        errorCollector.checkThat("One newer input is enough.", spritePacker.isAnyInputNewerThanAnyOutput(inputs, outputs), is(true));
-
-        Files.delete(outputs.get(0));
-        errorCollector.checkThat("If not output exists, existing inputs are considered newer.", spritePacker.isAnyInputNewerThanAnyOutput(inputs, outputs), is(true));
-    }
 }
