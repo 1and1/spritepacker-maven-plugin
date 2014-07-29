@@ -24,9 +24,9 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.oneandone.maven.plugins.spritepacker.matchers.ImageMatcher.eqImage;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.doReturn;
@@ -95,7 +95,7 @@ public class SpritesheetPackingConverterTest {
         executeConvert(converter);
         BufferedImage output = ImageIO.read(Files.newInputStream(file));
 
-        assertImagesEqual(input, output);
+        assertThat(output, is(eqImage(input)));
     }
 
     @Test
@@ -118,26 +118,7 @@ public class SpritesheetPackingConverterTest {
 
         BufferedImage composition = ImageIO.read(getClass().getResourceAsStream("/100px-Icon_subway.svg.png"));
 
-        assertImagesEqual(composition, spritesheet);
-    }
-
-    private void assertImagesEqual(BufferedImage image1, BufferedImage image2) {
-        int width = image1.getWidth();
-        int height = image1.getHeight();
-        if (width != image2.getWidth() || height != image2.getHeight()) {
-           fail("Image dimensions differ");
-        }
-
-        int differences = 0;
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (image1.getRGB(i, j) != image2.getRGB(i, j)) {
-                    differences++;
-                }
-            }
-        }
-
-        assertThat("No differences", differences, is(0));
+        assertThat(spritesheet, is(eqImage(composition)));
     }
 
     private NamedImage loadImage(String name) throws IOException {

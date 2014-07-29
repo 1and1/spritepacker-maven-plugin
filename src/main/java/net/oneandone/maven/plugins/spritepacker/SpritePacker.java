@@ -190,29 +190,38 @@ public class SpritePacker extends AbstractMojo {
         assert inputs != null && !inputs.isEmpty();
         assert outputs != null && !outputs.isEmpty();
 
+        boolean hasNoInput = true;
         long newestInput = 0L;
         for (Path input : inputs) {
             if (input != null) {
                 try {
                     newestInput = Math.max(Files.getLastModifiedTime(input).toMillis(), newestInput);
+                    hasNoInput = false;
                 } catch (IOException e) {
                     log("Cannot determine last modification time of input file: " + input.toAbsolutePath());
                 }
             }
         }
 
-        long oldestOutput = newestInput;
+        if (hasNoInput) {
+            return false;
+        }
+
+        boolean hasNoOutput = true;
         for (Path output : outputs) {
             if (output != null) {
                 try {
-                    oldestOutput = Math.min(Files.getLastModifiedTime(output).toMillis(), oldestOutput);
+                    if (Files.getLastModifiedTime(output).toMillis() <= newestInput) {
+                        return true;
+                    }
+                    hasNoOutput = false;
                 } catch (IOException e) {
                     log("Cannot determine last modification time of output file: " + output.toAbsolutePath());
                 }
             }
         }
 
-        return newestInput >= oldestOutput;
+        return hasNoOutput;
     }
 
     /**
