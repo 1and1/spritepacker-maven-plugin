@@ -10,7 +10,11 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.theories.DataPoints;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
 import org.junit.rules.ErrorCollector;
+import org.junit.runner.RunWith;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -23,7 +27,6 @@ import java.util.Set;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.instanceOf;
@@ -39,7 +42,11 @@ import static org.mockito.Mockito.spy;
 /**
  * Unit tests for the JsonPackingConverter.
  */
+@RunWith(Theories.class)
 public class JsonPackingConverterTest {
+    @DataPoints
+    public static final String[] vars = { null, "", ".", "abc", "0815-test", "&9.test", "synchronized", "$$$#__##$$" };
+
     private static final int HEIGHT = 100;
     private static final int WIDTH = 333;
 
@@ -113,10 +120,29 @@ public class JsonPackingConverterTest {
 
         String output = converter.createOutput(images, packing, mock(Log.class));
         int split = output.indexOf('=');
-        errorCollector.checkThat(split, allOf(greaterThan(0),
-                                              lessThan(output.length())));
-        errorCollector.checkThat(output.substring(0, split), equalToIgnoringWhiteSpace(AbstractTextConverter.sanitize(jsonpVar)));
+        errorCollector.checkThat(split, allOf(greaterThan(0), lessThan(output.length())));
+        errorCollector.checkThat(output.substring(0, split).trim(), is(JsonPackingConverter.fixJsonpVar(jsonpVar)));
         checkIsJsonRepresentationOf(output.substring(split + 1), outputMap);
+    }
+
+    @Theory
+    public void constructorEnsuresJsonpVarValidity(String var) {
+        errorCollector.checkThat(new JsonPackingConverter(null, var).jsonpVar, is(JsonPackingConverter.fixJsonpVar(var)));
+    }
+
+    @Test
+    public void testFixJsonpVar() {
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar("totallyValidExample001"), is("totallyValidExample001"));
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar("something is wrong"), is("somethingiswrong"));
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar("¿$@is\tthis\nstrange\benough?"), is("$isthisstrangeenough"));
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar("_-_._-_"), is("____"));
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar("-test"), is("test"));
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar("007"), is("_007"));
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar("null"), is("_null"));
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar("continue"), is("_continue"));
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar("\n"), is("_"));
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar(null), is((String) null));
+        errorCollector.checkThat(JsonPackingConverter.fixJsonpVar(""), is(""));
     }
 
     protected void checkIsJsonRepresentationOf(String jsonString, Map<String, Object> expectedMap) throws java.io.IOException {
