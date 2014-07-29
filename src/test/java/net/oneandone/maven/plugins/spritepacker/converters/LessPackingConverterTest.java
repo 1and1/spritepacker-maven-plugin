@@ -198,7 +198,7 @@ public class LessPackingConverterTest {
         List<NamedImage> imageList = Arrays.asList(new NamedImage(new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB), name));
         ImagePacking packing = getImagePacking(imageList);
         String output = new LessPackingConverter(null, null).createOutput(imageList, packing, log);
-        errorCollector.checkThat(getNameFromMixin(output.substring(output.lastIndexOf('('))),
+        errorCollector.checkThat(getNameFromMixin(output.substring(output.lastIndexOf('.'))),
                                  is(AbstractTextConverter.sanitize(name)));
     }
 
