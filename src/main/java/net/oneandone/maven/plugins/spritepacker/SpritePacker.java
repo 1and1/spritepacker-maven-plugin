@@ -158,13 +158,13 @@ public class SpritePacker extends AbstractMojo {
         // Add packing information
         ImagePacking imagePacking = PackGrowing.fit(images, padding);
 
-        List<PackingConverter> consumers = Arrays.asList(new SpritesheetPackingConverter(outputPath),
-                                                         new JsonPackingConverter(jsonPath, jsonpVar),
-                                                         new CssPackingConverter(cssPath, cssPrefix),
-                                                         new LessPackingConverter(lessPath, lessNamespace));
+        List<PackingConverter> converters = Arrays.asList(new SpritesheetPackingConverter(outputPath),
+                                                          new JsonPackingConverter(jsonPath, jsonpVar),
+                                                          new CssPackingConverter(cssPath, cssPrefix),
+                                                          new LessPackingConverter(lessPath, lessNamespace));
 
-        for (PackingConverter consumer : consumers) {
-            consumer.convert(images, imagePacking, getLog());
+        for (PackingConverter converter : converters) {
+            executeConverter(images, imagePacking, converter);
         }
 
         long took = System.currentTimeMillis() - startTime;
@@ -172,13 +172,18 @@ public class SpritePacker extends AbstractMojo {
 
     }
 
+    // Allow tests to stub or verify converter execution
+    protected void executeConverter(List<NamedImage> images, ImagePacking imagePacking, PackingConverter converter) throws MojoExecutionException {
+        converter.convert(images, imagePacking, getLog());
+    }
+
     /**
      * Convert a file to a path, or return null if the file is null
      *
-     * @param file  the file to convert to a path
-     * @return      the path that was converted from a file
+     * @param file the file to convert to a path
+     * @return the path that was converted from a file
      */
-    private Path fileToPath(File file) {
+    protected Path fileToPath(File file) {
         return (file == null) ? null : file.toPath();
     }
 
@@ -189,7 +194,7 @@ public class SpritePacker extends AbstractMojo {
      * @param sourceDirectory the source directory
      * @param includes        criterion for files to include
      * @param excludes        criterion for files to exclude
-     * @return                list of matching files
+     * @return list of matching files
      */
     protected List<Path> scanPaths(File sourceDirectory, String[] includes, String[] excludes) {
         Scanner scanner = buildContext.newScanner(sourceDirectory, true);
@@ -208,7 +213,7 @@ public class SpritePacker extends AbstractMojo {
      * Load list of image files as a list of NamedImages
      *
      * @param imageFiles the image files to load
-     * @return           the list of loaded NamedImages
+     * @return the list of loaded NamedImages
      * @throws MojoExecutionException
      */
     protected List<NamedImage> loadImages(List<Path> imageFiles) throws MojoExecutionException {
