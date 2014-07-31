@@ -12,7 +12,7 @@ Include the plugin in your maven project, and use the pom.xml configuration dire
 combine and where you would like it to combine them to.
 
 	<plugin>
-		<groupId>com.murphybob</groupId>
+		<groupId>net.oneandone.maven.plugins</groupId>
 		<artifactId>spritepacker-maven-plugin</artifactId>
 		<version>1.0.0</version>
         <executions>
