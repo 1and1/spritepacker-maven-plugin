@@ -9,6 +9,7 @@ import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.awt.Point;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,7 +72,7 @@ public class JsonPackingConverter extends AbstractTextConverter {
 
             String out = mapper.writeValueAsString(map);
             return jsonpVar == null ? out : jsonpVar + " = " + out;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new MojoExecutionException("Couldn't generate JSON data", e);
         }
     }
