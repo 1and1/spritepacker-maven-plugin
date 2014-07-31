@@ -16,13 +16,13 @@
                         </goals>
                         <configuration>
                             <sourceDirectory>${project.basedir}/src/images/sprites/</sourceDirectory>
-                            <output>${project.build.directory}/images/sprite.png</output>
                             <includes>
                                 <include>*.png</include>
                             </includes>
                             <excludes>
                                 <exclude>*.gif</exclude>
                             </excludes>
+                            <output>${project.build.directory}/images/sprite.png</output>
                             <json>${project.build.directory}/images/sprite.json</json>
                             <jsonpVar>sprite</jsonpVar>
                             <css>${project.build.directory}/images/sprite.css</css>
