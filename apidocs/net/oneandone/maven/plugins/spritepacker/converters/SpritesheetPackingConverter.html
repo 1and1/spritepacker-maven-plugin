@@ -3,13 +3,13 @@
 <html lang="de">
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-<title>SpritesheetPackingConverter (spritepacker-maven-plugin Maven Mojo 1.0-SNAPSHOT API)</title>
+<title>SpritesheetPackingConverter (spritepacker-maven-plugin Maven Mojo 1.0.0-SNAPSHOT API)</title>
 <link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
 </head>
 <body>
 <script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="SpritesheetPackingConverter (spritepacker-maven-plugin Maven Mojo 1.0-SNAPSHOT API)";
+        parent.document.title="SpritesheetPackingConverter (spritepacker-maven-plugin Maven Mojo 1.0.0-SNAPSHOT API)";
     }
 //-->
 </script>
@@ -123,7 +123,7 @@ implements <a href="../../../../../../net/oneandone/maven/plugins/spritepacker/c
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><strong><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html#SpritesheetPackingConverter(java.io.File)">SpritesheetPackingConverter</a></strong>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;output)</code>
+<td class="colOne"><code><strong><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html#SpritesheetPackingConverter(java.nio.file.Path)">SpritesheetPackingConverter</a></strong>(<a href="http://docs.oracle.com/javase/7/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file">Path</a>&nbsp;output)</code>
 <div class="block">Create a spritesheet converter with output file output.</div>
 </td>
 </tr>
@@ -144,10 +144,16 @@ implements <a href="../../../../../../net/oneandone/maven/plugins/spritepacker/c
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html#convert(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert</a></strong>(<a href="../../../../../../net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a>&nbsp;imagePacking,
+<td class="colLast"><code><strong><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html#convert(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert</a></strong>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../../net/oneandone/maven/plugins/spritepacker/NamedImage.html" title="class in net.oneandone.maven.plugins.spritepacker">NamedImage</a>&gt;&nbsp;imageList,
+       <a href="../../../../../../net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a>&nbsp;imagePacking,
        org.apache.maven.plugin.logging.Log&nbsp;log)</code>
 <div class="block">Convert ImagePacking to a spritesheet image and save as a PNG file.</div>
 </td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected <a href="http://docs.oracle.com/javase/6/docs/api/java/awt/image/BufferedImage.html?is-external=true" title="class or interface in java.awt.image">BufferedImage</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html#createSpritesheet(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking)">createSpritesheet</a></strong>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../../net/oneandone/maven/plugins/spritepacker/NamedImage.html" title="class in net.oneandone.maven.plugins.spritepacker">NamedImage</a>&gt;&nbsp;imageList,
+                 <a href="../../../../../../net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a>&nbsp;imagePacking)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -171,15 +177,15 @@ implements <a href="../../../../../../net/oneandone/maven/plugins/spritepacker/c
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SpritesheetPackingConverter(java.io.File)">
+<a name="SpritesheetPackingConverter(java.nio.file.Path)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SpritesheetPackingConverter</h4>
-<pre>public&nbsp;SpritesheetPackingConverter(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;output)</pre>
+<pre>public&nbsp;SpritesheetPackingConverter(<a href="http://docs.oracle.com/javase/7/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file">Path</a>&nbsp;output)</pre>
 <div class="block">Create a spritesheet converter with output file output.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>output</code> - </dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>output</code> - the path to the output file</dd></dl>
 </li>
 </ul>
 </li>
@@ -190,22 +196,33 @@ implements <a href="../../../../../../net/oneandone/maven/plugins/spritepacker/c
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="convert(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">
+<a name="convert(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>convert</h4>
-<pre>public&nbsp;void&nbsp;convert(<a href="../../../../../../net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a>&nbsp;imagePacking,
+<pre>public&nbsp;void&nbsp;convert(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../../net/oneandone/maven/plugins/spritepacker/NamedImage.html" title="class in net.oneandone.maven.plugins.spritepacker">NamedImage</a>&gt;&nbsp;imageList,
+           <a href="../../../../../../net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a>&nbsp;imagePacking,
            org.apache.maven.plugin.logging.Log&nbsp;log)
              throws org.apache.maven.plugin.MojoExecutionException</pre>
 <div class="block">Convert ImagePacking to a spritesheet image and save as a PNG file.</div>
 <dl>
 <dt><strong>Specified by:</strong></dt>
-<dd><code><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html#convert(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html" title="interface in net.oneandone.maven.plugins.spritepacker.converters">PackingConverter</a></code></dd>
-<dt><span class="strong">Parameters:</span></dt><dd><code>imagePacking</code> - the ImagePacking to convert</dd><dd><code>log</code> - the log object to use</dd>
+<dd><code><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html#convert(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html" title="interface in net.oneandone.maven.plugins.spritepacker.converters">PackingConverter</a></code></dd>
+<dt><span class="strong">Parameters:</span></dt><dd><code>imageList</code> - the list of images</dd><dd><code>imagePacking</code> - the ImagePacking to convert</dd><dd><code>log</code> - the log object to use</dd>
 <dt><span class="strong">Throws:</span></dt>
 <dd><code>org.apache.maven.plugin.MojoExecutionException</code></dd></dl>
+</li>
+</ul>
+<a name="createSpritesheet(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>createSpritesheet</h4>
+<pre>protected&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/awt/image/BufferedImage.html?is-external=true" title="class or interface in java.awt.image">BufferedImage</a>&nbsp;createSpritesheet(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../../net/oneandone/maven/plugins/spritepacker/NamedImage.html" title="class in net.oneandone.maven.plugins.spritepacker">NamedImage</a>&gt;&nbsp;imageList,
+                              <a href="../../../../../../net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a>&nbsp;imagePacking)</pre>
 </li>
 </ul>
 </li>

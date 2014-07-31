@@ -2,7 +2,6 @@
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -23,11 +22,11 @@ public class ImagePacking {
      * @param dimension     the outer dimensions of the spritesheet
      * @param positionMap   a map of images to positions
      */
-<span class="fc" id="L26">    public ImagePacking(Dimension dimension, Map&lt;NamedImage, Point&gt; positionMap) {</span>
-<span class="fc" id="L27">        width = dimension.width;</span>
-<span class="fc" id="L28">        height = dimension.height;</span>
-<span class="fc" id="L29">        this.positionMap = Collections.unmodifiableMap(positionMap);</span>
-<span class="fc" id="L30">    }</span>
+<span class="fc" id="L25">    public ImagePacking(Dimension dimension, Map&lt;NamedImage, Point&gt; positionMap) {</span>
+<span class="fc" id="L26">        width = dimension.width;</span>
+<span class="fc" id="L27">        height = dimension.height;</span>
+<span class="fc" id="L28">        this.positionMap = Collections.unmodifiableMap(positionMap);</span>
+<span class="fc" id="L29">    }</span>
 
     /**
      * Get the position of the specified image within the spritesheet.
@@ -36,33 +35,24 @@ public class ImagePacking {
      * @return      the position of the given image
      */
     public Point getPosition(NamedImage image) {
-<span class="fc" id="L39">        return positionMap.get(image);</span>
+<span class="fc" id="L38">        return positionMap.get(image);</span>
     }
 
     public int getWidth() {
-<span class="fc" id="L43">        return width;</span>
+<span class="fc" id="L42">        return width;</span>
     }
 
     public int getHeight() {
-<span class="fc" id="L47">        return height;</span>
+<span class="fc" id="L46">        return height;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L52">        return &quot;ImagePacking{&quot; +</span>
+<span class="fc" id="L51">        return &quot;ImagePacking{&quot; +</span>
                &quot;positionMap=&quot; + positionMap +
                &quot;, width=&quot; + width +
                &quot;, height=&quot; + height +
                '}';
-    }
-
-    /**
-     * Get a collection of all images that were packed
-     *
-     * @return  a collection of all images that were packed
-     */
-    public Collection&lt;NamedImage&gt; getImages() {
-<span class="fc" id="L65">        return positionMap.keySet();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>

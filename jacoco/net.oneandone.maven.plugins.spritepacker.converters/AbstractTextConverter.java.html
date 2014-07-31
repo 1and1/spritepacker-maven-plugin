@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractTextConverter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spritepacker-maven-plugin Maven Mojo</a> &gt; <a href="index.source.html" class="el_package">net.oneandone.maven.plugins.spritepacker.converters</a> &gt; <span class="el_source">AbstractTextConverter.java</span></div><h1>AbstractTextConverter.java</h1><pre class="source lang-java linenums">package net.oneandone.maven.plugins.spritepacker.converters;
 
 import net.oneandone.maven.plugins.spritepacker.ImagePacking;
+import net.oneandone.maven.plugins.spritepacker.NamedImage;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * An abstract PackingConverter that saves the output of the subclass's implemented createOutput method to a text file.
@@ -16,57 +18,57 @@ import java.nio.file.Files;
  * @author mklein
  */
 public abstract class AbstractTextConverter implements PackingConverter {
-    private final File file;
+<span class="fc" id="L21">    public static final Pattern CHARS_NOT_ALLOWED_IN_IDENTIFIERS = Pattern.compile(&quot;[^\\p{L}\\p{N}_-]&quot;);</span>
+    private final Path file;
     private final String type;
 
     /**
      * Create an AbstractTextConverter that saves to the specified file, and specify the type of output file for logging purposes.
-     *
      * @param file  the output file to write to
      * @param type  the type of file to convert to, for logging purposes
      */
-<span class="nc" id="L28">    protected AbstractTextConverter(File file, String type) {</span>
-<span class="nc" id="L29">        this.file = file;</span>
-<span class="nc" id="L30">        this.type = type;</span>
-<span class="nc" id="L31">    }</span>
+<span class="fc" id="L30">    protected AbstractTextConverter(Path file, String type) {</span>
+<span class="fc" id="L31">        this.file = file;</span>
+<span class="fc" id="L32">        this.type = type;</span>
+<span class="fc" id="L33">    }</span>
 
     /**
      * Convert the specified ImagePacking to a text file.
      *
+     * @param imageList     the list of images
      * @param imagePacking  the ImagePacking to convert
      * @param log           the log object to use
      * @throws MojoExecutionException
      */
     @Override
-    public void convert(ImagePacking imagePacking, Log log) throws MojoExecutionException {
-<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (file == null) {</span>
-<span class="nc" id="L43">            log.info(&quot;No &quot; + type + &quot; output file specified.&quot;);</span>
-<span class="nc" id="L44">            return;</span>
+    public void convert(List&lt;NamedImage&gt; imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (file == null) {</span>
+<span class="fc" id="L46">            log.info(&quot;No &quot; + type + &quot; output file specified.&quot;);</span>
+<span class="fc" id="L47">            return;</span>
         }
 
-<span class="nc" id="L47">        log.info(&quot;Generating &quot; + type + &quot; output...&quot;);</span>
+<span class="fc" id="L50">        log.info(&quot;Generating &quot; + type + &quot; output...&quot;);</span>
 
-<span class="nc" id="L49">        String output = createOutput(imagePacking, log);</span>
+<span class="fc" id="L52">        String output = createOutput(imageList, imagePacking, log);</span>
 
         try {
-<span class="nc" id="L52">            try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath(), Charset.forName(&quot;UTF-8&quot;))) {</span>
-<span class="nc" id="L53">                log.info(&quot;Saving &quot; + type + &quot;...&quot;);</span>
-<span class="nc" id="L54">                bufferedWriter.write(output);</span>
-<span class="nc bnc" id="L55" title="All 8 branches missed.">            }</span>
-<span class="nc" id="L56">        } catch (IOException e) {</span>
-<span class="nc" id="L57">            throw new MojoExecutionException(&quot;Could not write to file '&quot;+file.getAbsolutePath()+&quot;'.&quot;, e);</span>
-<span class="nc" id="L58">        }</span>
-
-<span class="nc" id="L60">    }</span>
+<span class="fc" id="L55">            log.info(&quot;Saving &quot; + type + &quot; to file &quot; + file.toAbsolutePath());</span>
+<span class="fc" id="L56">            Files.write(file, output.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L57">        } catch (IOException e) {</span>
+<span class="fc" id="L58">            throw new MojoExecutionException(&quot;Couldn't write to file &quot; + file.toAbsolutePath(), e);</span>
+<span class="fc" id="L59">        }</span>
+<span class="fc" id="L60">    }</span>
 
     /**
      * Create output text as String based on an ImagePacking.
      *
+     * @param imageList     the list of images
      * @param imagePacking  the ImagePacking to convert
      * @param log           the log object to use
      * @return              String containing the text file contents
+     * @throws MojoExecutionException
      */
-    protected abstract String createOutput(ImagePacking imagePacking, Log log) throws MojoExecutionException;
+    protected abstract String createOutput(List&lt;NamedImage&gt; imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException;
 
     /**
      * Convert an integer into a String pixel value, leaving off the &quot;px&quot; for values of 0.
@@ -74,8 +76,32 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @param i     the int value to convert
      * @return      the pixel value
      */
-    protected String intToPixel(int i) {
-<span class="nc bnc" id="L78" title="All 2 branches missed.">        return i == 0 ? &quot;0&quot; : i + &quot;px&quot;;</span>
+    protected static String intToPixel(int i) {
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        return i == 0 ? &quot;0&quot; : i + &quot;px&quot;;</span>
+    }
+
+    /**
+     * Sanitize name for use in CSS or Less by removing all characters that are not letters, numbers
+     * hyphens or underscores.
+     *
+     * @param name  the name to be sanitized
+     * @return      sanitized name without special characters
+     */
+    protected static String sanitize(String name) {
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        return (name == null) ? null : CHARS_NOT_ALLOWED_IN_IDENTIFIERS.matcher(name).replaceAll(&quot;&quot;);</span>
+    }
+
+    /**
+     * Fix names by checking if the first character is a letter or an underscore.
+     * If not, insert an underscore at the beginning of the name in order to make it valid for
+     * use in CSS or Less.
+     *
+     * @param name  the name to fix
+     * @return      valid name without number or hyphen as first character
+     */
+    protected static String fixFirstChar(String name) {
+<span class="fc bfc" id="L103" title="All 8 branches covered.">        boolean firstCharIsAllowed = name == null || name.isEmpty() || name.charAt(0) == '_' || Character.isLetter(name.charAt(0));</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        return firstCharIsAllowed ? name : &quot;_&quot; + name;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>

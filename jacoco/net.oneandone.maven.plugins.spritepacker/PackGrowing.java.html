@@ -29,7 +29,7 @@ public class PackGrowing {
     private final int padding;
 
     private final Map&lt;NamedImage, Point&gt; positionMap;
-    private Node root;
+    Node root;
 
     /**
      * Creates a new PackGrowing for the given images and padding.
@@ -37,7 +37,7 @@ public class PackGrowing {
      * @param images  the list of images to be packed
      * @param padding the amount of padding to put between sprites, in pixels
      */
-<span class="fc" id="L40">    private PackGrowing(List&lt;NamedImage&gt; images, int padding) {</span>
+<span class="fc" id="L40">    PackGrowing(List&lt;NamedImage&gt; images, int padding) {</span>
 <span class="fc" id="L41">        this.images = new ArrayList&lt;&gt;(images);</span>
 <span class="fc" id="L42">        this.padding = padding;</span>
 <span class="fc" id="L43">        positionMap = new IdentityHashMap&lt;&gt;();</span>
@@ -137,27 +137,27 @@ public class PackGrowing {
      * @param height height needed
      * @return       new available node
      */
-    private Node growNode(int width, int height, int padding) {
+    Node growNode(int width, int height, int padding) {
 <span class="fc bfc" id="L141" title="All 2 branches covered.">        boolean canGrowDown = width &lt;= root.getWidth();</span>
 <span class="fc bfc" id="L142" title="All 2 branches covered.">        boolean canGrowRight = height &lt;= root.getHeight();</span>
 
         // attempt to keep square-ish by growing right when height is much greater than width
-<span class="pc bpc" id="L145" title="1 of 4 branches missed.">        boolean shouldGrowRight = canGrowRight &amp;&amp; root.getHeight() &gt;= root.getWidth() + width;</span>
+<span class="fc bfc" id="L145" title="All 4 branches covered.">        boolean shouldGrowRight = canGrowRight &amp;&amp; root.getHeight() &gt;= root.getWidth() + width;</span>
         // attempt to keep square-ish by growing down when width is much greater than height
 <span class="fc bfc" id="L147" title="All 4 branches covered.">        boolean shouldGrowDown = canGrowDown &amp;&amp; root.getWidth() &gt;= root.getHeight() + height;</span>
 
-<span class="pc bpc" id="L149" title="1 of 2 branches missed.">        if (shouldGrowRight) {</span>
-<span class="nc" id="L150">            return growRight(width, height, padding);</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (shouldGrowRight) {</span>
+<span class="fc" id="L150">            return growRight(width, height, padding);</span>
 <span class="fc bfc" id="L151" title="All 2 branches covered.">        } else if (shouldGrowDown) {</span>
 <span class="fc" id="L152">            return growDown(width, height, padding);</span>
 <span class="fc bfc" id="L153" title="All 2 branches covered.">        } else if (canGrowRight) {</span>
 <span class="fc" id="L154">            return growRight(width, height, padding);</span>
-<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        } else if (canGrowDown) {</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        } else if (canGrowDown) {</span>
 <span class="fc" id="L156">            return growDown(width, height, padding);</span>
         }
 
         // need to ensure sensible root starting size to avoid this happening
-<span class="nc" id="L160">        return null;</span>
+<span class="fc" id="L160">        return null;</span>
     }
 
     /**
@@ -167,7 +167,7 @@ public class PackGrowing {
      * @param height height needed
      * @return       new available node
      */
-    private Node growRight(int width, int height, int padding) {
+    Node growRight(int width, int height, int padding) {
 <span class="fc" id="L171">        Node newRoot = new Node(root.getX(), root.getY(), root.getWidth() + width + padding, root.getHeight());</span>
 <span class="fc" id="L172">        newRoot.setUsed(true);</span>
 <span class="fc" id="L173">        newRoot.setDown(root);</span>
@@ -175,11 +175,11 @@ public class PackGrowing {
 <span class="fc" id="L175">        root = newRoot;</span>
 
 <span class="fc" id="L177">        Node availableNode = findNode(root, width, height);</span>
-<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        if (availableNode != null) {</span>
-<span class="fc" id="L179">            return splitNode(availableNode, width, height, padding);</span>
-        }
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (availableNode != null) {</span>
+<span class="fc" id="L179">        return splitNode(availableNode, width, height, padding);</span>
+    }
 
-<span class="nc" id="L182">        return null;</span>
+<span class="fc" id="L182">        return null;</span>
     }
 
     /**
@@ -189,7 +189,7 @@ public class PackGrowing {
      * @param height height needed
      * @return       new available node
      */
-    private Node growDown(int width, int height, int padding) {
+    Node growDown(int width, int height, int padding) {
 <span class="fc" id="L193">        Node newRoot = new Node(root.getX(), root.getY(), root.getWidth(), root.getHeight() + height + padding);</span>
 <span class="fc" id="L194">        newRoot.setUsed(true);</span>
 <span class="fc" id="L195">        newRoot.setDown(new Node(root.getX(), root.getY() + root.getHeight() + padding, root.getWidth(), height));</span>
@@ -197,11 +197,11 @@ public class PackGrowing {
 <span class="fc" id="L197">        root = newRoot;</span>
 
 <span class="fc" id="L199">        Node availableNode = findNode(root, width, height);</span>
-<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        if (availableNode != null) {</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        if (availableNode != null) {</span>
 <span class="fc" id="L201">            return splitNode(availableNode, width, height, padding);</span>
         }
 
-<span class="nc" id="L204">        return null;</span>
+<span class="fc" id="L204">        return null;</span>
     }
 
 }

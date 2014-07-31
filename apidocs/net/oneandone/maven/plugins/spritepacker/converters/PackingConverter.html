@@ -3,13 +3,13 @@
 <html lang="de">
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-<title>PackingConverter (spritepacker-maven-plugin Maven Mojo 1.0-SNAPSHOT API)</title>
+<title>PackingConverter (spritepacker-maven-plugin Maven Mojo 1.0.0-SNAPSHOT API)</title>
 <link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
 </head>
 <body>
 <script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="PackingConverter (spritepacker-maven-plugin Maven Mojo 1.0-SNAPSHOT API)";
+        parent.document.title="PackingConverter (spritepacker-maven-plugin Maven Mojo 1.0.0-SNAPSHOT API)";
     }
 //-->
 </script>
@@ -115,7 +115,8 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><strong><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html#convert(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert</a></strong>(<a href="../../../../../../net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a>&nbsp;imagePacking,
+<td class="colLast"><code><strong><a href="../../../../../../net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html#convert(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert</a></strong>(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../../net/oneandone/maven/plugins/spritepacker/NamedImage.html" title="class in net.oneandone.maven.plugins.spritepacker">NamedImage</a>&gt;&nbsp;imageList,
+       <a href="../../../../../../net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a>&nbsp;imagePacking,
        org.apache.maven.plugin.logging.Log&nbsp;log)</code>
 <div class="block">Convert the specified ImagePacking.</div>
 </td>
@@ -135,17 +136,18 @@
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="convert(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">
+<a name="convert(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>convert</h4>
-<pre>void&nbsp;convert(<a href="../../../../../../net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a>&nbsp;imagePacking,
+<pre>void&nbsp;convert(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../../../../net/oneandone/maven/plugins/spritepacker/NamedImage.html" title="class in net.oneandone.maven.plugins.spritepacker">NamedImage</a>&gt;&nbsp;imageList,
+           <a href="../../../../../../net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a>&nbsp;imagePacking,
            org.apache.maven.plugin.logging.Log&nbsp;log)
              throws org.apache.maven.plugin.MojoExecutionException</pre>
 <div class="block">Convert the specified ImagePacking.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>imagePacking</code> - the ImagePacking to convert</dd><dd><code>log</code> - the log object to use</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>imageList</code> - the list of images</dd><dd><code>imagePacking</code> - the ImagePacking to convert</dd><dd><code>log</code> - the log object to use</dd>
 <dt><span class="strong">Throws:</span></dt>
 <dd><code>org.apache.maven.plugin.MojoExecutionException</code></dd></dl>
 </li>

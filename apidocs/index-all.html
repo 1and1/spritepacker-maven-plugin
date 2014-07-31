@@ -3,13 +3,13 @@
 <html lang="de">
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-<title>Index (spritepacker-maven-plugin Maven Mojo 1.0-SNAPSHOT API)</title>
+<title>Index (spritepacker-maven-plugin Maven Mojo 1.0.0-SNAPSHOT API)</title>
 <link rel="stylesheet" type="text/css" href="./stylesheet.css" title="Style">
 </head>
 <body>
 <script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="Index (spritepacker-maven-plugin Maven Mojo 1.0-SNAPSHOT API)";
+        parent.document.title="Index (spritepacker-maven-plugin Maven Mojo 1.0.0-SNAPSHOT API)";
     }
 //-->
 </script>
@@ -61,7 +61,7 @@
 <!--   -->
 </a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
-<div class="contentContainer"><a href="#_A_">A</a>&nbsp;<a href="#_C_">C</a>&nbsp;<a href="#_E_">E</a>&nbsp;<a href="#_F_">F</a>&nbsp;<a href="#_G_">G</a>&nbsp;<a href="#_I_">I</a>&nbsp;<a href="#_J_">J</a>&nbsp;<a href="#_L_">L</a>&nbsp;<a href="#_N_">N</a>&nbsp;<a href="#_P_">P</a>&nbsp;<a href="#_S_">S</a>&nbsp;<a href="#_T_">T</a>&nbsp;<a name="_A_">
+<div class="contentContainer"><a href="#_A_">A</a>&nbsp;<a href="#_B_">B</a>&nbsp;<a href="#_C_">C</a>&nbsp;<a href="#_E_">E</a>&nbsp;<a href="#_F_">F</a>&nbsp;<a href="#_G_">G</a>&nbsp;<a href="#_I_">I</a>&nbsp;<a href="#_J_">J</a>&nbsp;<a href="#_L_">L</a>&nbsp;<a href="#_N_">N</a>&nbsp;<a href="#_P_">P</a>&nbsp;<a href="#_R_">R</a>&nbsp;<a href="#_S_">S</a>&nbsp;<a href="#_T_">T</a>&nbsp;<a href="#_U_">U</a>&nbsp;<a name="_A_">
 <!--   -->
 </a>
 <h2 class="title">A</h2>
@@ -70,9 +70,19 @@
 <dd>
 <div class="block">An abstract PackingConverter that saves the output of the subclass's implemented createOutput method to a text file.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#AbstractTextConverter(java.io.File, java.lang.String)">AbstractTextConverter(File, String)</a></span> - Constructor for class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#AbstractTextConverter(java.nio.file.Path, java.lang.String)">AbstractTextConverter(Path, String)</a></span> - Constructor for class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
 <dd>
 <div class="block">Create an AbstractTextConverter that saves to the specified file, and specify the type of output file for logging purposes.</div>
+</dd>
+</dl>
+<a name="_B_">
+<!--   -->
+</a>
+<h2 class="title">B</h2>
+<dl>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html#buildOutputMap(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking)">buildOutputMap(List&lt;NamedImage&gt;, ImagePacking)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">JsonPackingConverter</a></dt>
+<dd>
+<div class="block">Builds the output structure</div>
 </dd>
 </dl>
 <a name="_C_">
@@ -80,40 +90,46 @@
 </a>
 <h2 class="title">C</h2>
 <dl>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#convert(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert(ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#CHARS_NOT_ALLOWED_IN_IDENTIFIERS">CHARS_NOT_ALLOWED_IN_IDENTIFIERS</a></span> - Static variable in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html#CHARS_NOT_ALLOWED_IN_VARIABLES">CHARS_NOT_ALLOWED_IN_VARIABLES</a></span> - Static variable in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">JsonPackingConverter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#convert(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert(List&lt;NamedImage&gt;, ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
 <dd>
 <div class="block">Convert the specified ImagePacking to a text file.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html#convert(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert(ImagePacking, Log)</a></span> - Method in interface net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html" title="interface in net.oneandone.maven.plugins.spritepacker.converters">PackingConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html#convert(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert(List&lt;NamedImage&gt;, ImagePacking, Log)</a></span> - Method in interface net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html" title="interface in net.oneandone.maven.plugins.spritepacker.converters">PackingConverter</a></dt>
 <dd>
 <div class="block">Convert the specified ImagePacking.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html#convert(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert(ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">SpritesheetPackingConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html#convert(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">convert(List&lt;NamedImage&gt;, ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">SpritesheetPackingConverter</a></dt>
 <dd>
 <div class="block">Convert ImagePacking to a spritesheet image and save as a PNG file.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#createOutput(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">createOutput(ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#createOutput(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">createOutput(List&lt;NamedImage&gt;, ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
 <dd>
 <div class="block">Create output text as String based on an ImagePacking.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html#createOutput(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">createOutput(ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">CssPackingConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html#createOutput(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">createOutput(List&lt;NamedImage&gt;, ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">CssPackingConverter</a></dt>
 <dd>
 <div class="block">Create output CSS string based on an ImagePacking.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html#createOutput(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">createOutput(ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">JsonPackingConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html#createOutput(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">createOutput(List&lt;NamedImage&gt;, ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">JsonPackingConverter</a></dt>
 <dd>
 <div class="block">Create output JSON string based on an ImagePacking.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/LessPackingConverter.html#createOutput(net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">createOutput(ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/LessPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">LessPackingConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/LessPackingConverter.html#createOutput(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, org.apache.maven.plugin.logging.Log)">createOutput(List&lt;NamedImage&gt;, ImagePacking, Log)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/LessPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">LessPackingConverter</a></dt>
 <dd>
-<div class="block">Create output LESS string based on an ImagePacking.</div>
+<div class="block">Create output Less string based on an ImagePacking.</div>
 </dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html#createSpritesheet(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking)">createSpritesheet(List&lt;NamedImage&gt;, ImagePacking)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">SpritesheetPackingConverter</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters"><span class="strong">CssPackingConverter</span></a> - Class in <a href="./net/oneandone/maven/plugins/spritepacker/converters/package-summary.html">net.oneandone.maven.plugins.spritepacker.converters</a></dt>
 <dd>
 <div class="block">Converts ImagePacking to a CSS file, with the result that each icon gets its own class containing
  background-position, width and height of the icon.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html#CssPackingConverter(java.io.File, java.lang.String)">CssPackingConverter(File, String)</a></span> - Constructor for class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">CssPackingConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html#CssPackingConverter(java.nio.file.Path, java.lang.String)">CssPackingConverter(Path, String)</a></span> - Constructor for class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">CssPackingConverter</a></dt>
 <dd>
 <div class="block">Create a CSS converter with output file css and class prefix cssPrefix.</div>
 </dd>
@@ -127,16 +143,31 @@
 <dd>
 <div class="block">Execute the MOJO.</div>
 </dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html#executeConverter(java.util.List, net.oneandone.maven.plugins.spritepacker.ImagePacking, net.oneandone.maven.plugins.spritepacker.converters.PackingConverter)">executeConverter(List&lt;NamedImage&gt;, ImagePacking, PackingConverter)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html" title="class in net.oneandone.maven.plugins.spritepacker">SpritePacker</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="_F_">
 <!--   -->
 </a>
 <h2 class="title">F</h2>
 <dl>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html#fileToPath(java.io.File)">fileToPath(File)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html" title="class in net.oneandone.maven.plugins.spritepacker">SpritePacker</a></dt>
+<dd>
+<div class="block">Convert a file to a path, or return null if the file is null</div>
+</dd>
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/PackGrowing.html#fit(java.util.List, int)">fit(List&lt;NamedImage&gt;, int)</a></span> - Static method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/PackGrowing.html" title="class in net.oneandone.maven.plugins.spritepacker">PackGrowing</a></dt>
 <dd>
 <div class="block">Fit the images and return an ImagePacking containing the outer dimensions
  of the spritesheet and a Map of images to positions.</div>
+</dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#fixFirstChar(java.lang.String)">fixFirstChar(String)</a></span> - Static method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
+<dd>
+<div class="block">Fix names by checking if the first character is a letter or an underscore.</div>
+</dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html#fixJsonpVar(java.lang.String)">fixJsonpVar(String)</a></span> - Static method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">JsonPackingConverter</a></dt>
+<dd>
+<div class="block">Remove invalid characters from JavaScript variable and avoid leading numbers or reserved words
+ by prefixing them with an underscore</div>
 </dd>
 </dl>
 <a name="_G_">
@@ -144,6 +175,10 @@
 </a>
 <h2 class="title">G</h2>
 <dl>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html#getCssClassName(java.lang.String, java.lang.String)">getCssClassName(String, String)</a></span> - Static method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/CssPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">CssPackingConverter</a></dt>
+<dd>
+<div class="block">Sanitize, prefix, and fix first character of a CSS class name</div>
+</dd>
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/Node.html#getDown()">getDown()</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/Node.html" title="class in net.oneandone.maven.plugins.spritepacker">Node</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/ImagePacking.html#getHeight()">getHeight()</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a></dt>
@@ -154,10 +189,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/NamedImage.html#getImage()">getImage()</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/NamedImage.html" title="class in net.oneandone.maven.plugins.spritepacker">NamedImage</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/ImagePacking.html#getImages()">getImages()</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a></dt>
-<dd>
-<div class="block">Get a collection of all images that were packed</div>
-</dd>
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/NamedImage.html#getName()">getName()</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/NamedImage.html" title="class in net.oneandone.maven.plugins.spritepacker">NamedImage</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/ImagePacking.html#getPosition(net.oneandone.maven.plugins.spritepacker.NamedImage)">getPosition(NamedImage)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker">ImagePacking</a></dt>
@@ -182,6 +213,8 @@
 </a>
 <h2 class="title">I</h2>
 <dl>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html#IMAGE_PROPERTY_COUNT">IMAGE_PROPERTY_COUNT</a></span> - Static variable in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">JsonPackingConverter</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="./net/oneandone/maven/plugins/spritepacker/ImagePacking.html" title="class in net.oneandone.maven.plugins.spritepacker"><span class="strong">ImagePacking</span></a> - Class in <a href="./net/oneandone/maven/plugins/spritepacker/package-summary.html">net.oneandone.maven.plugins.spritepacker</a></dt>
 <dd>
 <div class="block">Holds the result of the PackGrowing.</div>
@@ -190,7 +223,7 @@
 <dd>
 <div class="block">Create an ImagePacking with the given dimension and position map data.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#intToPixel(int)">intToPixel(int)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#intToPixel(int)">intToPixel(int)</a></span> - Static method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
 <dd>
 <div class="block">Convert an integer into a String pixel value, leaving off the "px" for values of 0.</div>
 </dd>
@@ -208,7 +241,7 @@
  via a named property which encapsulates w, h, x, y and xy as pixel values as well as storing
  integer values for x, y, w and h in the property n.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html#JsonPackingConverter(java.io.File, java.lang.String)">JsonPackingConverter(File, String)</a></span> - Constructor for class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">JsonPackingConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html#JsonPackingConverter(java.nio.file.Path, java.lang.String)">JsonPackingConverter(Path, String)</a></span> - Constructor for class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">JsonPackingConverter</a></dt>
 <dd>
 <div class="block">Create a JSON converter with output file json and optional JSONP variable jsonpVar.</div>
 </dd>
@@ -220,13 +253,17 @@
 <dl>
 <dt><a href="./net/oneandone/maven/plugins/spritepacker/converters/LessPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters"><span class="strong">LessPackingConverter</span></a> - Class in <a href="./net/oneandone/maven/plugins/spritepacker/converters/package-summary.html">net.oneandone.maven.plugins.spritepacker.converters</a></dt>
 <dd>
-<div class="block">Converts ImagePacking to a LESS file, with the result that each icon's properties are available
+<div class="block">Converts ImagePacking to a Less file, with the result that each icon's properties are available
  via mixins. the ".create" mixin returns all properties, the ".pos" mixin returns only the position
  and the ".size" mixin returns only the dimensions of the icon.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/LessPackingConverter.html#LessPackingConverter(java.io.File, java.lang.String)">LessPackingConverter(File, String)</a></span> - Constructor for class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/LessPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">LessPackingConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/LessPackingConverter.html#LessPackingConverter(java.nio.file.Path, java.lang.String)">LessPackingConverter(Path, String)</a></span> - Constructor for class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/LessPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">LessPackingConverter</a></dt>
 <dd>
-<div class="block">Create a LESS converter with output file less and namespace lessNamespace.</div>
+<div class="block">Create a Less converter with output file less and namespace lessNamespace.</div>
+</dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html#loadImages(java.util.List)">loadImages(List&lt;Path&gt;)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html" title="class in net.oneandone.maven.plugins.spritepacker">SpritePacker</a></dt>
+<dd>
+<div class="block">Load list of image files as a list of NamedImages</div>
 </dd>
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html#log(java.lang.Object)">log(Object)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html" title="class in net.oneandone.maven.plugins.spritepacker">SpritePacker</a></dt>
 <dd>&nbsp;</dd>
@@ -266,22 +303,48 @@
 <dd>
 <div class="block">An algorithm for packing images into a spritesheet</div>
 </dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html#packImages(java.util.List)">packImages(List&lt;NamedImage&gt;)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html" title="class in net.oneandone.maven.plugins.spritepacker">SpritePacker</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="./net/oneandone/maven/plugins/spritepacker/converters/PackingConverter.html" title="interface in net.oneandone.maven.plugins.spritepacker.converters"><span class="strong">PackingConverter</span></a> - Interface in <a href="./net/oneandone/maven/plugins/spritepacker/converters/package-summary.html">net.oneandone.maven.plugins.spritepacker.converters</a></dt>
 <dd>
 <div class="block">Interface for converting an ImagePacking.</div>
 </dd>
+</dl>
+<a name="_R_">
+<!--   -->
+</a>
+<h2 class="title">R</h2>
+<dl>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html#RAW_NUMBER_COUNT">RAW_NUMBER_COUNT</a></span> - Static variable in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">JsonPackingConverter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html#RESERVED_WORDS">RESERVED_WORDS</a></span> - Static variable in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/JsonPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">JsonPackingConverter</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="_S_">
 <!--   -->
 </a>
 <h2 class="title">S</h2>
 <dl>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html#sanitize(java.lang.String)">sanitize(String)</a></span> - Static method in class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">AbstractTextConverter</a></dt>
+<dd>
+<div class="block">Sanitize name for use in CSS or Less by removing all characters that are not letters, numbers
+ hyphens or underscores.</div>
+</dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html#scanPaths(java.io.File, java.lang.String[], java.lang.String[])">scanPaths(File, String[], String[])</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html" title="class in net.oneandone.maven.plugins.spritepacker">SpritePacker</a></dt>
+<dd>
+<div class="block">Create a list of files within a source directory, including subdirectories,
+ that match the includes and excludes criteria</div>
+</dd>
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/Node.html#setDown(net.oneandone.maven.plugins.spritepacker.Node)">setDown(Node)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/Node.html" title="class in net.oneandone.maven.plugins.spritepacker">Node</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/Node.html#setRight(net.oneandone.maven.plugins.spritepacker.Node)">setRight(Node)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/Node.html" title="class in net.oneandone.maven.plugins.spritepacker">Node</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/Node.html#setUsed(boolean)">setUsed(boolean)</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/Node.html" title="class in net.oneandone.maven.plugins.spritepacker">Node</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/Utils.html#shouldWriteOutput(java.util.List, java.util.List)">shouldWriteOutput(List&lt;Path&gt;, List&lt;Path&gt;)</a></span> - Static method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/Utils.html" title="class in net.oneandone.maven.plugins.spritepacker">Utils</a></dt>
+<dd>
+<div class="block">Check if any input is newer than any output.</div>
+</dd>
 <dt><a href="./net/oneandone/maven/plugins/spritepacker/SpritePacker.html" title="class in net.oneandone.maven.plugins.spritepacker"><span class="strong">SpritePacker</span></a> - Class in <a href="./net/oneandone/maven/plugins/spritepacker/package-summary.html">net.oneandone.maven.plugins.spritepacker</a></dt>
 <dd>
 <div class="block">Packs spritesheets from supplied images.</div>
@@ -292,7 +355,7 @@
 <dd>
 <div class="block">Converts ImagePacking to a spritesheet PNG file.</div>
 </dd>
-<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html#SpritesheetPackingConverter(java.io.File)">SpritesheetPackingConverter(File)</a></span> - Constructor for class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">SpritesheetPackingConverter</a></dt>
+<dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html#SpritesheetPackingConverter(java.nio.file.Path)">SpritesheetPackingConverter(Path)</a></span> - Constructor for class net.oneandone.maven.plugins.spritepacker.converters.<a href="./net/oneandone/maven/plugins/spritepacker/converters/SpritesheetPackingConverter.html" title="class in net.oneandone.maven.plugins.spritepacker.converters">SpritesheetPackingConverter</a></dt>
 <dd>
 <div class="block">Create a spritesheet converter with output file output.</div>
 </dd>
@@ -309,7 +372,17 @@
 <dt><span class="strong"><a href="./net/oneandone/maven/plugins/spritepacker/Node.html#toString()">toString()</a></span> - Method in class net.oneandone.maven.plugins.spritepacker.<a href="./net/oneandone/maven/plugins/spritepacker/Node.html" title="class in net.oneandone.maven.plugins.spritepacker">Node</a></dt>
 <dd>&nbsp;</dd>
 </dl>
-<a href="#_A_">A</a>&nbsp;<a href="#_C_">C</a>&nbsp;<a href="#_E_">E</a>&nbsp;<a href="#_F_">F</a>&nbsp;<a href="#_G_">G</a>&nbsp;<a href="#_I_">I</a>&nbsp;<a href="#_J_">J</a>&nbsp;<a href="#_L_">L</a>&nbsp;<a href="#_N_">N</a>&nbsp;<a href="#_P_">P</a>&nbsp;<a href="#_S_">S</a>&nbsp;<a href="#_T_">T</a>&nbsp;</div>
+<a name="_U_">
+<!--   -->
+</a>
+<h2 class="title">U</h2>
+<dl>
+<dt><a href="./net/oneandone/maven/plugins/spritepacker/Utils.html" title="class in net.oneandone.maven.plugins.spritepacker"><span class="strong">Utils</span></a> - Class in <a href="./net/oneandone/maven/plugins/spritepacker/package-summary.html">net.oneandone.maven.plugins.spritepacker</a></dt>
+<dd>
+<div class="block">Utility methods that do not fit into specialized classes.</div>
+</dd>
+</dl>
+<a href="#_A_">A</a>&nbsp;<a href="#_B_">B</a>&nbsp;<a href="#_C_">C</a>&nbsp;<a href="#_E_">E</a>&nbsp;<a href="#_F_">F</a>&nbsp;<a href="#_G_">G</a>&nbsp;<a href="#_I_">I</a>&nbsp;<a href="#_J_">J</a>&nbsp;<a href="#_L_">L</a>&nbsp;<a href="#_N_">N</a>&nbsp;<a href="#_P_">P</a>&nbsp;<a href="#_R_">R</a>&nbsp;<a href="#_S_">S</a>&nbsp;<a href="#_T_">T</a>&nbsp;<a href="#_U_">U</a>&nbsp;</div>
 <!-- ======= START OF BOTTOM NAVBAR ====== -->
 <div class="bottomNav"><a name="navbar_bottom">
 <!--   -->
