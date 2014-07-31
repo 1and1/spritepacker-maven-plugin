@@ -56,7 +56,7 @@ See [http://plexus.codehaus.org/plexus-utils/apidocs/org/codehaus/plexus/util/Di
 
 **excludes**   
 &nbsp;&nbsp;&nbsp;&nbsp; *(optional)* Expression of which files to exclude.
-See [http://plexus.codehaus.org/plexus-utils/apidocs/org/codehaus/plexus/util/DirectoryScanner.html] for more details.</dt>
+See [http://plexus.codehaus.org/plexus-utils/apidocs/org/codehaus/plexus/util/DirectoryScanner.html] for more details.
 
 **output**   
 &nbsp;&nbsp;&nbsp;&nbsp; ***(required)*** File to write PNG spritesheet to.
