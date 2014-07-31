@@ -46,56 +46,57 @@ Configuration
 -------------
 
 
-**sourceDirectory**
-> ***(required)*** The directory where your source images reside.  This will be scanned recursively and files included based on
+**sourceDirectory**   
+&nbsp;&nbsp;&nbsp;&nbsp; ***(required)*** The directory where your source images reside.  This will be scanned recursively and files included based on
 include/exclude rules.
 
-**includes**
-> *(optional)* Expression of which files to include.
+**includes**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional)* Expression of which files to include.
 See [http://plexus.codehaus.org/plexus-utils/apidocs/org/codehaus/plexus/util/DirectoryScanner.html] for more details.
 
-**excludes**
-> *(optional)* Expression of which files to exclude.
+**excludes**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional)* Expression of which files to exclude.
 See [http://plexus.codehaus.org/plexus-utils/apidocs/org/codehaus/plexus/util/DirectoryScanner.html] for more details.</dt>
 
-**output**
-> ***(required)*** File to write PNG spritesheet to.
+**output**   
+&nbsp;&nbsp;&nbsp;&nbsp; ***(required)*** File to write PNG spritesheet to.
 
-**forceOverwrite**
-> *(optional, default=false)* Normally the output files are not re-generated if they already exist and none of the source files
+**forceOverwrite**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional, default=false)* Normally the output files are not re-generated if they already exist and none of the source files
 are newer than any of the output files. Setting this option to true ensures that all output files are re-created and overwritten
 regardless of the source files' last modified dates. This could be especially useful if you want icons that are deleted from the source
 directory to always be removed from the spritesheet.
 
-**padding**
-> *(optional)* Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
+**padding**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional)* Padding in pixels to be added around each image and the edges of the spritesheet.  Useful if you are having problems
 with images bleeding into each other due to users zooming, sub-pixel rendering, etc...
 
-**json**
-> *(optional)* File to write JSON(P) spritesheet metadata to. See [below](#json) for structure.
+**json**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional)* File to write JSON(P) spritesheet metadata to. See [below](#json) for structure.
 
-**jsonpVar**
-> *(optional)* If set this is used as a padding variable to make the JSON file into a JSONP file which may be more useful depending
+**jsonpVar**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional)* If set this is used as a padding variable to make the JSON file into a JSONP file which may be more useful depending
 on your application. e.g.
->> `{ image: {...} }`
->>
->> becomes
->>
->> `jsonpVar = { image: {...} }`
 
-**css**
-> *(optional)* File to write CSS classes to. See <a href="#css">below</a> for more information on the format.
+    { image: {...} }
+    
+&nbsp;&nbsp;&nbsp;&nbsp; becomes
+    
+    jsonpVar = { image: {...} }
 
-**cssPrefix**
-> *(optional)* Prefix to add to CSS classes. For instance, if there is a "smiley.png" icon it would normally get the CSS class name
+**css**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional)* File to write CSS classes to. See <a href="#css">below</a> for more information on the format.
+
+**cssPrefix**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional)* Prefix to add to CSS classes. For instance, if there is a "smiley.png" icon it would normally get the CSS class name
 ".smiley", whereas if the prefix "icon" is specified the resulting class is ".icon-smiley". This helps ensure that icon class names
 don't conflict with other CSS classes.
 
-**less**
-> *(optional)* File to write Less mixins to. See <a href="#less">below</a> for information on usage.
+**less**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional)* File to write Less mixins to. See <a href="#less">below</a> for information on usage.
 
-**lessNamespace**
-> *(optional)* The namespace that contains the Less mixins. If this is specified then all icon mixins are put into a #namespace{ }
+**lessNamespace**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional)* The namespace that contains the Less mixins. If this is specified then all icon mixins are put into a #namespace{ }
 block, which helps prevent conflicts with other Less mixins.
 
 Output formats
