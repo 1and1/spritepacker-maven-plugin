@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>local</groupId>
+    <artifactId>smoke-test</artifactId>
+    <version>1.0</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.oneandone.maven.plugins</groupId>
+                <artifactId>spritepacker-maven-plugin</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/images/sprites/</sourceDirectory>
+                            <includes>
+                                <include>*.png</include>
+                            </includes>
+                            <excludes>
+                                <exclude>*.gif</exclude>
+                            </excludes>
+                            <output>${project.build.directory}/images/sprite.png</output>
+                            <json>${project.build.directory}/images/sprite.json</json>
+                            <jsonpVar>sprite</jsonpVar>
+                            <css>${project.build.directory}/images/sprite.css</css>
+                            <cssPrefix>icon</cssPrefix>
+                            <less>${project.build.directory}/images/sprite.less</less>
+                            <lessNamespace>icon</lessNamespace>
+                            <padding>10</padding>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+    </project>
