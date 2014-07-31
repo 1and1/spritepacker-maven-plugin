@@ -156,7 +156,7 @@ public class SpritePacker extends AbstractMojo {
         log("Packing images...");
 
         // Add packing information
-        ImagePacking imagePacking = PackGrowing.fit(images, padding);
+        ImagePacking imagePacking = packImages(images);
 
         List<PackingConverter> converters = Arrays.asList(new SpritesheetPackingConverter(outputPath),
                                                           new JsonPackingConverter(jsonPath, jsonpVar),
@@ -170,6 +170,11 @@ public class SpritePacker extends AbstractMojo {
         long took = System.currentTimeMillis() - startTime;
         log("Done - took " + took + "ms!");
 
+    }
+
+    // Allow tests to stub or verify the packing
+    protected ImagePacking packImages(List<NamedImage> images) {
+        return PackGrowing.fit(images, padding);
     }
 
     // Allow tests to stub or verify converter execution
