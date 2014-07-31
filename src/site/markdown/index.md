@@ -223,8 +223,3 @@ Notes
 
 This uses Java libraries for creating the spritesheet; it can almost certainly be made smaller by
 adding your favourite PNG optimiser (optipng, deflopt, advancepng, etc) downstream in the build process. 
-
-License
--------
-
-See [LICENSE](LICENSE) file.

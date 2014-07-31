@@ -26,6 +26,14 @@
         <url>https://github.com/1and1/spritepacker-maven-plugin/issues</url>
     </issueManagement>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <properties>
         <oneandone.java.source>1.7</oneandone.java.source>
         <oneandone.java.target>1.7</oneandone.java.target>
