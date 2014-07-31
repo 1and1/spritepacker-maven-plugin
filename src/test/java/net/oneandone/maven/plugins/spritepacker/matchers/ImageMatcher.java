@@ -17,10 +17,15 @@ public class ImageMatcher extends TypeSafeDiagnosingMatcher<BufferedImage> {
 
     /**
      * Creates a matcher against the given image
+     *
      * @param expected the image to check against
      */
     public ImageMatcher(BufferedImage expected) {
         this.expected = expected;
+    }
+
+    public static Matcher<BufferedImage> eqImage(BufferedImage expected) {
+        return new ImageMatcher(expected);
     }
 
     @Override
@@ -50,9 +55,5 @@ public class ImageMatcher extends TypeSafeDiagnosingMatcher<BufferedImage> {
     @Override
     public void describeTo(Description description) {
         description.appendText(" an image with width ").appendValue(expected.getWidth()).appendText(" and height ").appendValue(expected.getHeight());
-    }
-
-    public static Matcher<BufferedImage> eqImage(BufferedImage expected) {
-        return new ImageMatcher(expected);
     }
 }

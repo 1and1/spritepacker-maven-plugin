@@ -71,7 +71,9 @@ public class AbstractTextConverterTest {
         errorCollector.checkThat(AbstractTextConverter.fixFirstChar("-test"), is("_-test"));
         errorCollector.checkThat(AbstractTextConverter.fixFirstChar("007"), is("_007"));
         errorCollector.checkThat(AbstractTextConverter.fixFirstChar("everything is fine"), is("everything is fine"));
+        errorCollector.checkThat(AbstractTextConverter.fixFirstChar("Æther"), is("Æther"));
         errorCollector.checkThat(AbstractTextConverter.fixFirstChar("\n"), is("_\n"));
+        errorCollector.checkThat(AbstractTextConverter.fixFirstChar("_\nnext\t\r\b"), is("_\nnext\t\r\b"));
         errorCollector.checkThat(AbstractTextConverter.fixFirstChar(null), is((String) null));
         errorCollector.checkThat(AbstractTextConverter.fixFirstChar(""), is(""));
     }

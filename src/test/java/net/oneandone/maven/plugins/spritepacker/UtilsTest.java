@@ -23,11 +23,10 @@ import static org.hamcrest.Matchers.is;
  */
 public class UtilsTest {
 
-    private Path inputDir;
-    private Path outputDir;
-
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
+    private Path inputDir;
+    private Path outputDir;
 
     @Before
     public void before() throws Exception {

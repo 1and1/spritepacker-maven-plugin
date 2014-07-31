@@ -15,6 +15,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for PackGrowing
@@ -52,6 +54,38 @@ public class PackGrowingTest {
                 new NamedImage(new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB), "Bild2"));
         ImagePacking fit = PackGrowing.fit(images, padding);
         errorCollector.checkThat(fit.getHeight(), is(height + 2 * padding));
+        errorCollector.checkThat(fit.getWidth(), is(2 * width + 3 * padding));
+        errorCollector.checkThat(fit.getPosition(images.get(0)), is(new Point(padding, padding)));
+        errorCollector.checkThat(fit.getPosition(images.get(1)), is(new Point(2 * padding + width, padding)));
+    }
+
+    @Test
+    public void testGettingWider() throws Exception {
+        int padding = 8;
+        int firstWidth = 3;
+        int secondWidth = 13;
+        int height = 34;
+        List<NamedImage> images = Arrays.asList(
+                new NamedImage(new BufferedImage(firstWidth, height, BufferedImage.TYPE_INT_ARGB), "Bild1"),
+                new NamedImage(new BufferedImage(secondWidth, height, BufferedImage.TYPE_INT_ARGB), "Bild2"));
+        ImagePacking fit = PackGrowing.fit(images, padding);
+        errorCollector.checkThat(fit.getHeight(), is(height + 2 * padding));
+        errorCollector.checkThat(fit.getWidth(), is(firstWidth + secondWidth + 3 * padding));
+        errorCollector.checkThat(fit.getPosition(images.get(0)), is(new Point(padding, padding)));
+        errorCollector.checkThat(fit.getPosition(images.get(1)), is(new Point(2 * padding + firstWidth, padding)));
+    }
+
+    @Test
+    public void testMappingForTwoImagesInARowAndShouldGrowRight() throws Exception {
+        int padding = 8;
+        int width = 43;
+        int firstHeight = 200;
+        int secondHeight = 34;
+        List<NamedImage> images = Arrays.asList(
+                new NamedImage(new BufferedImage(width, firstHeight, BufferedImage.TYPE_INT_ARGB), "Bild1"),
+                new NamedImage(new BufferedImage(width, secondHeight, BufferedImage.TYPE_INT_ARGB), "Bild2"));
+        ImagePacking fit = PackGrowing.fit(images, padding);
+        errorCollector.checkThat(fit.getHeight(), is(firstHeight + 2 * padding));
         errorCollector.checkThat(fit.getWidth(), is(2 * width + 3 * padding));
         errorCollector.checkThat(fit.getPosition(images.get(0)), is(new Point(padding, padding)));
         errorCollector.checkThat(fit.getPosition(images.get(1)), is(new Point(2 * padding + width, padding)));
@@ -105,5 +139,26 @@ public class PackGrowingTest {
         }
 
         errorCollector.checkThat("Overlapping images", overlappingCount, is(0));
+    }
+
+    @Test
+    public void cannotGrowDownIfWiderThanRoot() throws Exception {
+        PackGrowing packGrowing = new PackGrowing(Collections.<NamedImage>emptyList(), 0);
+        packGrowing.root = new Node(0, 0, 0, 0);
+        assertThat(packGrowing.growDown(1, 0, 0), is(nullValue()));
+    }
+
+    @Test
+    public void cannotGrowRightIfHigherThanRoot() throws Exception {
+        PackGrowing packGrowing = new PackGrowing(Collections.<NamedImage>emptyList(), 0);
+        packGrowing.root = new Node(0, 0, 0, 0);
+        assertThat(packGrowing.growRight(0, 1, 0), is(nullValue()));
+    }
+
+    @Test
+    public void cannotGrowIfHigherAndWiderThanRoot() throws Exception {
+        PackGrowing packGrowing = new PackGrowing(Collections.<NamedImage>emptyList(), 0);
+        packGrowing.root = new Node(0, 0, 0, 0);
+        assertThat(packGrowing.growNode(1, 1, 0), is(nullValue()));
     }
 }

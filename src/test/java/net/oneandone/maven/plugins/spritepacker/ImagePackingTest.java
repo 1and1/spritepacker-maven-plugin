@@ -26,7 +26,7 @@ public class ImagePackingTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPositions() throws Exception {
-        new ImagePacking(new Dimension(0,0), null);
+        new ImagePacking(new Dimension(0, 0), null);
     }
 
     @Test

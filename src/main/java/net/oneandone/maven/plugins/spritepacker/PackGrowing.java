@@ -29,7 +29,7 @@ public class PackGrowing {
     private final int padding;
 
     private final Map<NamedImage, Point> positionMap;
-    private Node root;
+    Node root;
 
     /**
      * Creates a new PackGrowing for the given images and padding.
@@ -37,7 +37,7 @@ public class PackGrowing {
      * @param images  the list of images to be packed
      * @param padding the amount of padding to put between sprites, in pixels
      */
-    private PackGrowing(List<NamedImage> images, int padding) {
+    PackGrowing(List<NamedImage> images, int padding) {
         this.images = new ArrayList<>(images);
         this.padding = padding;
         positionMap = new IdentityHashMap<>();
@@ -137,7 +137,7 @@ public class PackGrowing {
      * @param height height needed
      * @return       new available node
      */
-    private Node growNode(int width, int height, int padding) {
+    Node growNode(int width, int height, int padding) {
         boolean canGrowDown = width <= root.getWidth();
         boolean canGrowRight = height <= root.getHeight();
 
@@ -167,7 +167,7 @@ public class PackGrowing {
      * @param height height needed
      * @return       new available node
      */
-    private Node growRight(int width, int height, int padding) {
+    Node growRight(int width, int height, int padding) {
         Node newRoot = new Node(root.getX(), root.getY(), root.getWidth() + width + padding, root.getHeight());
         newRoot.setUsed(true);
         newRoot.setDown(root);
@@ -176,8 +176,8 @@ public class PackGrowing {
 
         Node availableNode = findNode(root, width, height);
         if (availableNode != null) {
-            return splitNode(availableNode, width, height, padding);
-        }
+        return splitNode(availableNode, width, height, padding);
+    }
 
         return null;
     }
@@ -189,7 +189,7 @@ public class PackGrowing {
      * @param height height needed
      * @return       new available node
      */
-    private Node growDown(int width, int height, int padding) {
+    Node growDown(int width, int height, int padding) {
         Node newRoot = new Node(root.getX(), root.getY(), root.getWidth(), root.getHeight() + height + padding);
         newRoot.setUsed(true);
         newRoot.setDown(new Node(root.getX(), root.getY() + root.getHeight() + padding, root.getWidth(), height));

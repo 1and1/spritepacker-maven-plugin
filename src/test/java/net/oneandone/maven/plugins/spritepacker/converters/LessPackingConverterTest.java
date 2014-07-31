@@ -173,7 +173,7 @@ public class LessPackingConverterTest {
     }
 
     @Theory
-    public void testLessImageNameSanitization(String name) throws Exception{
+    public void testLessImageNameSanitization(String name) throws Exception {
         List<NamedImage> imageList = Arrays.asList(new NamedImage(new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB), name));
         ImagePacking packing = getImagePacking(imageList);
         String output = new LessPackingConverter(null, null).createOutput(imageList, packing, log);
@@ -202,7 +202,7 @@ public class LessPackingConverterTest {
             NamedImage image = imageMap.get(name);
             errorCollector.checkThat("Valid image name was defined", image, is(notNullValue()));
             errorCollector.checkThat("Size mixin defined correctly", trimmed,
-                                     is(".size(" + name + "){width:"+AbstractTextConverter.intToPixel(image.getWidth())+
+                                     is(".size(" + name + "){width:" + AbstractTextConverter.intToPixel(image.getWidth()) +
                                         ";height:" + AbstractTextConverter.intToPixel(image.getHeight()) + ";}"));
             errorCollector.checkThat("Image size was not defined twice", sizes.add(image), is(true));
             return true;
@@ -211,7 +211,7 @@ public class LessPackingConverterTest {
     }
 
     private String getNameFromMixin(String mixin) {
-        return mixin.substring(mixin.indexOf('(')+1, mixin.indexOf(')'));
+        return mixin.substring(mixin.indexOf('(') + 1, mixin.indexOf(')'));
     }
 
 }

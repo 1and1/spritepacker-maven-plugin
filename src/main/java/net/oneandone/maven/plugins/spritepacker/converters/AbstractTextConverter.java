@@ -5,9 +5,8 @@ import net.oneandone.maven.plugins.spritepacker.NamedImage;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -53,14 +52,11 @@ public abstract class AbstractTextConverter implements PackingConverter {
         String output = createOutput(imageList, imagePacking, log);
 
         try {
-            try (BufferedWriter bufferedWriter = Files.newBufferedWriter(file, Charset.forName("UTF-8"))) {
-                log.info("Saving " + type + " to file " + file.toAbsolutePath());
-                bufferedWriter.write(output);
-            }
+            log.info("Saving " + type + " to file " + file.toAbsolutePath());
+            Files.write(file, output.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new MojoExecutionException("Couldn't write to file " + file.toAbsolutePath(), e);
         }
-
     }
 
     /**
