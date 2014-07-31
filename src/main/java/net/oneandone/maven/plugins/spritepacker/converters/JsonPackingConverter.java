@@ -125,7 +125,8 @@ public class JsonPackingConverter extends AbstractTextConverter {
     protected static String fixJsonpVar(String jsonpVar) {
         if (StringUtils.isNotEmpty(jsonpVar)) {
             String newVar = CHARS_NOT_ALLOWED_IN_VARIABLES.matcher(jsonpVar).replaceAll("");
-            return (newVar.isEmpty() || hasLeadingNumber(newVar) || RESERVED_WORDS.contains(newVar)) ? "_" + newVar : newVar;
+            boolean needsPrefix = newVar.isEmpty() || hasLeadingNumber(newVar) || RESERVED_WORDS.contains(newVar);
+            return needsPrefix ? "_" + newVar : newVar;
         }
         return jsonpVar;
     }

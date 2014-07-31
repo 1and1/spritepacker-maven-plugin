@@ -104,6 +104,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @return      valid name without number or hyphen as first character
      */
     protected static String fixFirstChar(String name) {
-        return (name == null || name.isEmpty() || name.charAt(0) == '_' || Character.isLetter(name.charAt(0))) ? name : "_" + name;
+        boolean firstCharIsAllowed = name == null || name.isEmpty() || name.charAt(0) == '_' || Character.isLetter(name.charAt(0));
+        return firstCharIsAllowed ? name : "_" + name;
     }
 }

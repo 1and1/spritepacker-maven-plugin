@@ -44,10 +44,8 @@ public class Utils {
         }
 
         for (Path output : outputs) {
-            if (output != null) {
-                if (Files.notExists(output) || Files.getLastModifiedTime(output).toMillis() <= newestInput) {
-                    return true;
-                }
+            if (output != null && (Files.notExists(output) || Files.getLastModifiedTime(output).toMillis() <= newestInput)) {
+                return true;
             }
         }
 
