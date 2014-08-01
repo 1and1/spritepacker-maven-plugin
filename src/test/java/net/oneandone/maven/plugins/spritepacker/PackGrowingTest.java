@@ -144,21 +144,21 @@ public class PackGrowingTest {
     @Test
     public void cannotGrowDownIfWiderThanRoot() throws Exception {
         PackGrowing packGrowing = new PackGrowing(Collections.<NamedImage>emptyList(), 0);
-        packGrowing.root = new Node(0, 0, 0, 0);
+        packGrowing.setRoot(new Node(0, 0, 0, 0));
         assertThat(packGrowing.growDown(1, 0, 0), is(nullValue()));
     }
 
     @Test
     public void cannotGrowRightIfHigherThanRoot() throws Exception {
         PackGrowing packGrowing = new PackGrowing(Collections.<NamedImage>emptyList(), 0);
-        packGrowing.root = new Node(0, 0, 0, 0);
+        packGrowing.setRoot(new Node(0, 0, 0, 0));
         assertThat(packGrowing.growRight(0, 1, 0), is(nullValue()));
     }
 
     @Test
     public void cannotGrowIfHigherAndWiderThanRoot() throws Exception {
         PackGrowing packGrowing = new PackGrowing(Collections.<NamedImage>emptyList(), 0);
-        packGrowing.root = new Node(0, 0, 0, 0);
+        packGrowing.setRoot(new Node(0, 0, 0, 0));
         assertThat(packGrowing.growNode(1, 1, 0), is(nullValue()));
     }
 }

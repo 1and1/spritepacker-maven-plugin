@@ -29,7 +29,7 @@ public class PackGrowing {
     private final int padding;
 
     private final Map<NamedImage, Point> positionMap;
-    Node root;
+    private Node root;
 
     /**
      * Creates a new PackGrowing for the given images and padding.
@@ -204,4 +204,11 @@ public class PackGrowing {
         return null;
     }
 
+    /**
+     * Allows setting the root to test certain edge cases which cannot occur in actual fittings.
+     * @param root the root node to set
+     */
+    void setRoot(Node root) {
+        this.root = root;
+    }
 }
