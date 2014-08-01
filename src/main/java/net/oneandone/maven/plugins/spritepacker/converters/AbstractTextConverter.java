@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
  * @author mklein
  */
 public abstract class AbstractTextConverter implements PackingConverter {
+    public static final String EOL = System.getProperty("line.separator");
     // Identifiers can contain any unicode letters (\p{L}), numbers (\p{N}), underscore and hyphen, so "ω⓪-⑨_A3" is a valid identifier.
     public static final Pattern CHARS_NOT_ALLOWED_IN_IDENTIFIERS = Pattern.compile("[^\\p{L}\\p{N}_-]");
     private final Path file;
@@ -51,6 +52,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
         log.info("Generating " + type + " output...");
 
         String output = createOutput(imageList, imagePacking, log);
+        output.replaceAll("\n", EOL);
 
         try {
             log.info("Saving " + type + " to file " + file.toAbsolutePath());
