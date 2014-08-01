@@ -126,7 +126,7 @@ would result in the following CSS:
 
 ### Less
 
-If a Less output files is specified, Less mixins are created for each icon file in the source directory. The resulting mixin file
+If a Less output file is specified, Less mixins are created for each icon file in the source directory. The resulting mixin file
 holds three functions for each icon:
 
     .create(icon-name) // to create an icon with .pos() and .size()
