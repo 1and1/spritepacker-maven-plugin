@@ -20,7 +20,7 @@ public class Utils {
 
     /**
      * Check if any input is newer than any output.
-     * If the an input has the exact same modification time as an output the input is considered to be newer.
+     * If an input has the exact same modification time as an output the input is considered to be newer.
      *
      * @param inputs    the list of input files, must not be null
      * @param outputs   the list of output files, must not be null
