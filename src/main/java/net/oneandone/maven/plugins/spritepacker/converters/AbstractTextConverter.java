@@ -51,8 +51,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
 
         log.info("Generating " + type + " output...");
 
-        String output = createOutput(imageList, imagePacking, log);
-        output.replaceAll("\\r?\\n", EOL);
+        String output = createOutput(imageList, imagePacking, log).replaceAll("\\r?\\n", EOL);
 
         try {
             log.info("Saving " + type + " to file " + file.toAbsolutePath());
