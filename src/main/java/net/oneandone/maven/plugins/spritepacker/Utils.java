@@ -19,8 +19,8 @@ public class Utils {
     private Utils() {}
 
     /**
-     * Check if any input is newer than any output. This also takes output files into account that do not yet exist,
-     * as they have a lastModified time of 0L and are thus automatically "older" than any input files.
+     * Check if any input is newer than any output.
+     * If the an input has the exact same modification time as an output the input is considered to be newer.
      *
      * @param inputs    the list of input files, must not be null
      * @param outputs   the list of output files, must not be null
@@ -31,9 +31,10 @@ public class Utils {
         Objects.requireNonNull(outputs);
 
         boolean hasNoInput = true;
-        long newestInput = 0L;
+        long newestInput = Long.MIN_VALUE;
         for (Path input : inputs) {
             if (input != null && Files.exists(input)) {
+                // Files.getLastModifiedTime(input) can be an implementation specific default when a time stamp to indicate the time of last modification is not supported by the file system
                 newestInput = Math.max(Files.getLastModifiedTime(input).toMillis(), newestInput);
                 hasNoInput = false;
             }

@@ -140,7 +140,7 @@ public class SpritePacker extends AbstractMojo {
         // If force overwrite not specified, and the JSON file is not being created for the first time,
         // and the output files were modified more recently than the input files, return.
         try {
-            if (!(forceOverwrite || Utils.shouldWriteOutput(inputs, outputs))) {
+            if (!forceOverwrite && !Utils.shouldWriteOutput(inputs, outputs)) {
                 log("No source images modified.");
                 return;
             }

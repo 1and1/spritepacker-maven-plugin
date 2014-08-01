@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
  * @author Robert Murphy, mklein
  */
 public class JsonPackingConverter extends AbstractTextConverter {
+    // JSON names may contain unicode letters, ascii digits, the dollar sign and the underscore, e.g.: "_ω$0"
     public static final Pattern CHARS_NOT_ALLOWED_IN_VARIABLES = Pattern.compile("[^\\p{L}\\d_$]");
     public static final Collection<String> RESERVED_WORDS = Collections.unmodifiableCollection(Arrays.asList(
             "break", "case", "catch", "continue", "debugger", "default", "delete", "do", "else",
