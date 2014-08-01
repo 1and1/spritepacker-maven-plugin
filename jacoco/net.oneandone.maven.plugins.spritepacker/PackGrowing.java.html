@@ -29,7 +29,7 @@ public class PackGrowing {
     private final int padding;
 
     private final Map&lt;NamedImage, Point&gt; positionMap;
-    Node root;
+    private Node root;
 
     /**
      * Creates a new PackGrowing for the given images and padding.
@@ -204,5 +204,12 @@ public class PackGrowing {
 <span class="fc" id="L204">        return null;</span>
     }
 
+    /**
+     * Allows setting the root to test certain edge cases which cannot occur in actual fittings.
+     * @param root the root node to set
+     */
+    void setRoot(Node root) {
+<span class="fc" id="L212">        this.root = root;</span>
+<span class="fc" id="L213">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>

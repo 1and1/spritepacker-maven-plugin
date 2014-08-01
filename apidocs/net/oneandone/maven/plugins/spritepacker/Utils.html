@@ -157,8 +157,8 @@ extends <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Object.html?
 <pre>public static&nbsp;boolean&nbsp;shouldWriteOutput(<a href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file">Path</a>&gt;&nbsp;inputs,
                         <a href="http://docs.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file">Path</a>&gt;&nbsp;outputs)
                                  throws <a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Check if any input is newer than any output. This also takes output files into account that do not yet exist,
- as they have a lastModified time of 0L and are thus automatically "older" than any input files.</div>
+<div class="block">Check if any input is newer than any output.
+ If an input has the exact same modification time as an output the input is considered to be newer.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>inputs</code> - the list of input files, must not be null</dd><dd><code>outputs</code> - the list of output files, must not be null</dd>
 <dt><span class="strong">Returns:</span></dt><dd>whether any input file was newer than any output file</dd>
 <dt><span class="strong">Throws:</span></dt>

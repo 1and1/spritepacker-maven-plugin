@@ -27,8 +27,9 @@ import java.util.regex.Pattern;
  * @author Robert Murphy, mklein
  */
 public class JsonPackingConverter extends AbstractTextConverter {
-<span class="fc" id="L30">    public static final Pattern CHARS_NOT_ALLOWED_IN_VARIABLES = Pattern.compile(&quot;[^\\p{L}\\d_$]&quot;);</span>
-<span class="fc" id="L31">    public static final Collection&lt;String&gt; RESERVED_WORDS = Collections.unmodifiableCollection(Arrays.asList(</span>
+    // JavaScript variable names may contain unicode letters, ascii digits, the dollar sign and the underscore, e.g.: &quot;_ω$0&quot;
+<span class="fc" id="L31">    public static final Pattern CHARS_NOT_ALLOWED_IN_VARIABLES = Pattern.compile(&quot;[^\\p{L}\\d_$]&quot;);</span>
+<span class="fc" id="L32">    public static final Collection&lt;String&gt; RESERVED_WORDS = Collections.unmodifiableCollection(Arrays.asList(</span>
             &quot;break&quot;, &quot;case&quot;, &quot;catch&quot;, &quot;continue&quot;, &quot;debugger&quot;, &quot;default&quot;, &quot;delete&quot;, &quot;do&quot;, &quot;else&quot;,
             &quot;finally&quot;, &quot;for&quot;, &quot;function&quot;, &quot;if&quot;, &quot;in&quot;, &quot;instanceof&quot;, &quot;new&quot;, &quot;return&quot;, &quot;switch&quot;,
             &quot;this&quot;, &quot;throw&quot;, &quot;try&quot;, &quot;typeof&quot;, &quot;var&quot;, &quot;void&quot;, &quot;while&quot;, &quot;with&quot;, &quot;class&quot;, &quot;const&quot;,
@@ -49,9 +50,9 @@ public class JsonPackingConverter extends AbstractTextConverter {
      * @param jsonpVar optional JSONP variable name
      */
     public JsonPackingConverter(Path json, String jsonpVar) {
-<span class="fc" id="L52">        super(json, &quot;JSON&quot;);</span>
-<span class="fc" id="L53">        this.jsonpVar = fixJsonpVar(jsonpVar);</span>
-<span class="fc" id="L54">    }</span>
+<span class="fc" id="L53">        super(json, &quot;JSON&quot;);</span>
+<span class="fc" id="L54">        this.jsonpVar = fixJsonpVar(jsonpVar);</span>
+<span class="fc" id="L55">    }</span>
 
     /**
      *Create output JSON string based on an ImagePacking.
@@ -64,16 +65,16 @@ public class JsonPackingConverter extends AbstractTextConverter {
      */
     @Override
     protected String createOutput(List&lt;NamedImage&gt; imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
-<span class="fc" id="L67">        Map&lt;String, Object&gt; map = buildOutputMap(imageList, imagePacking);</span>
+<span class="fc" id="L68">        Map&lt;String, Object&gt; map = buildOutputMap(imageList, imagePacking);</span>
 
         try {
-<span class="fc" id="L70">            ObjectMapper mapper = new ObjectMapper();</span>
-<span class="fc" id="L71">            mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);</span>
+<span class="fc" id="L71">            ObjectMapper mapper = new ObjectMapper();</span>
+<span class="fc" id="L72">            mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);</span>
 
-<span class="fc" id="L73">            String out = mapper.writeValueAsString(map);</span>
-<span class="fc bfc" id="L74" title="All 2 branches covered.">            return jsonpVar == null ? out : jsonpVar + &quot; = &quot; + out;</span>
-<span class="fc" id="L75">        } catch (IOException e) {</span>
-<span class="fc" id="L76">            throw new MojoExecutionException(&quot;Couldn't generate JSON data&quot;, e);</span>
+<span class="fc" id="L74">            String out = mapper.writeValueAsString(map);</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            return jsonpVar == null ? out : jsonpVar + &quot; = &quot; + out;</span>
+<span class="fc" id="L76">        } catch (IOException e) {</span>
+<span class="fc" id="L77">            throw new MojoExecutionException(&quot;Couldn't generate JSON data&quot;, e);</span>
         }
     }
 
@@ -84,36 +85,36 @@ public class JsonPackingConverter extends AbstractTextConverter {
      * @return a map with an entry for each image
      */
     protected Map&lt;String, Object&gt; buildOutputMap(List&lt;NamedImage&gt; imageList, ImagePacking imagePacking) {
-<span class="fc" id="L87">        Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;(imageList.size());</span>
-<span class="fc bfc" id="L88" title="All 2 branches covered.">        for (NamedImage n : imageList) {</span>
-<span class="fc" id="L89">            Point position = imagePacking.getPosition(n);</span>
+<span class="fc" id="L88">        Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;(imageList.size());</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        for (NamedImage n : imageList) {</span>
+<span class="fc" id="L90">            Point position = imagePacking.getPosition(n);</span>
 
-<span class="fc" id="L91">            Map&lt;String, Object&gt; props = new LinkedHashMap&lt;&gt;(IMAGE_PROPERTY_COUNT);</span>
-<span class="fc" id="L92">            int x = position.x;</span>
-<span class="fc" id="L93">            int y = position.y;</span>
-<span class="fc" id="L94">            int width = n.getWidth();</span>
-<span class="fc" id="L95">            int height = n.getHeight();</span>
+<span class="fc" id="L92">            Map&lt;String, Object&gt; props = new LinkedHashMap&lt;&gt;(IMAGE_PROPERTY_COUNT);</span>
+<span class="fc" id="L93">            int x = position.x;</span>
+<span class="fc" id="L94">            int y = position.y;</span>
+<span class="fc" id="L95">            int width = n.getWidth();</span>
+<span class="fc" id="L96">            int height = n.getHeight();</span>
 
-<span class="fc" id="L97">            String xStr = intToPixel(-x);</span>
-<span class="fc" id="L98">            String yStr = intToPixel(-y);</span>
+<span class="fc" id="L98">            String xStr = intToPixel(-x);</span>
+<span class="fc" id="L99">            String yStr = intToPixel(-y);</span>
 
-<span class="fc" id="L100">            props.put(&quot;x&quot;, xStr);</span>
-<span class="fc" id="L101">            props.put(&quot;y&quot;, yStr);</span>
-<span class="fc" id="L102">            props.put(&quot;w&quot;, intToPixel(width));</span>
-<span class="fc" id="L103">            props.put(&quot;h&quot;, intToPixel(height));</span>
-<span class="fc" id="L104">            props.put(&quot;xy&quot;, xStr + &quot; &quot; + yStr);</span>
+<span class="fc" id="L101">            props.put(&quot;x&quot;, xStr);</span>
+<span class="fc" id="L102">            props.put(&quot;y&quot;, yStr);</span>
+<span class="fc" id="L103">            props.put(&quot;w&quot;, intToPixel(width));</span>
+<span class="fc" id="L104">            props.put(&quot;h&quot;, intToPixel(height));</span>
+<span class="fc" id="L105">            props.put(&quot;xy&quot;, xStr + &quot; &quot; + yStr);</span>
 
-<span class="fc" id="L106">            Map&lt;String, Integer&gt; numbers = new LinkedHashMap&lt;&gt;(RAW_NUMBER_COUNT);</span>
-<span class="fc" id="L107">            numbers.put(&quot;x&quot;, x);</span>
-<span class="fc" id="L108">            numbers.put(&quot;y&quot;, y);</span>
-<span class="fc" id="L109">            numbers.put(&quot;w&quot;, width);</span>
-<span class="fc" id="L110">            numbers.put(&quot;h&quot;, height);</span>
+<span class="fc" id="L107">            Map&lt;String, Integer&gt; numbers = new LinkedHashMap&lt;&gt;(RAW_NUMBER_COUNT);</span>
+<span class="fc" id="L108">            numbers.put(&quot;x&quot;, x);</span>
+<span class="fc" id="L109">            numbers.put(&quot;y&quot;, y);</span>
+<span class="fc" id="L110">            numbers.put(&quot;w&quot;, width);</span>
+<span class="fc" id="L111">            numbers.put(&quot;h&quot;, height);</span>
 
-<span class="fc" id="L112">            props.put(&quot;n&quot;, numbers);</span>
+<span class="fc" id="L113">            props.put(&quot;n&quot;, numbers);</span>
 
-<span class="fc" id="L114">            map.put(n.getName(), props);</span>
-<span class="fc" id="L115">        }</span>
-<span class="fc" id="L116">        return map;</span>
+<span class="fc" id="L115">            map.put(n.getName(), props);</span>
+<span class="fc" id="L116">        }</span>
+<span class="fc" id="L117">        return map;</span>
     }
 
     /**
@@ -124,12 +125,12 @@ public class JsonPackingConverter extends AbstractTextConverter {
      * @return          the fixed jsonpVar
      */
     protected static String fixJsonpVar(String jsonpVar) {
-<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (StringUtils.isNotEmpty(jsonpVar)) {</span>
-<span class="fc" id="L128">            String newVar = CHARS_NOT_ALLOWED_IN_VARIABLES.matcher(jsonpVar).replaceAll(&quot;&quot;);</span>
-<span class="fc bfc" id="L129" title="All 6 branches covered.">            boolean needsPrefix = newVar.isEmpty() || hasLeadingNumber(newVar) || RESERVED_WORDS.contains(newVar);</span>
-<span class="fc bfc" id="L130" title="All 2 branches covered.">            return needsPrefix ? &quot;_&quot; + newVar : newVar;</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (StringUtils.isNotEmpty(jsonpVar)) {</span>
+<span class="fc" id="L129">            String newVar = CHARS_NOT_ALLOWED_IN_VARIABLES.matcher(jsonpVar).replaceAll(&quot;&quot;);</span>
+<span class="fc bfc" id="L130" title="All 6 branches covered.">            boolean needsPrefix = newVar.isEmpty() || hasLeadingNumber(newVar) || RESERVED_WORDS.contains(newVar);</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">            return needsPrefix ? &quot;_&quot; + newVar : newVar;</span>
         }
-<span class="fc" id="L132">        return jsonpVar;</span>
+<span class="fc" id="L133">        return jsonpVar;</span>
     }
 
     /**
@@ -139,7 +140,7 @@ public class JsonPackingConverter extends AbstractTextConverter {
      * @return      whether the string starts with [0-9]
      */
     private static boolean hasLeadingNumber(String str) {
-<span class="fc bfc" id="L142" title="All 4 branches covered.">        return str.charAt(0) &gt;= '0' &amp;&amp; str.charAt(0) &lt;= '9';</span>
+<span class="fc bfc" id="L143" title="All 4 branches covered.">        return str.charAt(0) &gt;= '0' &amp;&amp; str.charAt(0) &lt;= '9';</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>

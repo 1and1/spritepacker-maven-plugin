@@ -1,5 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,PackGrowing,0,450,0,38,0,64,0,29,0,10
+spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,PackGrowing,0,454,0,38,0,66,0,30,0,11
 spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,Node,0,78,0,0,0,20,0,12,0,12
 spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,PackGrowing.new Comparator() {...},0,19,0,0,0,4,0,2,0,2
 spritepacker-maven-plugin Maven Mojo,net.oneandone.maven.plugins.spritepacker,SpritePacker,15,303,2,12,3,51,3,12,1,7

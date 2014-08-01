@@ -140,7 +140,7 @@ import java.util.List;
         // If force overwrite not specified, and the JSON file is not being created for the first time,
         // and the output files were modified more recently than the input files, return.
         try {
-<span class="pc bpc" id="L143" title="1 of 4 branches missed.">            if (!(forceOverwrite || Utils.shouldWriteOutput(inputs, outputs))) {</span>
+<span class="pc bpc" id="L143" title="1 of 4 branches missed.">            if (!forceOverwrite &amp;&amp; !Utils.shouldWriteOutput(inputs, outputs)) {</span>
 <span class="fc" id="L144">                log(&quot;No source images modified.&quot;);</span>
 <span class="fc" id="L145">                return;</span>
             }
