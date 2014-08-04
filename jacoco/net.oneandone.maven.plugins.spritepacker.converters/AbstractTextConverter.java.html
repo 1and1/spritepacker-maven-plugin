@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractTextConverter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spritepacker-maven-plugin Maven Mojo</a> &gt; <a href="index.source.html" class="el_package">net.oneandone.maven.plugins.spritepacker.converters</a> &gt; <span class="el_source">AbstractTextConverter.java</span></div><h1>AbstractTextConverter.java</h1><pre class="source lang-java linenums">package net.oneandone.maven.plugins.spritepacker.converters;
 
+import com.google.common.base.Splitter;
 import net.oneandone.maven.plugins.spritepacker.ImagePacking;
 import net.oneandone.maven.plugins.spritepacker.NamedImage;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -19,7 +20,8 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractTextConverter implements PackingConverter {
     // Identifiers can contain any unicode letters (\p{L}), numbers (\p{N}), underscore and hyphen, so &quot;ω⓪-⑨_A3&quot; is a valid identifier.
-<span class="fc" id="L22">    public static final Pattern CHARS_NOT_ALLOWED_IN_IDENTIFIERS = Pattern.compile(&quot;[^\\p{L}\\p{N}_-]&quot;);</span>
+<span class="fc" id="L23">    public static final Pattern CHARS_NOT_ALLOWED_IN_IDENTIFIERS = Pattern.compile(&quot;[^\\p{L}\\p{N}_-]&quot;);</span>
+<span class="fc" id="L24">    private static final Splitter LINE_SPLITTER = Splitter.onPattern(&quot;\\r?\\n&quot;).omitEmptyStrings();</span>
     private final Path file;
     private final String type;
 
@@ -28,10 +30,10 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @param file  the output file to write to
      * @param type  the type of file to convert to, for logging purposes
      */
-<span class="fc" id="L31">    protected AbstractTextConverter(Path file, String type) {</span>
-<span class="fc" id="L32">        this.file = file;</span>
-<span class="fc" id="L33">        this.type = type;</span>
-<span class="fc" id="L34">    }</span>
+<span class="fc" id="L33">    protected AbstractTextConverter(Path file, String type) {</span>
+<span class="fc" id="L34">        this.file = file;</span>
+<span class="fc" id="L35">        this.type = type;</span>
+<span class="fc" id="L36">    }</span>
 
     /**
      * Convert the specified ImagePacking to a text file.
@@ -43,22 +45,22 @@ public abstract class AbstractTextConverter implements PackingConverter {
      */
     @Override
     public void convert(List&lt;NamedImage&gt; imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (file == null) {</span>
-<span class="fc" id="L47">            log.info(&quot;No &quot; + type + &quot; output file specified.&quot;);</span>
-<span class="fc" id="L48">            return;</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (file == null) {</span>
+<span class="fc" id="L49">            log.info(&quot;No &quot; + type + &quot; output file specified.&quot;);</span>
+<span class="fc" id="L50">            return;</span>
         }
 
-<span class="fc" id="L51">        log.info(&quot;Generating &quot; + type + &quot; output...&quot;);</span>
+<span class="fc" id="L53">        log.info(&quot;Generating &quot; + type + &quot; output...&quot;);</span>
 
-<span class="fc" id="L53">        String output = createOutput(imageList, imagePacking, log);</span>
-
+<span class="fc" id="L55">        String output = createOutput(imageList, imagePacking, log);</span>
         try {
-<span class="fc" id="L56">            log.info(&quot;Saving &quot; + type + &quot; to file &quot; + file.toAbsolutePath());</span>
-<span class="fc" id="L57">            Files.write(file, output.getBytes(StandardCharsets.UTF_8));</span>
-<span class="fc" id="L58">        } catch (IOException e) {</span>
-<span class="fc" id="L59">            throw new MojoExecutionException(&quot;Couldn't write to file &quot; + file.toAbsolutePath(), e);</span>
-<span class="fc" id="L60">        }</span>
-<span class="fc" id="L61">    }</span>
+<span class="fc" id="L57">            log.info(&quot;Saving &quot; + type + &quot; to file &quot; + file.toAbsolutePath());</span>
+            // Ensure that all line endings use the system specific line separator.
+<span class="fc" id="L59">            Files.write(file, LINE_SPLITTER.split(output), StandardCharsets.UTF_8);</span>
+<span class="fc" id="L60">        } catch (IOException e) {</span>
+<span class="fc" id="L61">            throw new MojoExecutionException(&quot;Couldn't write to file &quot; + file.toAbsolutePath(), e);</span>
+<span class="fc" id="L62">        }</span>
+<span class="fc" id="L63">    }</span>
 
     /**
      * Create output text as String based on an ImagePacking.
@@ -78,7 +80,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @return      the pixel value
      */
     protected static String intToPixel(int i) {
-<span class="fc bfc" id="L81" title="All 2 branches covered.">        return i == 0 ? &quot;0&quot; : i + &quot;px&quot;;</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        return i == 0 ? &quot;0&quot; : i + &quot;px&quot;;</span>
     }
 
     /**
@@ -89,7 +91,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @return      sanitized name without special characters
      */
     protected static String sanitize(String name) {
-<span class="fc bfc" id="L92" title="All 2 branches covered.">        return (name == null) ? null : CHARS_NOT_ALLOWED_IN_IDENTIFIERS.matcher(name).replaceAll(&quot;&quot;);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        return (name == null) ? null : CHARS_NOT_ALLOWED_IN_IDENTIFIERS.matcher(name).replaceAll(&quot;&quot;);</span>
     }
 
     /**
@@ -101,8 +103,8 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @return      valid name without number or hyphen as first character
      */
     protected static String fixFirstChar(String name) {
-<span class="fc bfc" id="L104" title="All 8 branches covered.">        boolean firstCharIsAllowed = name == null || name.isEmpty() || name.charAt(0) == '_' || Character.isLetter(name.charAt(0));</span>
-<span class="fc bfc" id="L105" title="All 2 branches covered.">        return firstCharIsAllowed ? name : &quot;_&quot; + name;</span>
+<span class="fc bfc" id="L106" title="All 8 branches covered.">        boolean firstCharIsAllowed = name == null || name.isEmpty() || name.charAt(0) == '_' || Character.isLetter(name.charAt(0));</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        return firstCharIsAllowed ? name : &quot;_&quot; + name;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>

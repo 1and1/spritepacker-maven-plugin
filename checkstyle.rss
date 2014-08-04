@@ -28,7 +28,7 @@ under the License.
       <title>File: 12,
              Errors: 0,
              Warnings: 0,
-             Infos: 196
+             Infos: 197
       </title>
             <link>http://1and1.github.io/spritepacker-maven-plugin//checkstyle.html</link>
       <description>
@@ -105,7 +105,7 @@ under the License.
                   <a href="http://1and1.github.io/spritepacker-maven-plugin//checkstyle.html#net.oneandone.maven.plugins.spritepacker.converters.AbstractTextConverter.java">net/oneandone/maven/plugins/spritepacker/converters/AbstractTextConverter.java</a>
                 </td>
                 <td>
-                  11
+                  12
                 </td>
                 <td>
                   0
