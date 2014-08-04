@@ -55,6 +55,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
         String output = createOutput(imageList, imagePacking, log);
         try {
             log.info("Saving " + type + " to file " + file.toAbsolutePath());
+            // Ensure that all line endings use the system specific line separator.
             Files.write(file, LINE_SPLITTER.split(output), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new MojoExecutionException("Couldn't write to file " + file.toAbsolutePath(), e);
