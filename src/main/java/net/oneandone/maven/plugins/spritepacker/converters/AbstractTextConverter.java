@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public abstract class AbstractTextConverter implements PackingConverter {
     // Identifiers can contain any unicode letters (\p{L}), numbers (\p{N}), underscore and hyphen, so "ω⓪-⑨_A3" is a valid identifier.
     public static final Pattern CHARS_NOT_ALLOWED_IN_IDENTIFIERS = Pattern.compile("[^\\p{L}\\p{N}_-]");
-    private static final Splitter LINE_SPLITTER = Splitter.onPattern("\\r?\\n");
+    private static final Splitter LINE_SPLITTER = Splitter.onPattern("\\r?\\n").omitEmptyStrings();
     private final Path file;
     private final String type;
 
