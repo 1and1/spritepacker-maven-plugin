@@ -27,7 +27,7 @@ def referenceDir = basedir.toPath().resolve("references");
       def lineNumber = 1;
       output.eachLine { outputLine ->
         def referenceLine = reader.readLine();
-        assert referenceLine == outputLine : "Line " + lineNumber + " differs";
+        assert referenceLine == outputLine : "Line " + lineNumber + " of file " + basename + " differs";
         lineNumber++;
       };
     };
