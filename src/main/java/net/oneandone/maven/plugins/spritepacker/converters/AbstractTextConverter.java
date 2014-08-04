@@ -1,5 +1,6 @@
 package net.oneandone.maven.plugins.spritepacker.converters;
 
+import com.google.common.base.Splitter;
 import net.oneandone.maven.plugins.spritepacker.ImagePacking;
 import net.oneandone.maven.plugins.spritepacker.NamedImage;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -18,9 +19,9 @@ import java.util.regex.Pattern;
  * @author mklein
  */
 public abstract class AbstractTextConverter implements PackingConverter {
-    public static final String EOL = System.getProperty("line.separator");
     // Identifiers can contain any unicode letters (\p{L}), numbers (\p{N}), underscore and hyphen, so "ω⓪-⑨_A3" is a valid identifier.
     public static final Pattern CHARS_NOT_ALLOWED_IN_IDENTIFIERS = Pattern.compile("[^\\p{L}\\p{N}_-]");
+    private static final Splitter LINE_SPLITTER = Splitter.onPattern("\\r?\\n");
     private final Path file;
     private final String type;
 
@@ -51,11 +52,10 @@ public abstract class AbstractTextConverter implements PackingConverter {
 
         log.info("Generating " + type + " output...");
 
-        String output = createOutput(imageList, imagePacking, log).replaceAll("\\r?\\n", EOL);
-
+        String output = createOutput(imageList, imagePacking, log);
         try {
             log.info("Saving " + type + " to file " + file.toAbsolutePath());
-            Files.write(file, output.getBytes(StandardCharsets.UTF_8));
+            Files.write(file, LINE_SPLITTER.split(output), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new MojoExecutionException("Couldn't write to file " + file.toAbsolutePath(), e);
         }
