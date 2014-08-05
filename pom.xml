@@ -21,7 +21,10 @@
         <url>https://github.com/1and1/spritepacker-maven-plugin/</url>
         <tag>HEAD</tag>
     </scm>
-
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/1and1/spritepacker-maven-plugin/issues</url>
+    </issueManagement>
 
     <licenses>
         <license>
