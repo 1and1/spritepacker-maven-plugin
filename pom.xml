@@ -21,10 +21,7 @@
         <url>https://github.com/1and1/spritepacker-maven-plugin/</url>
         <tag>HEAD</tag>
     </scm>
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/1and1/spritepacker-maven-plugin/issues</url>
-    </issueManagement>
+
 
     <licenses>
         <license>
@@ -33,6 +30,25 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>Michael Klein</name>
+            <email>michael.klein2@1und1.de</email>
+            <organization>1&amp;1</organization>
+            <organizationUrl>https://1and1.github.com</organizationUrl>
+            <url>https://github.com/mischkl</url>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>Simon Siegler</name>
+            <email>simon.siegler@1und1.de</email>
+            <organization>1&amp;1</organization>
+            <organizationUrl>https://1and1.github.com</organizationUrl>
+            <url>https://github.com/ssiegler</url>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
 
     <properties>
         <oneandone.java.source>1.7</oneandone.java.source>
@@ -55,6 +71,21 @@
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.mycila.maven-license-plugin</groupId>
+                    <artifactId>maven-license-plugin</artifactId>
+                    <configuration>
+                        <header>${maven-license-plugin.header}</header>
+                        <strictCheck>true</strictCheck>
+                        <excludes>
+                            <exclude>src/**/*.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <dependencies>
