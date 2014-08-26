@@ -207,6 +207,10 @@ public class SpritePacker extends AbstractMojo {
         scanner.setExcludes(excludes);
         scanner.scan();
         String[] fileNames = scanner.getIncludedFiles();
+
+        // sort files by path and name
+        Arrays.sort(fileNames);
+
         List<Path> paths = new ArrayList<>(fileNames.length);
         for (String fileName : fileNames) {
             paths.add(sourceDirectory.toPath().resolve(fileName));
