@@ -56,8 +56,20 @@ public class SpritePackerTest {
     public ErrorCollector errorCollector = new ErrorCollector();
 
     @Test
+    public void executeWithSkipSkipsExecution() throws Exception {
+        SpritePacker spritePacker = spy(new SpritePacker());
+        spritePacker.skip = Boolean.TRUE;
+
+        spritePacker.execute();
+        verify(spritePacker, never()).scanPaths(any(File.class), any(String[].class), any(String[].class));
+        verify(spritePacker, never()).loadImages(anyListOf(Path.class));
+        verify(spritePacker, never()).executeConverter(anyListOf(NamedImage.class), any(ImagePacking.class), any(PackingConverter.class));
+    }
+
+    @Test
     public void scanPathsResolvesScannerResultsFromSourceDirectory() throws Exception {
         SpritePacker spritePacker = new SpritePacker();
+        spritePacker.skip = Boolean.FALSE;
         BuildContext buildContext = mock(BuildContext.class);
         spritePacker.buildContext = buildContext;
         Scanner scanner = mock(Scanner.class);
@@ -71,9 +83,14 @@ public class SpritePackerTest {
         File sourceDirectory = mock(File.class);
         Path sourcePath = mock(Path.class);
         List<Path> resultPaths = Arrays.asList(mock(Path.class), mock(Path.class), mock(Path.class));
-        when(sourcePath.resolve(fileNames[0])).thenReturn(resultPaths.get(0));
-        when(sourcePath.resolve(fileNames[1])).thenReturn(resultPaths.get(1));
-        when(sourcePath.resolve(fileNames[2])).thenReturn(resultPaths.get(2));
+
+        // sort files to match expected behavior of scanPaths
+        String[] sortedFiles = fileNames.clone();
+        Arrays.sort(sortedFiles);
+
+        when(sourcePath.resolve(sortedFiles[0])).thenReturn(resultPaths.get(0));
+        when(sourcePath.resolve(sortedFiles[1])).thenReturn(resultPaths.get(1));
+        when(sourcePath.resolve(sortedFiles[2])).thenReturn(resultPaths.get(2));
         when(sourceDirectory.toPath()).thenReturn(sourcePath);
         String[] excludes = new String[] { "1234", "**/test/*", ".*" };
         String[] includes = new String[] { "**/*.png", "*.jpg", "inc/**" };
@@ -122,6 +139,7 @@ public class SpritePackerTest {
     @Test
     public void executeWithNoInputsDoesNothing() throws Exception {
         SpritePacker spritePacker = spy(new SpritePacker());
+        spritePacker.skip = Boolean.FALSE;
         doReturn(Collections.<Path>emptyList()).when(spritePacker).scanPaths(any(File.class), any(String[].class), any(String[].class));
 
         spritePacker.execute();
@@ -133,6 +151,7 @@ public class SpritePackerTest {
     public void executeWithNonExistingInput() throws Exception {
         SpritePacker spritePacker = spy(new SpritePacker());
         spritePacker.forceOverwrite = Boolean.FALSE;
+        spritePacker.skip = Boolean.FALSE;
         FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
         Path input = fileSystem.getPath("input");
         doReturn(Arrays.asList(input)).when(spritePacker).scanPaths(any(File.class), any(String[].class), any(String[].class));
@@ -146,6 +165,7 @@ public class SpritePackerTest {
     public void executeWithNonExistingInputButForceOverwrite() throws Exception {
         SpritePacker spritePacker = spy(new SpritePacker());
         spritePacker.forceOverwrite = Boolean.TRUE;
+        spritePacker.skip = Boolean.FALSE;
         spritePacker.sourceDirectory = mock(File.class);
         FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
         List<Path> inputs = Arrays.asList(fileSystem.getPath("input"));
@@ -165,6 +185,7 @@ public class SpritePackerTest {
     public void executeConverters() throws Exception {
         SpritePacker spritePacker = spy(new SpritePacker());
         spritePacker.forceOverwrite = Boolean.TRUE;
+        spritePacker.skip = Boolean.FALSE;
         spritePacker.sourceDirectory = mock(File.class);
         doNothing().when(spritePacker).executeConverter(anyListOf(NamedImage.class), any(ImagePacking.class), any(PackingConverter.class));
 
