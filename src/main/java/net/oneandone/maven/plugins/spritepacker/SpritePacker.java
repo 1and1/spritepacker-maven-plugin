@@ -109,6 +109,12 @@ public class SpritePacker extends AbstractMojo {
     @Parameter(defaultValue = "false")
     Boolean forceOverwrite;
 
+    /**
+     * Optionally skip the execution of the plugin.
+     */
+    @Parameter(defaultValue = "false")
+    Boolean skip;
+
     @Component
     BuildContext buildContext;
 
@@ -118,6 +124,11 @@ public class SpritePacker extends AbstractMojo {
      * @throws MojoExecutionException if something unexpected occurs.
      */
     public void execute() throws MojoExecutionException {
+
+        if (skip) {
+            log("Execution of spritepacker was skipped.");
+            return;
+        }
 
         long startTime = System.currentTimeMillis();
 
