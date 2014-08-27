@@ -14,7 +14,7 @@ combine and where you would like it to combine them to.
 	<plugin>
 		<groupId>net.oneandone.maven.plugins</groupId>
 		<artifactId>spritepacker-maven-plugin</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
         <executions>
             <execution>
                 <goals>
@@ -44,7 +44,6 @@ combine and where you would like it to combine them to.
 
 Configuration
 -------------
-
 
 **sourceDirectory**   
 &nbsp;&nbsp;&nbsp;&nbsp; ***(required)*** The directory where your source images reside.  This will be scanned recursively and files included based on
@@ -98,6 +97,9 @@ don't conflict with other CSS classes.
 **lessNamespace**   
 &nbsp;&nbsp;&nbsp;&nbsp; *(optional)* The namespace that contains the Less mixins. If this is specified then all icon mixins are put into a #namespace{ }
 block, which helps prevent conflicts with other Less mixins.
+
+**skip**   
+&nbsp;&nbsp;&nbsp;&nbsp; *(optional)* Skips the execution of the plugin.
 
 Output formats
 --------------
