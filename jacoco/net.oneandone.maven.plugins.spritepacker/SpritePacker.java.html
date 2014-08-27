@@ -109,6 +109,12 @@ import java.util.List;
     @Parameter(defaultValue = &quot;false&quot;)
     Boolean forceOverwrite;
 
+    /**
+     * Optionally skip the execution of the plugin.
+     */
+    @Parameter(defaultValue = &quot;false&quot;)
+    Boolean skip;
+
     @Component
     BuildContext buildContext;
 
@@ -119,68 +125,73 @@ import java.util.List;
      */
     public void execute() throws MojoExecutionException {
 
-<span class="fc" id="L122">        long startTime = System.currentTimeMillis();</span>
-
-<span class="fc" id="L124">        List&lt;Path&gt; inputs = scanPaths(sourceDirectory, includes, excludes);</span>
-
-        // Check if there are actually any inputs to do anything with
-<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (inputs.isEmpty()) {</span>
-<span class="fc" id="L128">            log(&quot;No source images found.&quot;);</span>
-<span class="fc" id="L129">            return;</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (skip) {</span>
+<span class="fc" id="L129">            log(&quot;Execution of spritepacker was skipped.&quot;);</span>
+<span class="fc" id="L130">            return;</span>
         }
 
-<span class="fc" id="L132">        Path outputPath = fileToPath(output);</span>
-<span class="fc" id="L133">        Path jsonPath = fileToPath(json);</span>
-<span class="fc" id="L134">        Path cssPath = fileToPath(css);</span>
-<span class="fc" id="L135">        Path lessPath = fileToPath(less);</span>
+<span class="fc" id="L133">        long startTime = System.currentTimeMillis();</span>
+
+<span class="fc" id="L135">        List&lt;Path&gt; inputs = scanPaths(sourceDirectory, includes, excludes);</span>
+
+        // Check if there are actually any inputs to do anything with
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (inputs.isEmpty()) {</span>
+<span class="fc" id="L139">            log(&quot;No source images found.&quot;);</span>
+<span class="fc" id="L140">            return;</span>
+        }
+
+<span class="fc" id="L143">        Path outputPath = fileToPath(output);</span>
+<span class="fc" id="L144">        Path jsonPath = fileToPath(json);</span>
+<span class="fc" id="L145">        Path cssPath = fileToPath(css);</span>
+<span class="fc" id="L146">        Path lessPath = fileToPath(less);</span>
 
         // Load output files into an ArrayList
-<span class="fc" id="L138">        List&lt;Path&gt; outputs = Arrays.asList(outputPath, jsonPath, cssPath, lessPath);</span>
+<span class="fc" id="L149">        List&lt;Path&gt; outputs = Arrays.asList(outputPath, jsonPath, cssPath, lessPath);</span>
 
         // If force overwrite not specified, and the JSON file is not being created for the first time,
         // and the output files were modified more recently than the input files, return.
         try {
-<span class="pc bpc" id="L143" title="1 of 4 branches missed.">            if (!forceOverwrite &amp;&amp; !Utils.shouldWriteOutput(inputs, outputs)) {</span>
-<span class="fc" id="L144">                log(&quot;No source images modified.&quot;);</span>
-<span class="fc" id="L145">                return;</span>
+<span class="pc bpc" id="L154" title="1 of 4 branches missed.">            if (!forceOverwrite &amp;&amp; !Utils.shouldWriteOutput(inputs, outputs)) {</span>
+<span class="fc" id="L155">                log(&quot;No source images modified.&quot;);</span>
+<span class="fc" id="L156">                return;</span>
             }
-<span class="nc" id="L147">        } catch (IOException e) {</span>
-<span class="nc" id="L148">            throw new MojoExecutionException(&quot;Could not check if output should be written.&quot;, e);</span>
-<span class="fc" id="L149">        }</span>
+<span class="nc" id="L158">        } catch (IOException e) {</span>
+<span class="nc" id="L159">            throw new MojoExecutionException(&quot;Could not check if output should be written.&quot;, e);</span>
+<span class="fc" id="L160">        }</span>
 
-<span class="fc" id="L151">        log(&quot;Loading &quot; + inputs.size() + &quot; images from &quot; + sourceDirectory.getAbsolutePath());</span>
+<span class="fc" id="L162">        log(&quot;Loading &quot; + inputs.size() + &quot; images from &quot; + sourceDirectory.getAbsolutePath());</span>
 
         // Load images defined in input array
-<span class="fc" id="L154">        List&lt;NamedImage&gt; images = loadImages(inputs);</span>
+<span class="fc" id="L165">        List&lt;NamedImage&gt; images = loadImages(inputs);</span>
 
-<span class="fc" id="L156">        log(&quot;Packing images...&quot;);</span>
+<span class="fc" id="L167">        log(&quot;Packing images...&quot;);</span>
 
         // Add packing information
-<span class="fc" id="L159">        ImagePacking imagePacking = packImages(images);</span>
+<span class="fc" id="L170">        ImagePacking imagePacking = packImages(images);</span>
 
-<span class="fc" id="L161">        List&lt;PackingConverter&gt; converters = Arrays.asList(new SpritesheetPackingConverter(outputPath),</span>
+<span class="fc" id="L172">        List&lt;PackingConverter&gt; converters = Arrays.asList(new SpritesheetPackingConverter(outputPath),</span>
                                                           new JsonPackingConverter(jsonPath, jsonpVar),
                                                           new CssPackingConverter(cssPath, cssPrefix),
                                                           new LessPackingConverter(lessPath, lessNamespace));
 
-<span class="fc bfc" id="L166" title="All 2 branches covered.">        for (PackingConverter converter : converters) {</span>
-<span class="fc" id="L167">            executeConverter(images, imagePacking, converter);</span>
-<span class="fc" id="L168">        }</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        for (PackingConverter converter : converters) {</span>
+<span class="fc" id="L178">            executeConverter(images, imagePacking, converter);</span>
+<span class="fc" id="L179">        }</span>
 
-<span class="fc" id="L170">        long took = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L171">        log(&quot;Done - took &quot; + took + &quot;ms!&quot;);</span>
+<span class="fc" id="L181">        long took = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L182">        log(&quot;Done - took &quot; + took + &quot;ms!&quot;);</span>
 
-<span class="fc" id="L173">    }</span>
+<span class="fc" id="L184">    }</span>
 
     // Allow tests to stub or verify the packing
     protected ImagePacking packImages(List&lt;NamedImage&gt; images) {
-<span class="nc" id="L177">        return PackGrowing.fit(images, padding);</span>
+<span class="nc" id="L188">        return PackGrowing.fit(images, padding);</span>
     }
 
     // Allow tests to stub or verify converter execution
     protected void executeConverter(List&lt;NamedImage&gt; images, ImagePacking imagePacking, PackingConverter converter) throws MojoExecutionException {
-<span class="fc" id="L182">        converter.convert(images, imagePacking, getLog());</span>
-<span class="fc" id="L183">    }</span>
+<span class="fc" id="L193">        converter.convert(images, imagePacking, getLog());</span>
+<span class="fc" id="L194">    }</span>
 
     /**
      * Convert a file to a path, or return null if the file is null
@@ -189,7 +200,7 @@ import java.util.List;
      * @return the path that was converted from a file
      */
     protected Path fileToPath(File file) {
-<span class="pc bpc" id="L192" title="1 of 2 branches missed.">        return (file == null) ? null : file.toPath();</span>
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">        return (file == null) ? null : file.toPath();</span>
     }
 
     /**
@@ -202,16 +213,20 @@ import java.util.List;
      * @return list of matching files
      */
     protected List&lt;Path&gt; scanPaths(File sourceDirectory, String[] includes, String[] excludes) {
-<span class="fc" id="L205">        Scanner scanner = buildContext.newScanner(sourceDirectory, true);</span>
-<span class="fc" id="L206">        scanner.setIncludes(includes);</span>
-<span class="fc" id="L207">        scanner.setExcludes(excludes);</span>
-<span class="fc" id="L208">        scanner.scan();</span>
-<span class="fc" id="L209">        String[] fileNames = scanner.getIncludedFiles();</span>
-<span class="fc" id="L210">        List&lt;Path&gt; paths = new ArrayList&lt;&gt;(fileNames.length);</span>
-<span class="fc bfc" id="L211" title="All 2 branches covered.">        for (String fileName : fileNames) {</span>
-<span class="fc" id="L212">            paths.add(sourceDirectory.toPath().resolve(fileName));</span>
+<span class="fc" id="L216">        Scanner scanner = buildContext.newScanner(sourceDirectory, true);</span>
+<span class="fc" id="L217">        scanner.setIncludes(includes);</span>
+<span class="fc" id="L218">        scanner.setExcludes(excludes);</span>
+<span class="fc" id="L219">        scanner.scan();</span>
+<span class="fc" id="L220">        String[] fileNames = scanner.getIncludedFiles();</span>
+
+        // sort files by path and name
+<span class="fc" id="L223">        Arrays.sort(fileNames);</span>
+
+<span class="fc" id="L225">        List&lt;Path&gt; paths = new ArrayList&lt;&gt;(fileNames.length);</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        for (String fileName : fileNames) {</span>
+<span class="fc" id="L227">            paths.add(sourceDirectory.toPath().resolve(fileName));</span>
         }
-<span class="fc" id="L214">        return paths;</span>
+<span class="fc" id="L229">        return paths;</span>
     }
 
     /**
@@ -222,21 +237,21 @@ import java.util.List;
      * @throws MojoExecutionException
      */
     protected List&lt;NamedImage&gt; loadImages(List&lt;Path&gt; imageFiles) throws MojoExecutionException {
-<span class="fc" id="L225">        List&lt;NamedImage&gt; images = new ArrayList&lt;&gt;(imageFiles.size());</span>
-<span class="fc bfc" id="L226" title="All 2 branches covered.">        for (Path f : imageFiles) {</span>
+<span class="fc" id="L240">        List&lt;NamedImage&gt; images = new ArrayList&lt;&gt;(imageFiles.size());</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        for (Path f : imageFiles) {</span>
             try {
-<span class="fc" id="L228">                String basename = FileUtils.removeExtension(f.getFileName().toString());</span>
-<span class="fc" id="L229">                images.add(new NamedImage(ImageIO.read(Files.newInputStream(f)), basename));</span>
-<span class="fc" id="L230">            } catch (IOException e) {</span>
-<span class="fc" id="L231">                throw new MojoExecutionException(&quot;Failed to open file: &quot; + f.toAbsolutePath(), e);</span>
-<span class="fc" id="L232">            }</span>
-<span class="fc" id="L233">        }</span>
-<span class="fc" id="L234">        return images;</span>
+<span class="fc" id="L243">                String basename = FileUtils.removeExtension(f.getFileName().toString());</span>
+<span class="fc" id="L244">                images.add(new NamedImage(ImageIO.read(Files.newInputStream(f)), basename));</span>
+<span class="fc" id="L245">            } catch (IOException e) {</span>
+<span class="fc" id="L246">                throw new MojoExecutionException(&quot;Failed to open file: &quot; + f.toAbsolutePath(), e);</span>
+<span class="fc" id="L247">            }</span>
+<span class="fc" id="L248">        }</span>
+<span class="fc" id="L249">        return images;</span>
     }
 
     public void log(Object message) {
-<span class="fc" id="L238">        getLog().info(message.toString());</span>
-<span class="fc" id="L239">    }</span>
+<span class="fc" id="L253">        getLog().info(message.toString());</span>
+<span class="fc" id="L254">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>
