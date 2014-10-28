@@ -5,7 +5,7 @@ import net.oneandone.maven.plugins.spritepacker.NamedImage;
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.awt.*;
+import java.awt.Point;
 import java.nio.file.Path;
 import java.util.List;
 
