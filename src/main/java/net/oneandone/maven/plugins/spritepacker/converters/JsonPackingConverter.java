@@ -61,7 +61,7 @@ public class JsonPackingConverter extends AbstractTextConverter {
      * @param imagePacking  the ImagePacking to convert - must not be null
      * @param log           the log object to use
      * @return              String containing the JSON file contents
-     * @throws org.apache.maven.plugin.MojoExecutionException when the JSON output cannot be generated
+     * @throws MojoExecutionException when the JSON output cannot be generated
      */
     @Override
     protected String createOutput(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {

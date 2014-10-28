@@ -20,7 +20,7 @@ public interface PackingConverter {
      * @param imageList    the list of images
      * @param imagePacking the ImagePacking to convert
      * @param log          the log object to use
-     * @throws org.apache.maven.plugin.MojoExecutionException when the conversion fails
+     * @throws MojoExecutionException when the conversion fails
      */
     void convert(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException;
 }

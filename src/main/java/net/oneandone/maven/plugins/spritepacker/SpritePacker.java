@@ -235,7 +235,7 @@ public class SpritePacker extends AbstractMojo {
      *
      * @param imageFiles the image files to load
      * @return the list of loaded NamedImages
-     * @throws org.apache.maven.plugin.MojoExecutionException when any input image cannot be opened
+     * @throws MojoExecutionException when any input image cannot be opened
      */
     protected List<NamedImage> loadImages(List<Path> imageFiles) throws MojoExecutionException {
         List<NamedImage> images = new ArrayList<>(imageFiles.size());

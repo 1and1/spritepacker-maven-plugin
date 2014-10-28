@@ -33,13 +33,6 @@ public class SpritesheetPackingConverter implements PackingConverter {
         this.output = output;
     }
 
-    /**
-     * Convert ImagePacking to a spritesheet image and save as a PNG file.
-     *
-     * @param imageList     the list of images
-     * @param imagePacking  the ImagePacking to convert
-     * @param log           the log object to use
-     */
     @Override
     public void convert(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
         if (output == null) {

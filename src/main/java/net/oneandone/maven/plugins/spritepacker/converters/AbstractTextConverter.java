@@ -35,13 +35,6 @@ public abstract class AbstractTextConverter implements PackingConverter {
         this.type = type;
     }
 
-    /**
-     * Convert the specified ImagePacking to a text file.
-     *
-     * @param imageList     the list of images
-     * @param imagePacking  the ImagePacking to convert
-     * @param log           the log object to use
-     */
     @Override
     public void convert(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
         if (file == null) {
@@ -68,7 +61,7 @@ public abstract class AbstractTextConverter implements PackingConverter {
      * @param imagePacking  the ImagePacking to convert
      * @param log           the log object to use
      * @return              String containing the text file contents
-     * @throws org.apache.maven.plugin.MojoExecutionException when the output cannot be generated
+     * @throws MojoExecutionException when the output cannot be generated
      */
     protected abstract String createOutput(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException;
 
