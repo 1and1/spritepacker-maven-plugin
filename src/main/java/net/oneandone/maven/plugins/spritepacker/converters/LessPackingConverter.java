@@ -37,7 +37,6 @@ public class LessPackingConverter extends AbstractTextConverter {
      * @param imagePacking  the ImagePacking to convert - must not be null
      * @param log           the log object to use
      * @return              String containing the Less file contents
-     * @throws MojoExecutionException
      */
     @Override
     protected String createOutput(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
