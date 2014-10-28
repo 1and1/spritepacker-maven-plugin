@@ -122,6 +122,7 @@ public class SpritePacker extends AbstractMojo {
     /**
      * Execute the MOJO.
      *
+     * @throws MojoExecutionException if something unexpected occurs.
      */
     public void execute() throws MojoExecutionException {
 
