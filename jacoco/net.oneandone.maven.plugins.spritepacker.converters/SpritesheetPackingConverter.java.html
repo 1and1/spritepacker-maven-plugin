@@ -33,53 +33,45 @@ public class SpritesheetPackingConverter implements PackingConverter {
 <span class="fc" id="L33">        this.output = output;</span>
 <span class="fc" id="L34">    }</span>
 
-    /**
-     * Convert ImagePacking to a spritesheet image and save as a PNG file.
-     *
-     * @param imageList     the list of images
-     * @param imagePacking  the ImagePacking to convert
-     * @param log           the log object to use
-     * @throws MojoExecutionException
-     */
     @Override
     public void convert(List&lt;NamedImage&gt; imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (output == null) {</span>
-<span class="fc" id="L47">            throw new MojoExecutionException(&quot;No spritesheet specified.&quot;);</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (output == null) {</span>
+<span class="fc" id="L39">            throw new MojoExecutionException(&quot;No spritesheet specified.&quot;);</span>
         }
 
         try {
-<span class="fc" id="L51">            Files.createDirectories(output.getParent());</span>
-<span class="fc" id="L52">        } catch (IOException e) {</span>
-<span class="fc" id="L53">            throw new MojoExecutionException(&quot;Couldn't create target directory: &quot; + output.getParent(), e);</span>
-<span class="fc" id="L54">        }</span>
+<span class="fc" id="L43">            Files.createDirectories(output.getParent());</span>
+<span class="fc" id="L44">        } catch (IOException e) {</span>
+<span class="fc" id="L45">            throw new MojoExecutionException(&quot;Couldn't create target directory: &quot; + output.getParent(), e);</span>
+<span class="fc" id="L46">        }</span>
 
-<span class="fc" id="L56">        log.info(&quot;Generating spritesheet...&quot;);</span>
+<span class="fc" id="L48">        log.info(&quot;Generating spritesheet...&quot;);</span>
 
-<span class="fc" id="L58">        BufferedImage spritesheet = createSpritesheet(imageList, imagePacking);</span>
+<span class="fc" id="L50">        BufferedImage spritesheet = createSpritesheet(imageList, imagePacking);</span>
 
-<span class="fc" id="L60">        log.info(&quot;Saving spritesheet to file &quot; + output.toAbsolutePath());</span>
+<span class="fc" id="L52">        log.info(&quot;Saving spritesheet to file &quot; + output.toAbsolutePath());</span>
 
         try {
-<span class="fc" id="L63">            ImageIO.write(spritesheet, &quot;png&quot;, Files.newOutputStream(output));</span>
-<span class="fc" id="L64">        } catch (IOException e) {</span>
-<span class="fc" id="L65">            throw new MojoExecutionException(&quot;Couldn't write spritesheet &quot; + output.toAbsolutePath(), e);</span>
-<span class="fc" id="L66">        }</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L55">            ImageIO.write(spritesheet, &quot;png&quot;, Files.newOutputStream(output));</span>
+<span class="fc" id="L56">        } catch (IOException e) {</span>
+<span class="fc" id="L57">            throw new MojoExecutionException(&quot;Couldn't write spritesheet &quot; + output.toAbsolutePath(), e);</span>
+<span class="fc" id="L58">        }</span>
+<span class="fc" id="L59">    }</span>
 
     protected BufferedImage createSpritesheet(List&lt;NamedImage&gt; imageList, ImagePacking imagePacking) {
-<span class="fc" id="L70">        BufferedImage spritesheet = new BufferedImage(imagePacking.getWidth(), imagePacking.getHeight(), BufferedImage.TYPE_INT_ARGB);</span>
-<span class="fc" id="L71">        Graphics2D gfx = spritesheet.createGraphics();</span>
-<span class="fc" id="L72">        gfx.setComposite(AlphaComposite.Src);</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">        for (NamedImage image : imageList) {</span>
-<span class="fc" id="L74">            Point imagePosition = imagePacking.getPosition(image);</span>
-<span class="fc" id="L75">            int x = imagePosition.x;</span>
-<span class="fc" id="L76">            int y = imagePosition.y;</span>
-<span class="fc" id="L77">            int width = image.getWidth();</span>
-<span class="fc" id="L78">            int height = image.getHeight();</span>
-<span class="fc" id="L79">            gfx.drawImage(image.getImage(), x, y, x + width, y + height, 0, 0, width, height, null);</span>
-<span class="fc" id="L80">        }</span>
-<span class="fc" id="L81">        return spritesheet;</span>
+<span class="fc" id="L62">        BufferedImage spritesheet = new BufferedImage(imagePacking.getWidth(), imagePacking.getHeight(), BufferedImage.TYPE_INT_ARGB);</span>
+<span class="fc" id="L63">        Graphics2D gfx = spritesheet.createGraphics();</span>
+<span class="fc" id="L64">        gfx.setComposite(AlphaComposite.Src);</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        for (NamedImage image : imageList) {</span>
+<span class="fc" id="L66">            Point imagePosition = imagePacking.getPosition(image);</span>
+<span class="fc" id="L67">            int x = imagePosition.x;</span>
+<span class="fc" id="L68">            int y = imagePosition.y;</span>
+<span class="fc" id="L69">            int width = image.getWidth();</span>
+<span class="fc" id="L70">            int height = image.getHeight();</span>
+<span class="fc" id="L71">            gfx.drawImage(image.getImage(), x, y, x + width, y + height, 0, 0, width, height, null);</span>
+<span class="fc" id="L72">        }</span>
+<span class="fc" id="L73">        return spritesheet;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

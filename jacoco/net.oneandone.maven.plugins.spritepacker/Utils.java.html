@@ -8,7 +8,6 @@ import java.util.Objects;
 
 /**
  * Utility methods that do not fit into specialized classes.
- * &lt;p/&gt;
  *
  * @author ssiegler
  */
@@ -16,7 +15,7 @@ public class Utils {
     /**
      * Avoid instantiation of utility class
      */
-<span class="nc" id="L19">    private Utils() {}</span>
+<span class="nc" id="L18">    private Utils() {}</span>
 
     /**
      * Check if any input is newer than any output.
@@ -25,6 +24,7 @@ public class Utils {
      * @param inputs    the list of input files, must not be null
      * @param outputs   the list of output files, must not be null
      * @return          whether any input file was newer than any output file
+     * @throws IOException if any problem occurs when reading file modification times
      */
     public static boolean shouldWriteOutput(List&lt;Path&gt; inputs, List&lt;Path&gt; outputs) throws IOException {
 <span class="fc" id="L30">        Objects.requireNonNull(inputs);</span>
@@ -53,4 +53,4 @@ public class Utils {
 <span class="fc" id="L53">        return false;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

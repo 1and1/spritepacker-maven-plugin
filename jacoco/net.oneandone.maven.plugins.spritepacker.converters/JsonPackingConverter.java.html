@@ -61,7 +61,7 @@ public class JsonPackingConverter extends AbstractTextConverter {
      * @param imagePacking  the ImagePacking to convert - must not be null
      * @param log           the log object to use
      * @return              String containing the JSON file contents
-     * @throws MojoExecutionException
+     * @throws MojoExecutionException when the JSON output cannot be generated
      */
     @Override
     protected String createOutput(List&lt;NamedImage&gt; imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException {
@@ -143,4 +143,4 @@ public class JsonPackingConverter extends AbstractTextConverter {
 <span class="fc bfc" id="L143" title="All 4 branches covered.">        return str.charAt(0) &gt;= '0' &amp;&amp; str.charAt(0) &lt;= '9';</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
