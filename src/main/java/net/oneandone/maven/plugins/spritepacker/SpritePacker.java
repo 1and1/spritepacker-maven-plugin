@@ -18,6 +18,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -240,7 +241,9 @@ public class SpritePacker extends AbstractMojo {
         for (Path f : imageFiles) {
             try {
                 String basename = FileUtils.removeExtension(f.getFileName().toString());
-                images.add(new NamedImage(ImageIO.read(Files.newInputStream(f)), basename));
+                try (InputStream inputStream = Files.newInputStream(f)) {
+                    images.add(new NamedImage(ImageIO.read(inputStream), basename));
+                }
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to open file: " + f.toAbsolutePath(), e);
             }
