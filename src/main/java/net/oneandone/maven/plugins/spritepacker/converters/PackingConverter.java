@@ -17,10 +17,10 @@ public interface PackingConverter {
     /**
      * Convert the specified ImagePacking.
      *
-     * @param imageList     the list of images
-     * @param imagePacking  the ImagePacking to convert
-     * @param log           the log object to use
-     * @throws MojoExecutionException
+     * @param imageList    the list of images
+     * @param imagePacking the ImagePacking to convert
+     * @param log          the log object to use
+     * @throws MojoExecutionException when the conversion fails
      */
     void convert(List<NamedImage> imageList, ImagePacking imagePacking, Log log) throws MojoExecutionException;
 }

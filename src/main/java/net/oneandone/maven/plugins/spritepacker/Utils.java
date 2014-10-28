@@ -8,7 +8,6 @@ import java.util.Objects;
 
 /**
  * Utility methods that do not fit into specialized classes.
- * <p/>
  *
  * @author ssiegler
  */
@@ -25,6 +24,7 @@ public class Utils {
      * @param inputs    the list of input files, must not be null
      * @param outputs   the list of output files, must not be null
      * @return          whether any input file was newer than any output file
+     * @throws IOException if any problem occurs when reading file modification times
      */
     public static boolean shouldWriteOutput(List<Path> inputs, List<Path> outputs) throws IOException {
         Objects.requireNonNull(inputs);

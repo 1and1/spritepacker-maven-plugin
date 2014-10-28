@@ -5,10 +5,6 @@ assert basedir != null;
 
 def imageDir = basedir.toPath().resolve(Paths.get("target", "images"));
 
-
-
-System.err.println( groovy.lang.GroovySystem.getVersion());
-
 assert Files.exists(imageDir);
 
 def referenceDir = basedir.toPath().resolve("references");
