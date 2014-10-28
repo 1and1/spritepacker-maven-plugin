@@ -238,6 +238,9 @@ public class SpritePacker extends AbstractMojo {
      * @throws MojoExecutionException when any input image cannot be opened
      */
     protected List<NamedImage> loadImages(List<Path> imageFiles) throws MojoExecutionException {
+        // Do not cache image data in temporary files.
+        ImageIO.setUseCache(false);
+
         List<NamedImage> images = new ArrayList<>(imageFiles.size());
         for (Path f : imageFiles) {
             try (InputStream inputStream = Files.newInputStream(f)) {
