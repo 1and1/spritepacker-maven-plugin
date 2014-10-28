@@ -239,11 +239,9 @@ public class SpritePacker extends AbstractMojo {
     protected List<NamedImage> loadImages(List<Path> imageFiles) throws MojoExecutionException {
         List<NamedImage> images = new ArrayList<>(imageFiles.size());
         for (Path f : imageFiles) {
-            try {
+            try (InputStream inputStream = Files.newInputStream(f)) {
                 String basename = FileUtils.removeExtension(f.getFileName().toString());
-                try (InputStream inputStream = Files.newInputStream(f)) {
-                    images.add(new NamedImage(ImageIO.read(inputStream), basename));
-                }
+                images.add(new NamedImage(ImageIO.read(inputStream), basename));
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to open file: " + f.toAbsolutePath(), e);
             }
