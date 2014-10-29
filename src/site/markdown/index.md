@@ -14,7 +14,7 @@ combine and where you would like it to combine them to.
 	<plugin>
 		<groupId>net.oneandone.maven.plugins</groupId>
 		<artifactId>spritepacker-maven-plugin</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.2</version>
         <executions>
             <execution>
                 <goals>
