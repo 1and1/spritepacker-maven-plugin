@@ -8,7 +8,7 @@
 
     <groupId>net.oneandone.maven.plugins</groupId>
     <artifactId>spritepacker-maven-plugin</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>maven-plugin</packaging>
 
     <name>spritepacker-maven-plugin Maven Mojo</name>
@@ -19,7 +19,7 @@
         <connection>scm:git:git://github.com/1and1/spritepacker-maven-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/1and1/spritepacker-maven-plugin.git</developerConnection>
         <url>https://github.com/1and1/spritepacker-maven-plugin/</url>
-        <tag>HEAD</tag>
+        <tag>spritepacker-maven-plugin-1.0.3</tag>
     </scm>
 
 
